@@ -1,12 +1,11 @@
-
 import java_cup.runtime.*;
 
 init with {: scanner.init(); :};
 scan with {: return scanner.next_token(); :};
 
-terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, BOOLEAN, FALSE, TRUE, INT, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, IDENTIFIER;
+terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, BOOLEAN, FALSE, TRUE, INT, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, IDENTIFIER, STATIC, empty;
 
-non terminal Program, MainClass;
+non terminal Program, MainClass, ClassDecl, VarDecl, MethodDecl, Statement, StatementList, Type, Exp, ExpList, ExpRest, FormalList, FormalRest, op;
 
 Program ::= MainClass ClassDecl;
 
@@ -15,15 +14,17 @@ ClassDecl ::= empty
             | CLASS IDENTIFIER LBRACE VarDecl MethodDecl RBRACE
             ;
 
-MainClass ::= CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACE RBRACE IDENTIFIER RPAREN LBRACE Statement* RBRACE RBRACE
+MainClass ::= CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACE RBRACE IDENTIFIER RPAREN LBRACE StatementList RBRACE RBRACE;
 
 
 VarDecl ::= Type IDENTIFIER SEMICOLON;
 
-MethodDecl ::= PUBLIC Type IDENTIFIER LPAREN FormalList RPAREN LBRACE VarDecl StatementList RETURN Exp SEMICOLOR RBRACE;
+MethodDecl ::= PUBLIC Type IDENTIFIER LPAREN FormalList RPAREN LBRACE VarDecl StatementList RETURN Exp SEMICOLON RBRACE;
 
 FormalList ::= Type IDENTIFIER FormalRest
             | empty;
+
+FormalRest ::= COMMA Type IDENTIFIER;
 
 Type ::= INT LBRACK RBRACK
         | BOOLEAN
@@ -36,18 +37,18 @@ StatementList ::= Statement
                 ;
 
 Statement ::= LBRACE StatementList RBRACE
-            | IF LPAREN Exp RPAREN Statement ELSE statement
+            | IF LPAREN Exp RPAREN Statement ELSE Statement
             | WHILE LPAREN Exp RPAREN Statement
             | PRINT LPAREN Exp RPAREN SEMICOLON
-            | IDENTIFIER = Exp SEMICOLON
+            | IDENTIFIER EQ Exp SEMICOLON
             | IDENTIFIER LBRACK Exp RBRACK EQ Exp SEMICOLON
             ;
 
 Exp         ::= Exp op Exp
                 | Exp LBRACK Exp RBRACK
                 | Exp DOT LENGTH
-                | EXP DOT IDENTIFIER LPAREN ExpList RPAREN
-                | INTEGER
+                | Exp DOT IDENTIFIER LPAREN ExpList RPAREN
+                | INT
                 | TRUE
                 | FALSE
                 | IDENTIFIER
@@ -63,12 +64,13 @@ op          ::= ANDAND
                 | PLUS
                 | MINUS
                 | MULT
+                ;
 
 ExpList     ::= Exp ExpRest
                 | empty
+                ;
 
 ExpRest     ::= ExpRest ExpRest
                 | COMMA Exp
+                ;
 
-
-empty ::= ;
