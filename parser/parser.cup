@@ -66,11 +66,10 @@ op          ::= ANDAND
                 | MULT
                 ;
 
-ExpList     ::= Exp ExpRest
-                | empty
+ExpList     ::= Exp ExpRest 
                 ;
 
-ExpRest     ::= ExpRest ExpRest
-                | COMMA Exp
+ExpRest     ::= COMMA Exp ExpRest
+                | empty
                 ;
 
