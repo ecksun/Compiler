@@ -5,13 +5,15 @@ scan with {: return scanner.next_token(); :};
 
 terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, BOOLEAN, FALSE, TRUE, INT, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, IDENTIFIER, STATIC, empty;
 
-non terminal Program, MainClass, ClassDecl, VarDecl, MethodDecl, Statement, StatementList, Type, Exp, ExpList, ExpRest, FormalList, FormalRest, op;
+non terminal Program, MainClass, ClassDecl, VarDecl, MethodDecl, Statement, StatementList, Type, Exp, ExpList, ExpRest, FormalList, FormalRest, op, ClassDeclList;
 
-Program ::= MainClass ClassDecl;
+Program ::= MainClass ClassDeclList;
 
-ClassDecl ::= empty
-            | ClassDecl ClassDecl
-            | CLASS IDENTIFIER LBRACE VarDecl MethodDecl RBRACE
+ClassDeclList ::= ClassDecl ClassDeclList
+                ;
+
+ClassDecl ::= CLASS IDENTIFIER LBRACE VarDecl MethodDecl RBRACE
+            | empty
             ;
 
 MainClass ::= CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACE RBRACE IDENTIFIER RPAREN LBRACE StatementList RBRACE RBRACE;
