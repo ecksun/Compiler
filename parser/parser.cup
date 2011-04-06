@@ -1,7 +1,7 @@
 import java_cup.runtime.*;
 
-init with {: scanner.init(); :};
-scan with {: return scanner.next_token(); :};
+// init with {: getScanner().init(); :};
+scan with {: return getScanner().next_token(); :};
 
 terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, BOOLEAN, FALSE, TRUE, INT, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, IDENTIFIER, STATIC, empty;
 
@@ -14,7 +14,7 @@ precedence left PLUS, MINUS;
 precedence left MULT;
 
 // XXX: Är det här verkligen rätt gramatik
-precedence left NOT;
+precedence right NOT;
 precedence left DOT;
 precedence left LBRACK, RBRACK;
 precedence left LPAREN, RPAREN;
