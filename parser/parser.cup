@@ -7,6 +7,18 @@ terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, BOOLEAN, FALSE, TRUE, I
 
 non terminal Program, MainClass, ClassDecl, VarDecl, MethodDecl, Statement, StatementList, Type, Exp, ExpList, ExpRest, FormalList, FormalRest, op, ClassDeclList;
 
+
+precedence left ANDAND;
+precedence left LT;
+precedence left PLUS, MINUS;
+precedence left MULT;
+
+// XXX: Är det här verkligen rätt gramatik
+precedence left NOT;
+precedence left DOT;
+precedence left LBRACK, RBRACK;
+precedence left LPAREN, RPAREN;
+
 Program ::= MainClass ClassDeclList;
 
 ClassDeclList ::= ClassDecl ClassDeclList
