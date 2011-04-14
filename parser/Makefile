@@ -1,6 +1,6 @@
 lib_dir=../lib
 java_cup_jar=$(lib_dir)/java-cup-11a.jar
-javac_flags=-cp $(java_cup_jar):.:../lex
+javac_flags=-cp .:../lex:$(java_cup_jar)
 
 JAVAC=javac
 CUP=java -jar $(java_cup_jar)
@@ -19,4 +19,4 @@ sym.java: parser.cup
 	$(JAVAC) $(javac_flags) $<
 
 clean:
-	-rm -f parser.java sym.java parser.class
+	-rm -f parser.java sym.java *.class

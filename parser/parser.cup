@@ -8,7 +8,10 @@ terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, BOOLEAN, INT, STRING, I
 terminal Boolean TRUE, FALSE;
 terminal Integer NUMBER;
 
-non terminal Program, MainClass, ClassDecl, VarDecl, MethodDecl, Statement, StatementList, Type, Exp, ExpList, ExpRest, FormalList, FormalRest, op, ClassDeclList;
+non terminal Program, MainClass, ClassDecl, VarDecl, MethodDecl, Statement, StatementList, Type, ExpList, ExpRest, FormalList, FormalRest, ClassDeclList;
+
+non terminal Node Exp;
+non terminal Integer op;
 
 
 precedence left ANDAND;
@@ -21,6 +24,8 @@ precedence right NOT;
 precedence left DOT;
 precedence left LBRACK, RBRACK;
 precedence left LPAREN, RPAREN;
+
+start with Program;
 
 Program ::= MainClass ClassDeclList;
 
