@@ -1,15 +1,16 @@
-java_cup_jar=/usr/share/java/cup.jar
+CUP=java -jar java-cup-11a.jar
+java_cup_jar=java-cup-11a.jar
 javac_flags=-cp ${java_cup_jar}
 
-.PHONY: clean
+.PHONY: all clean
 
 all: parser.java sym.java parser.class
 
 parser.java: parser.cup
-	cup < $^
+	$(CUP) < $^
 
 sym.java: parser.cup
-	cup < $^
+	$(CUP) < $^
 
 %.class: %.java
 	javac ${javac_flags} $<
