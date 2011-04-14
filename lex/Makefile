@@ -1,7 +1,8 @@
-java_cup_jar=../parser/java-cup-11a.jar
+lib_dir=../lib
+java_cup_jar=$(lib_dir)/java-cup-11a.jar
 javac_flags=-cp $(java_cup_jar):.
 
-JFLEX=./jflex/bin/jflex
+JFLEX=$(lib_dir)/jflex/bin/jflex
 JAVAC=javac
 
 .PHONY: all clean
