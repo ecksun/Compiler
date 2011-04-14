@@ -83,10 +83,15 @@ Exp         ::=   Exp:left op:operator Exp:right
                 ;
 
 op          ::=   ANDAND 
+                    {: RESULT = sym.ANDAND; :}
                 | LT 
+                    {: RESULT = sym.LT; :}
                 | PLUS 
+                    {: RESULT = sym.PLUS; :}
                 | MINUS 
+                    {: RESULT = sym.MINUS; :}
                 | MULT 
+                    {: RESULT = sym.MULT; :}
                 ;
 
 ExpList     ::= Exp ExpRest 
