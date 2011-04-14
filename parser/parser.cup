@@ -3,7 +3,10 @@ import java_cup.runtime.*;
 // init with {: getScanner().init(); :};
 scan with {: return getScanner().next_token(); :};
 
-terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, BOOLEAN, FALSE, TRUE, INT, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, IDENTIFIER, STATIC, empty;
+terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, BOOLEAN, INT, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, IDENTIFIER, STATIC, empty;
+
+terminal Boolean TRUE, FALSE;
+terminal Integer NUMBER;
 
 non terminal Program, MainClass, ClassDecl, VarDecl, MethodDecl, Statement, StatementList, Type, Exp, ExpList, ExpRest, FormalList, FormalRest, op, ClassDeclList;
 
@@ -58,11 +61,12 @@ Statement ::= LBRACE StatementList RBRACE
             | IDENTIFIER LBRACK Exp RBRACK EQ Exp SEMICOLON
             ;
 
-Exp         ::= Exp op Exp
+Exp         ::=   Exp:left op:operator Exp:right
+{: RESULT = new Op(operator, left, right); :}
                 | Exp LBRACK Exp RBRACK
                 | Exp DOT LENGTH
                 | Exp DOT IDENTIFIER LPAREN ExpList RPAREN
-                | INT
+                | NUMBER
                 | TRUE
                 | FALSE
                 | IDENTIFIER
@@ -73,11 +77,11 @@ Exp         ::= Exp op Exp
                 | LPAREN Exp RPAREN
                 ;
 
-op          ::= ANDAND
-                | LT
-                | PLUS
-                | MINUS
-                | MULT
+op          ::=   ANDAND 
+                | LT 
+                | PLUS 
+                | MINUS 
+                | MULT 
                 ;
 
 ExpList     ::= Exp ExpRest 

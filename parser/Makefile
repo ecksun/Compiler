@@ -1,10 +1,10 @@
 CUP=java -jar java-cup-11a.jar
 java_cup_jar=java-cup-11a.jar
-javac_flags=-cp $(java_cup_jar)
+javac_flags=-cp $(java_cup_jar):.:../lex
 
 .PHONY: all clean
 
-all: parser.java sym.java parser.class
+all: sym.java parser.class Tree.class
 
 parser.java: parser.cup
 	$(CUP) < $^
