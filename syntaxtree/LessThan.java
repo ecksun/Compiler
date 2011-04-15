@@ -1,6 +1,5 @@
 package syntaxtree;
-import syntaxtree.visitor.Visitor;
-import syntaxtree.visitor.TypeVisitor;
+import syntaxtree.visitor.*;
 
 public class LessThan extends Exp {
   public Exp e1,e2;

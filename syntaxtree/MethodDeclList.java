@@ -1,6 +1,6 @@
 package syntaxtree;
 
-import java.util.Vector;
+import java.util.*;
 
 public class MethodDeclList {
    private Vector list;

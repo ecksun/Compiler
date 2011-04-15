@@ -1,6 +1,6 @@
 package syntaxtree;
 
-import java.util.Vector;
+import java.util.*;
 
 public class StatementList {
     private Vector list;

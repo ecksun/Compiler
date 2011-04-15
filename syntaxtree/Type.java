@@ -1,6 +1,5 @@
 package syntaxtree;
-import syntaxtree.visitor.Visitor;
-import syntaxtree.visitor.TypeVisitor;
+import syntaxtree.visitor.*;
 
 public abstract class Type {
     public  boolean equals(Type tp)

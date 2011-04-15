@@ -1,6 +1,6 @@
 package syntaxtree;
 
-import java.util.Vector;
+import java.util.*;
 
 public class ClassDeclList {
    private Vector list;
