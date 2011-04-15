@@ -1,6 +1,5 @@
 package syntaxtree;
-import syntaxtree.visitor.Visitor;
-import syntaxtree.visitor.TypeVisitor;
+import syntaxtree.visitor.*;
 
 public class Block extends Statement {
   public StatementList sl;

@@ -1,6 +1,6 @@
 package syntaxtree;
 
-import java.util.Vector;
+import java.util.*;
 
 public class FormalList {
    private Vector list;
