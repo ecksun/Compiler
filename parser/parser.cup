@@ -1,4 +1,5 @@
 import java_cup.runtime.*;
+import syntaxtree.*;
 
 // init with {: getScanner().init(); :};
 scan with {: return getScanner().next_token(); :};
