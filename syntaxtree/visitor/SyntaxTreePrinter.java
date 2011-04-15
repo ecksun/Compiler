@@ -1,5 +1,7 @@
 package syntaxtree.visitor;
 
+import syntaxtree.*;
+
 public class SyntaxTreePrinter extends DepthFirstVisitor
 {
     int level = 0;
@@ -109,13 +111,6 @@ public class SyntaxTreePrinter extends DepthFirstVisitor
     }
 
     public void visit(Print n)
-    {
-        preWork(n);
-        super.visit(n);
-        postWork(n);
-    }
-
-    public void visit(Write n)
     {
         preWork(n);
         super.visit(n);
