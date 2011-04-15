@@ -1,6 +1,6 @@
-package syntaxtree;
+package syntaxtree.visitor;
 
-public class SyntaxTreePrinter extends visitor.DepthFirstVisitor 
+public class SyntaxTreePrinter extends DepthFirstVisitor 
 {
     int level = 0;
     java.io.PrintStream out;

@@ -1,10 +1,10 @@
 package syntaxtree;
-import visitor.Visitor;
-import visitor.TypeVisitor;
+import syntaxtree.visitor.Visitor;
+import syntaxtree.visitor.TypeVisitor;
 
 public class MainClass {
   public Identifier i1,i2;
-  public Statement s;
+  public StatementList s;
 
   public MainClass(Identifier ai1, Identifier ai2, StatementList as) {
     i1=ai1; i2=ai2; s=as;
