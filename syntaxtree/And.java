@@ -1,6 +1,6 @@
 package syntaxtree;
-import visitor.Visitor;
-import visitor.TypeVisitor;
+import syntaxtree.visitor.Visitor;
+import syntaxtree.visitor.TypeVisitor;
 
 public class And extends Exp {
   public Exp e1,e2;
