@@ -1,3 +1,7 @@
+// TODO byt ut VarDecl mot VarDeclList där det är lämpligt
+// TODO byt ut MethodDecl mot MethodDeclList där det är lämpligt
+// TODO se över VarDecl och MethodDecl så att de är korrekta
+
 import java_cup.runtime.*;
 
 // init with {: getScanner().init(); :};
@@ -8,10 +12,10 @@ terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, BOOLEAN, INT, STRING, I
 terminal Boolean TRUE, FALSE;
 terminal Integer NUMBER;
 
-non terminal Program, MainClass, ClassDecl, VarDecl, MethodDecl, Statement, StatementList, Type, ExpList, ExpRest, FormalList, FormalRest, ClassDeclList;
+non terminal Program, MainClass, ClassDecl, VarDecl, VarDeclList, MethodDecl, Statement, StatementList, Type, ExpList, ExpRest, FormalList, FormalRest, ClassDeclList;
 
-non terminal Node Exp;
-non terminal Integer op;
+non terminal Exp Exp, op;
+non terminal MethodDeclList MethodDeclList;
 
 
 precedence left ANDAND;
@@ -27,19 +31,46 @@ precedence left LPAREN, RPAREN;
 
 start with Program;
 
-Program ::= MainClass ClassDeclList;
-
-ClassDeclList ::= ClassDecl ClassDeclList
-                ;
-
-ClassDecl ::= CLASS IDENTIFIER LBRACE VarDecl MethodDecl RBRACE
-            | empty
+Program ::= MainClass:mainClass ClassDeclList:classDeclList
+{: RESULT = new Program(mainClass, classDeclList); :}
             ;
 
-MainClass ::= CLASS IDENTIFIER LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACE RBRACE IDENTIFIER RPAREN LBRACE StatementList RBRACE RBRACE;
+ClassDeclList   ::= ClassDecl:classDecl ClassDeclList
+{:  
+    if (RESULT == null) {
+        RESULT = new ClassDeclList(); 
+    }
+    RESULT.addElement(classDecl);
+:}
+                ;
 
+ClassDecl   ::= CLASS IDENTIFIER:id LBRACE VarDeclList:varDeclList MethodDeclList:methodDeclList RBRACE
+{:
+    RESULT = new ClassDeclSimple(id, varDeclList, methodDeclList);
+:}
+            |   empty
+            ;
+
+MainClass   ::= CLASS IDENTIFIER:className LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACE RBRACE IDENTIFIER:args RPAREN LBRACE StatementList:statementList RBRACE RBRACE
+{:
+// XXX: MainClass tar Statement och inte StatementList. Vem gör fel?
+    RESULT = new MainClass(className, args, statementList);
+:}
+            ;
+
+VarDeclList ::= VarDecl:varDecl VarDeclList
+{: RESULT.addElement(varDecl); :}
+            |   empty
+{: RESULT = new VarDeclList(); :}
+            ;
 
 VarDecl ::= Type IDENTIFIER SEMICOLON;
+
+MethodDeclList  ::= MethodDecl:methodDecl MethodDeclList
+{: RESULT.addElement(methodDecl); :}
+                |   empty
+{: RESULT = new MethodDeclList(); :}
+                ;
 
 MethodDecl ::= PUBLIC Type IDENTIFIER LPAREN FormalList RPAREN LBRACE VarDecl StatementList RETURN Exp SEMICOLON RBRACE;
 
