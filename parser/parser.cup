@@ -6,7 +6,7 @@ scan with {: return getScanner().next_token(); :};
 
 terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, STATIC, empty;
 
-terminal Identifier IDENTIFIER;
+terminal String IDENTIFIER;
 terminal Boolean TRUE, FALSE;
 terminal BooleanType BOOLEAN;
 terminal Integer NUMBER;
@@ -26,8 +26,8 @@ non terminal Statement Statement;
 non terminal StatementList StatementList;
 non terminal Type Type;
 non terminal Formal Formal;
-non terminal FormalList FormalList;
-non terminal FormalRest FormalRest;
+non terminal FormalList FormalList, FormalRest;
+non terminal Identifier Identifier;
 
 
 precedence left ANDAND;
@@ -58,14 +58,14 @@ ClassDeclList   ::= ClassDecl:classDecl ClassDeclList:list
 :}
                 ;
 
-ClassDecl   ::= CLASS IDENTIFIER:id LBRACE VarDeclList:varDeclList MethodDeclList:methodDeclList RBRACE
+ClassDecl   ::= CLASS Identifier:id LBRACE VarDeclList:varDeclList MethodDeclList:methodDeclList RBRACE
 {:
     RESULT = new ClassDeclSimple(id, varDeclList, methodDeclList);
 :}
             |   empty
             ;
 
-MainClass   ::= CLASS IDENTIFIER:className LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACE RBRACE IDENTIFIER:args RPAREN LBRACE StatementList:statementList RBRACE RBRACE
+MainClass   ::= CLASS Identifier:className LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACE RBRACE Identifier:args RPAREN LBRACE StatementList:statementList RBRACE RBRACE
 {:
     RESULT = new MainClass(className, args, statementList);
 :}
@@ -82,7 +82,7 @@ VarDeclList ::= VarDecl:varDecl VarDeclList:list
 :}
             ;
 
-VarDecl ::= Type:type IDENTIFIER:name SEMICOLON
+VarDecl ::= Type:type Identifier:name SEMICOLON
 {:
     RESULT = new VarDecl(type, name);
 :}
@@ -99,13 +99,13 @@ MethodDeclList  ::= MethodDecl:methodDecl MethodDeclList:list
 :}
                 ;
 
-MethodDecl  ::= PUBLIC Type:retType IDENTIFIER:methodName LPAREN FormalList:args RPAREN LBRACE VarDecl:varDecl StatementList:stmList RETURN Exp:retExp SEMICOLON RBRACE
+MethodDecl  ::= PUBLIC Type:retType Identifier:methodName LPAREN FormalList:args RPAREN LBRACE VarDeclList:varDeclList StatementList:stmList RETURN Exp:retExp SEMICOLON RBRACE
 {:
-    RESULT = new MethodDecl(retType, methodName, args, varDecl, stmList, retExp);
+    RESULT = new MethodDecl(retType, methodName, args, varDeclList, stmList, retExp);
 :}
             ;
 
-Formal  ::= Type:type IDENTIFIER:name
+Formal  ::= Type:type Identifier:name
 {:
     RESULT = new Formal(type, name);
 :}
@@ -162,9 +162,9 @@ Statement ::= LBRACE StatementList:list RBRACE
 {: RESULT = new While(exp, stm); :}
             | PRINT LPAREN Exp:exp RPAREN SEMICOLON
 {: RESULT = new Print(exp); :}
-            | IDENTIFIER:id EQ Exp:exp SEMICOLON
+            | Identifier:id EQ Exp:exp SEMICOLON
 {: RESULT = new Assign(id, exp); :}
-            | IDENTIFIER:id LBRACK Exp:index RBRACK EQ Exp:value SEMICOLON
+            | Identifier:id LBRACK Exp:index RBRACK EQ Exp:value SEMICOLON
 {: RESULT = new ArrayAssign(id, index, value); :}
             ;
 
@@ -174,22 +174,22 @@ Exp         ::=   op:operator
 {: RESULT = new ArrayLookup(id, index); :}
                 | Exp:id DOT LENGTH
 {: RESULT = new ArrayLength(id); :}
-                | Exp:obj DOT IDENTIFIER:method LPAREN ExpList:args RPAREN
+                | Exp:obj DOT Identifier:method LPAREN ExpList:args RPAREN
 {: RESULT = new Call(obj, method, args); :}
                 | NUMBER:n
-{: RESULT = n; :}
+{: RESULT = new IntegerLiteral(n); :}
                 | TRUE
-{: RESULT = true; :}
+{: RESULT = new True(); :}
                 | FALSE
-{: RESULT = false; :}
+{: RESULT = new False(); :}
                 | IDENTIFIER:id
-{: RESULT = new Identifier(id); :}
+{: RESULT = new IdentifierExp(id); :}
                 | THIS
 {: RESULT = new This(); :}
                 | NEW INT LBRACK Exp:size RBRACK
 {: RESULT = new NewArray(size); :}
-                | NEW IDENTIFIER:id LPAREN RPAREN
-{: RESULT = new Object(id); :}
+                | NEW Identifier:id LPAREN RPAREN
+{: RESULT = new NewObject(id); :}
                 | NOT Exp:exp
 {: RESULT = new Not(exp); :}
                 | LPAREN Exp:exp RPAREN
@@ -234,3 +234,7 @@ RESULT = list;
 {: RESULT = new ExpList(); :}
         ;
 
+    
+Identifier  ::= IDENTIFIER:id
+{: RESULT = new Identifier(id); :}
+            ;
