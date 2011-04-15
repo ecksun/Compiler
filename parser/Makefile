@@ -1,6 +1,6 @@
 lib_dir=../lib
 java_cup_jar=$(lib_dir)/java-cup-11a.jar
-javac_flags=-cp .:../lex:$(java_cup_jar)
+javac_flags=-cp .:../lex:../syntaxtree:$(java_cup_jar)
 
 JAVAC=javac
 CUP=java -jar $(java_cup_jar)

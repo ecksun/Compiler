@@ -1,21 +1,32 @@
-// TODO byt ut VarDecl mot VarDeclList där det är lämpligt
-// TODO byt ut MethodDecl mot MethodDeclList där det är lämpligt
-// TODO se över VarDecl och MethodDecl så att de är korrekta
-
 import java_cup.runtime.*;
 
 // init with {: getScanner().init(); :};
 scan with {: return getScanner().next_token(); :};
 
-terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, BOOLEAN, INT, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, IDENTIFIER, STATIC, empty;
+terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, STATIC, empty;
 
+terminal Identifier IDENTIFIER;
 terminal Boolean TRUE, FALSE;
+terminal BooleanType BOOLEAN;
 terminal Integer NUMBER;
+terminal IntegerType INT;
 
-non terminal Program, MainClass, ClassDecl, VarDecl, VarDeclList, MethodDecl, Statement, StatementList, Type, ExpList, ExpRest, FormalList, FormalRest, ClassDeclList;
-
+non terminal Program Program;
+non terminal MainClass MainClass;
+non terminal ClassDeclSimple ClassDecl;
+non terminal ClassDeclList ClassDeclList;
 non terminal Exp Exp, op;
+non terminal ExpList ExpList, ExpRest;
+non terminal MethodDecl MethodDecl;
 non terminal MethodDeclList MethodDeclList;
+non terminal VarDecl VarDecl;
+non terminal VarDeclList VarDeclList;
+non terminal Statement Statement;
+non terminal StatementList StatementList;
+non terminal Type Type;
+non terminal Formal Formal;
+non terminal FormalList FormalList;
+non terminal FormalRest FormalRest;
 
 
 precedence left ANDAND;
@@ -35,12 +46,14 @@ Program ::= MainClass:mainClass ClassDeclList:classDeclList
 {: RESULT = new Program(mainClass, classDeclList); :}
             ;
 
-ClassDeclList   ::= ClassDecl:classDecl ClassDeclList
+ClassDeclList   ::= ClassDecl:classDecl ClassDeclList:list
 {:  
-    if (RESULT == null) {
-        RESULT = new ClassDeclList(); 
-    }
-    RESULT.addElement(classDecl);
+    list.addElement(classDecl);
+    RESULT = list; 
+:}
+                |   empty
+{:
+    RESULT = new ClassDeclList(); 
 :}
                 ;
 
@@ -53,82 +66,170 @@ ClassDecl   ::= CLASS IDENTIFIER:id LBRACE VarDeclList:varDeclList MethodDeclLis
 
 MainClass   ::= CLASS IDENTIFIER:className LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACE RBRACE IDENTIFIER:args RPAREN LBRACE StatementList:statementList RBRACE RBRACE
 {:
-// XXX: MainClass tar Statement och inte StatementList. Vem gör fel?
     RESULT = new MainClass(className, args, statementList);
 :}
             ;
 
-VarDeclList ::= VarDecl:varDecl VarDeclList
-{: RESULT.addElement(varDecl); :}
+VarDeclList ::= VarDecl:varDecl VarDeclList:list
+{: 
+    list.addElement(varDecl); 
+    RESULT = list;
+:}
             |   empty
-{: RESULT = new VarDeclList(); :}
+{: 
+    RESULT = new VarDeclList(); 
+:}
             ;
 
-VarDecl ::= Type IDENTIFIER SEMICOLON;
+VarDecl ::= Type:type IDENTIFIER:name SEMICOLON
+{:
+    RESULT = new VarDecl(type, name);
+:}
+        ;
 
-MethodDeclList  ::= MethodDecl:methodDecl MethodDeclList
-{: RESULT.addElement(methodDecl); :}
+MethodDeclList  ::= MethodDecl:methodDecl MethodDeclList:list
+{: 
+    list.addElement(methodDecl); 
+    RESULT = list;
+:}
                 |   empty
-{: RESULT = new MethodDeclList(); :}
+{: 
+    RESULT = new MethodDeclList(); 
+:}
                 ;
 
-MethodDecl ::= PUBLIC Type IDENTIFIER LPAREN FormalList RPAREN LBRACE VarDecl StatementList RETURN Exp SEMICOLON RBRACE;
-
-FormalList ::= Type IDENTIFIER FormalRest
-            | empty;
-
-FormalRest ::= COMMA Type IDENTIFIER;
-
-Type ::= INT LBRACK RBRACK
-        | BOOLEAN
-        | INT
-        | IDENTIFIER;
-
-StatementList ::= Statement
-                | Statement Statement
-                | empty
-                ;
-
-Statement ::= LBRACE StatementList RBRACE
-            | IF LPAREN Exp RPAREN Statement ELSE Statement
-            | WHILE LPAREN Exp RPAREN Statement
-            | PRINT LPAREN Exp RPAREN SEMICOLON
-            | IDENTIFIER EQ Exp SEMICOLON
-            | IDENTIFIER LBRACK Exp RBRACK EQ Exp SEMICOLON
+MethodDecl  ::= PUBLIC Type:retType IDENTIFIER:methodName LPAREN FormalList:args RPAREN LBRACE VarDecl:varDecl StatementList:stmList RETURN Exp:retExp SEMICOLON RBRACE
+{:
+    RESULT = new MethodDecl(retType, methodName, args, varDecl, stmList, retExp);
+:}
             ;
 
-Exp         ::=   Exp:left op:operator Exp:right
-{: RESULT = new Op(operator, left, right); :}
-                | Exp LBRACK Exp RBRACK
-                | Exp DOT LENGTH
-                | Exp DOT IDENTIFIER LPAREN ExpList RPAREN
-                | NUMBER
+Formal  ::= Type:type IDENTIFIER:name
+{:
+    RESULT = new Formal(type, name);
+:}
+        ;
+
+FormalList  ::= Formal:formal FormalRest:list
+{:
+    list.addElement(formal);
+    RESULT = list;
+:}
+            |   empty
+{:
+    RESULT = new FormalList();
+:}
+            ;
+
+FormalRest ::= COMMA Formal:formal FormalRest:list
+{:
+    list.addElement(formal);
+    RESULT = list;
+:}
+            |   empty
+{:
+    RESULT = new FormalList();
+:}
+;
+
+Type    ::= INT LBRACK RBRACK
+{: RESULT = new IntArrayType(); :}
+        |   BOOLEAN
+{: RESULT = new BooleanType(); :}
+        |   INT
+{: RESULT = new IntegerType(); :}
+        |   IDENTIFIER:id
+{: RESULT = new IdentifierType(id); :}
+        ;
+
+StatementList   ::= Statement:stm StatementList:list
+{: 
+    list.addElement(stm); 
+    RESULT = list;
+:}
+                |   empty
+{:
+    RESULT = new StatementList();
+:}
+                ;
+
+Statement ::= LBRACE StatementList:list RBRACE
+{:  RESULT = list; :}
+            | IF LPAREN Exp:exp RPAREN Statement:ifStm ELSE Statement:elseStm
+{: RESULT = new If(exp, ifStm, elseStm); :}
+            | WHILE LPAREN Exp:exp RPAREN Statement:stm
+{: RESULT = new While(exp, stm); :}
+            | PRINT LPAREN Exp:exp RPAREN SEMICOLON
+{: RESULT = new Print(exp); :}
+            | IDENTIFIER:id EQ Exp:exp SEMICOLON
+{: RESULT = new Assign(id, exp); :}
+            | IDENTIFIER:id LBRACK Exp:index RBRACK EQ Exp:value SEMICOLON
+{: RESULT = new ArrayAssign(id, index, value); :}
+            ;
+
+Exp         ::=   op:operator
+{: RESULT = operator; :}
+                | Exp:id LBRACK Exp:index RBRACK
+{: RESULT = new ArrayLookup(id, index); :}
+                | Exp:id DOT LENGTH
+{: RESULT = new ArrayLength(id); :}
+                | Exp:obj DOT IDENTIFIER:method LPAREN ExpList:args RPAREN
+{: RESULT = new Call(obj, method, args); :}
+                | NUMBER:n
+{: RESULT = n; :}
                 | TRUE
+{: RESULT = true; :}
                 | FALSE
-                | IDENTIFIER
+{: RESULT = false; :}
+                | IDENTIFIER:id
+{: RESULT = new Identifier(id); :}
                 | THIS
-                | NEW INT LBRACK Exp RBRACK
-                | NEW IDENTIFIER LPAREN RPAREN
-                | NOT Exp
-                | LPAREN Exp RPAREN
+{: RESULT = new This(); :}
+                | NEW INT LBRACK Exp:size RBRACK
+{: RESULT = new NewArray(size); :}
+                | NEW IDENTIFIER:id LPAREN RPAREN
+{: RESULT = new Object(id); :}
+                | NOT Exp:exp
+{: RESULT = new Not(exp); :}
+                | LPAREN Exp:exp RPAREN
+{: RESULT = exp; :}
                 ;
 
-op          ::=   ANDAND 
-                    {: RESULT = sym.ANDAND; :}
-                | LT 
-                    {: RESULT = sym.LT; :}
-                | PLUS 
-                    {: RESULT = sym.PLUS; :}
-                | MINUS 
-                    {: RESULT = sym.MINUS; :}
-                | MULT 
-                    {: RESULT = sym.MULT; :}
+op          ::=   Exp:left ANDAND Exp:right
+{:
+    RESULT = new And(left, right);
+:}
+                | Exp:left LT Exp:right
+{:
+    RESULT = new LessThan(left, right);
+:}
+                | Exp:left PLUS Exp:right
+{:
+    RESULT = new Plus(left, right);
+:}
+                | Exp:left MINUS Exp:right
+{:
+    RESULT = new Minus(left, right);
+:}
+                | Exp:left MULT Exp:right
+{:
+    RESULT = new Times(left, right);
+:}
                 ;
 
-ExpList     ::= Exp ExpRest 
-                ;
+ExpList ::= Exp:exp ExpRest:list
+{: 
+list.addElement(exp); 
+RESULT = list;
+:}
+            ;
 
-ExpRest     ::= COMMA Exp ExpRest
-                | empty
-                ;
+ExpRest ::= COMMA Exp:exp ExpRest:list
+{: 
+list.addElement(exp); 
+RESULT = list;
+:}
+        |   empty
+{: RESULT = new ExpList(); :}
+        ;
 
