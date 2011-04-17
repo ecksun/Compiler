@@ -1,5 +1,6 @@
 import java_cup.runtime.*;
 import syntaxtree.*;
+import java.util.*;
 
 // init with {: getScanner().init(); :};
 scan with {: return getScanner().next_token(); :};
@@ -15,18 +16,18 @@ terminal IntegerType INT;
 non terminal Program Program;
 non terminal MainClass MainClass;
 non terminal ClassDeclSimple ClassDecl;
-non terminal ClassDeclList ClassDeclList;
+non terminal List<ClassDecl> ClassDeclList;
 non terminal Exp Exp, op;
-non terminal ExpList ExpList, ExpRest;
+non terminal List<Exp> ExpList, ExpRest;
 non terminal MethodDecl MethodDecl;
-non terminal MethodDeclList MethodDeclList;
+non terminal List<MethodDecl> MethodDeclList;
 non terminal VarDecl VarDecl;
-non terminal VarDeclList VarDeclList;
+non terminal List<VarDecl> VarDeclList;
 non terminal Statement Statement;
 non terminal StatementList StatementList;
 non terminal Type Type;
 non terminal Formal Formal;
-non terminal FormalList FormalList, FormalRest;
+non terminal List<Formal> FormalList, FormalRest;
 non terminal Identifier Identifier;
 
 
@@ -49,12 +50,12 @@ Program ::= MainClass:mainClass ClassDeclList:classDeclList
 
 ClassDeclList   ::= ClassDecl:classDecl ClassDeclList:list
 {:  
-    list.addElement(classDecl);
+    list.add(classDecl);
     RESULT = list; 
 :}
                 |   empty
 {:
-    RESULT = new ClassDeclList(); 
+    RESULT = new ArrayList<ClassDecl>(); 
 :}
                 ;
 
@@ -73,12 +74,12 @@ MainClass   ::= CLASS Identifier:className LBRACE PUBLIC STATIC VOID IDENTIFIER 
 
 VarDeclList ::= VarDecl:varDecl VarDeclList:list
 {: 
-    list.addElement(varDecl); 
+    list.add(varDecl); 
     RESULT = list;
 :}
             |   empty
 {: 
-    RESULT = new VarDeclList(); 
+    RESULT = new ArrayList<VarDecl>(); 
 :}
             ;
 
@@ -90,12 +91,12 @@ VarDecl ::= Type:type Identifier:name SEMICOLON
 
 MethodDeclList  ::= MethodDecl:methodDecl MethodDeclList:list
 {: 
-    list.addElement(methodDecl); 
+    list.add(methodDecl); 
     RESULT = list;
 :}
                 |   empty
 {: 
-    RESULT = new MethodDeclList(); 
+    RESULT = new ArrayList<MethodDecl>(); 
 :}
                 ;
 
@@ -113,23 +114,23 @@ Formal  ::= Type:type Identifier:name
 
 FormalList  ::= Formal:formal FormalRest:list
 {:
-    list.addElement(formal);
+    list.add(formal);
     RESULT = list;
 :}
             |   empty
 {:
-    RESULT = new FormalList();
+    RESULT = new ArrayList<Formal>();
 :}
             ;
 
 FormalRest ::= COMMA Formal:formal FormalRest:list
 {:
-    list.addElement(formal);
+    list.add(formal);
     RESULT = list;
 :}
             |   empty
 {:
-    RESULT = new FormalList();
+    RESULT = new ArrayList<Formal>();
 :}
 ;
 
@@ -145,7 +146,7 @@ Type    ::= INT LBRACK RBRACK
 
 StatementList   ::= Statement:stm StatementList:list
 {: 
-    list.addElement(stm); 
+    list.add(stm); 
     RESULT = list;
 :}
                 |   empty
@@ -220,18 +221,18 @@ op          ::=   Exp:left ANDAND Exp:right
 
 ExpList ::= Exp:exp ExpRest:list
 {: 
-list.addElement(exp); 
+list.add(exp); 
 RESULT = list;
 :}
             ;
 
 ExpRest ::= COMMA Exp:exp ExpRest:list
 {: 
-list.addElement(exp); 
+list.add(exp); 
 RESULT = list;
 :}
         |   empty
-{: RESULT = new ExpList(); :}
+{: RESULT = new ArrayList<Exp>(); :}
         ;
 
     

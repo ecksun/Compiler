@@ -1,22 +1,31 @@
 package syntaxtree;
+
+import java.util.*;
+
 import syntaxtree.visitor.*;
 
-public class Call extends Exp {
-  public Exp e;
-  public String c=null; // class of e
-    
-  public Identifier i;
-  public ExpList el;
-  
-  public Call(Exp ae, Identifier ai, ExpList ael) {
-    e=ae; i=ai; el=ael;
-  }
+public class Call extends Exp
+{
+    public Exp e;
+    public String c = null; // class of e
 
-  public void accept(Visitor v) {
-    v.visit(this);
-  }
+    public Identifier i;
+    public List<Exp> el;
 
-  public Type accept(TypeVisitor v) {
-    return v.visit(this);
-  }
+    public Call(Exp ae, Identifier ai, List<Exp> ael)
+    {
+        e = ae;
+        i = ai;
+        el = ael;
+    }
+
+    public void accept(Visitor v)
+    {
+        v.visit(this);
+    }
+
+    public Type accept(TypeVisitor v)
+    {
+        return v.visit(this);
+    }
 }

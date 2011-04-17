@@ -1,20 +1,30 @@
 package syntaxtree;
+
+import java.util.*;
+
 import syntaxtree.visitor.*;
 
-public class ClassDeclSimple extends ClassDecl {
-  public Identifier i;
-  public VarDeclList vl;  
-  public MethodDeclList ml;
- 
-  public ClassDeclSimple(Identifier ai, VarDeclList avl, MethodDeclList aml) {
-    i=ai; vl=avl; ml=aml;
-  }
+public class ClassDeclSimple extends ClassDecl
+{
+    public Identifier i;
+    public List<VarDecl> vl;
+    public List<MethodDecl> ml;
 
-  public void accept(Visitor v) {
-    v.visit(this);
-  }
+    public ClassDeclSimple(Identifier ai, List<VarDecl> avl,
+            List<MethodDecl> aml)
+    {
+        i = ai;
+        vl = avl;
+        ml = aml;
+    }
 
-  public Type accept(TypeVisitor v) {
-    return v.visit(this);
-  }
+    public void accept(Visitor v)
+    {
+        v.visit(this);
+    }
+
+    public Type accept(TypeVisitor v)
+    {
+        return v.visit(this);
+    }
 }

@@ -1,7 +1,7 @@
 package syntaxtree;
 import syntaxtree.visitor.*;
 
-public abstract class Statement {
-  public abstract void accept(Visitor v);
-  public abstract Type accept(TypeVisitor v);
+public interface Statement {
+  public void accept(Visitor v);
+  public Type accept(TypeVisitor v);
 }
