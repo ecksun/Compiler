@@ -6,11 +6,8 @@ import syntaxtree.visitor.*;
 
 public class StatementList extends ArrayList<Statement> implements Statement
 {
-    private ArrayList<Statement> list;
-
     public StatementList()
     {
-        list = new ArrayList<Statement>();
     }
 
     public void accept(Visitor v)
