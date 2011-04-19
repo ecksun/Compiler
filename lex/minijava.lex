@@ -85,7 +85,7 @@ Identifier = [:jletter:] [:jletterdigit:]*
     "-"                 { return symbol(sym.MINUS); }
     "*"                 { return symbol(sym.MULT); }
 
-    {Identifier}        { return symbol(sym.IDENTIFIER); }
+    {Identifier}        { return symbol(sym.IDENTIFIER, yytext()); }
 
     {WhiteSpace}        { /* Ignore */ }
     
