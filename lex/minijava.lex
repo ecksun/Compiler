@@ -1,7 +1,7 @@
 package lex;
 
-import java_cup.runtime.*;
-import java_cup.*;
+import java_cup.runtime.Symbol;
+import parser.sym;
 
 %%
 
@@ -45,46 +45,46 @@ Identifier = [:jletter:] [:jletterdigit:]*
 %%
 
 <YYINITIAL> {
-    "public"            { return symbol(SymbolName.PUBLIC); }
-    "class"             { return symbol(SymbolName.CLASS); }
-    "return"            { return symbol(SymbolName.RETURN); }
-    "length"            { return symbol(SymbolName.LENGTH); }
-    "this"              { return symbol(SymbolName.THIS); }
-    "new"               { return symbol(SymbolName.NEW); }
+    "public"            { return symbol(sym.PUBLIC); }
+    "class"             { return symbol(sym.CLASS); }
+    "return"            { return symbol(sym.RETURN); }
+    "length"            { return symbol(sym.LENGTH); }
+    "this"              { return symbol(sym.THIS); }
+    "new"               { return symbol(sym.NEW); }
 
 
-    "void"              { return symbol(SymbolName.VOID); }
-    "boolean"           { return symbol(SymbolName.BOOLEAN); }
-    "true"              { return symbol(SymbolName.FALSE); }
-    "false"             { return symbol(SymbolName.TRUE); }
-    "int"               { return symbol(SymbolName.INT); }
-    "String"            { return symbol(SymbolName.STRING); }
+    "void"              { return symbol(sym.VOID); }
+    "boolean"           { return symbol(sym.BOOLEAN); }
+    "true"              { return symbol(sym.FALSE); }
+    "false"             { return symbol(sym.TRUE); }
+    "int"               { return symbol(sym.INT); }
+    "String"            { return symbol(sym.STRING); }
 
-    "if"                { return symbol(SymbolName.IF); }
-    "else"              { return symbol(SymbolName.ELSE); }
-    "while"             { return symbol(SymbolName.WHILE); }
+    "if"                { return symbol(sym.IF); }
+    "else"              { return symbol(sym.ELSE); }
+    "while"             { return symbol(sym.WHILE); }
 
-    "System.out.println"    { return symbol(SymbolName.PRINT); }
+    "System.out.println"    { return symbol(sym.PRINT); }
 
-    "{"                 { return symbol(SymbolName.LBRACE); }
-    "}"                 { return symbol(SymbolName.RBRACE); }
-    "("                 { return symbol(SymbolName.LPAREN); }
-    ")"                 { return symbol(SymbolName.RPAREN); }
-    "["                 { return symbol(SymbolName.LBRACK); }
-    "]"                 { return symbol(SymbolName.RBRACK); }
-    ";"                 { return symbol(SymbolName.SEMICOLON); }
-    ","                 { return symbol(SymbolName.COMMA); }
-    "."                 { return symbol(SymbolName.DOT); } 
-    "="                 { return symbol(SymbolName.EQ); } 
-    "!"                 { return symbol(SymbolName.NOT); } 
+    "{"                 { return symbol(sym.LBRACE); }
+    "}"                 { return symbol(sym.RBRACE); }
+    "("                 { return symbol(sym.LPAREN); }
+    ")"                 { return symbol(sym.RPAREN); }
+    "["                 { return symbol(sym.LBRACK); }
+    "]"                 { return symbol(sym.RBRACK); }
+    ";"                 { return symbol(sym.SEMICOLON); }
+    ","                 { return symbol(sym.COMMA); }
+    "."                 { return symbol(sym.DOT); } 
+    "="                 { return symbol(sym.EQ); } 
+    "!"                 { return symbol(sym.NOT); } 
 
-    "&&"                { return symbol(SymbolName.ANDAND); }
-    "<"                 { return symbol(SymbolName.LT); }
-    "+"                 { return symbol(SymbolName.PLUS); }
-    "-"                 { return symbol(SymbolName.MINUS); }
-    "*"                 { return symbol(SymbolName.MULT); }
+    "&&"                { return symbol(sym.ANDAND); }
+    "<"                 { return symbol(sym.LT); }
+    "+"                 { return symbol(sym.PLUS); }
+    "-"                 { return symbol(sym.MINUS); }
+    "*"                 { return symbol(sym.MULT); }
 
-    {Identifier}        { return symbol(SymbolName.IDENTIFIER); }
+    {Identifier}        { return symbol(sym.IDENTIFIER); }
 
     {WhiteSpace}        { /* Ignore */ }
     

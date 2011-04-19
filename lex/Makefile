@@ -1,6 +1,6 @@
 lib_dir=../lib
 java_cup_jar=$(lib_dir)/java-cup-11a.jar
-javac_flags=-cp $(java_cup_jar):.
+javac_flags=-cp $(java_cup_jar):.:..
 
 JFLEX=$(lib_dir)/jflex/bin/jflex
 JAVAC=javac
