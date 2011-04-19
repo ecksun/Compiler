@@ -40,6 +40,8 @@ CommentContent       = ( [^*] | \*+ [^/*] )*
 
 Identifier = [:jletter:] [:jletterdigit:]*
 
+Number = [0-9]+
+
 %state STRING
 
 %%
@@ -86,6 +88,8 @@ Identifier = [:jletter:] [:jletterdigit:]*
     "*"                 { return symbol(sym.MULT); }
 
     {Identifier}        { return symbol(sym.IDENTIFIER, yytext()); }
+
+    {Number}           { return symbol(sym.NUMBER, Integer.parseInt(yytext())); }
 
     {WhiteSpace}        { /* Ignore */ }
     
