@@ -12,6 +12,7 @@ import java_cup.*;
 %column
 %cup
 %int
+%debug
 
 %{
     StringBuilder string = new StringBuilder();
@@ -36,6 +37,8 @@ TraditionalComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}
 DocumentationComment = "/**" {CommentContent} "*"+ "/"
 CommentContent       = ( [^*] | \*+ [^/*] )*
+
+Identifier = [:jletter:] [:jletterdigit:]*
 
 %state STRING
 
@@ -81,7 +84,9 @@ CommentContent       = ( [^*] | \*+ [^/*] )*
     "-"                 { return symbol(SymbolName.MINUS); }
     "*"                 { return symbol(SymbolName.MULT); }
 
-    {WhiteSpace}        { }
+    {Identifier}        { return symbol(SymbolName.IDENTIFIER); }
+
+    {WhiteSpace}        { /* Ignore */ }
     
     {Comment}           { }
 }

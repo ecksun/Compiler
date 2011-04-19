@@ -35,4 +35,5 @@ public static int PLUS       = 1366;
 public static int MINUS      = 1367;   
 public static int MULT       = 1368; 
 public static int NUMBER     = 1369;
+public static int IDENTIFIER = 1370;
 }
