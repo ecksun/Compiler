@@ -1,7 +1,7 @@
 package syntaxtree;
 import syntaxtree.visitor.*;
 
-public class While extends Statement {
+public class While implements Statement {
   public Exp e;
   public Statement s;
 

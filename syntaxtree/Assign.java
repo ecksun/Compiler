@@ -1,7 +1,7 @@
 package syntaxtree;
 import syntaxtree.visitor.*;
 
-public class Assign extends Statement {
+public class Assign implements Statement {
   public Identifier i;
   public Exp e;
 

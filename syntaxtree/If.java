@@ -1,7 +1,7 @@
 package syntaxtree;
 import syntaxtree.visitor.*;
 
-public class If extends Statement {
+public class If implements Statement {
   public Exp e;
   public Statement s1,s2;
 

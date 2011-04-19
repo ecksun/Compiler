@@ -1,7 +1,7 @@
 package syntaxtree;
 import syntaxtree.visitor.*;
 
-public class Block extends Statement {
+public class Block implements Statement {
   public StatementList sl;
 
   public Block(StatementList asl) {

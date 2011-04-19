@@ -1,7 +1,7 @@
 package syntaxtree;
 import syntaxtree.visitor.*;
 
-public class Print extends Statement {
+public class Print implements Statement {
   public Exp e;
 
   public Print(Exp ae) {

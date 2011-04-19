@@ -1,7 +1,7 @@
 package syntaxtree;
 import syntaxtree.visitor.*;
 
-public class ArrayAssign extends Statement {
+public class ArrayAssign implements Statement {
   public Identifier id;
   public Exp index,value;
 
