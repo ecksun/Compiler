@@ -47,6 +47,7 @@ Identifier = [:jletter:] [:jletterdigit:]*
 <YYINITIAL> {
     "public"            { return symbol(sym.PUBLIC); }
     "class"             { return symbol(sym.CLASS); }
+    "static"            { return symbol(sym.STATIC); }
     "return"            { return symbol(sym.RETURN); }
     "length"            { return symbol(sym.LENGTH); }
     "this"              { return symbol(sym.THIS); }
