@@ -5,16 +5,15 @@ javac_flags=-cp $(java_cup_jar):.
 JFLEX=$(lib_dir)/jflex/bin/jflex
 JAVAC=javac
 
-.PHONY: all clean
+.PHONY: all clean classes
 
-all: SymbolName.class Lexer.java Lexer.class
+all: Lexer.java classes
 
-clean:
-	-rm -f *.class Lexer.java
+classes: *.java
+	$(JAVAC) $(javac_flags) $^
 
 Lexer.java: minijava.lex
 	$(JFLEX) $<
 
-%.class: %.java
-	$(JAVAC) $(javac_flags) $<
-
+clean:
+	-rm -f *.class Lexer.java
