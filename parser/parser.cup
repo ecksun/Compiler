@@ -7,7 +7,7 @@ import java.util.*;
 // init with {: getScanner().init(); :};
 scan with {: return getScanner().next_token(); :};
 
-terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, STATIC, empty;
+terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, STATIC;
 
 terminal String IDENTIFIER;
 terminal Boolean TRUE, FALSE;
@@ -55,7 +55,7 @@ ClassDeclList   ::= ClassDecl:classDecl ClassDeclList:list
     list.add(classDecl);
     RESULT = list; 
 :}
-                |   empty
+                |   
 {:
     RESULT = new ArrayList<ClassDecl>(); 
 :}
@@ -65,12 +65,12 @@ ClassDecl   ::= CLASS Identifier:id LBRACE VarDeclList:varDeclList MethodDeclLis
 {:
     RESULT = new ClassDeclSimple(id, varDeclList, methodDeclList);
 :}
-            |   empty
+            |   
             ;
 
-MainClass   ::= CLASS Identifier:className LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACK RBRACK Identifier:args RPAREN LBRACE StatementList:statementList RBRACE RBRACE
+MainClass   ::= CLASS Identifier:className LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACK RBRACK Identifier:args RPAREN LBRACE RBRACE RBRACE
 {:
-    RESULT = new MainClass(className, args, statementList);
+    RESULT = new MainClass(className, args, new StatementList());
 :}
             ;
 
@@ -79,7 +79,7 @@ VarDeclList ::= VarDecl:varDecl VarDeclList:list
     list.add(varDecl); 
     RESULT = list;
 :}
-            |   empty
+            |   
 {: 
     RESULT = new ArrayList<VarDecl>(); 
 :}
@@ -96,7 +96,7 @@ MethodDeclList  ::= MethodDecl:methodDecl MethodDeclList:list
     list.add(methodDecl); 
     RESULT = list;
 :}
-                |   empty
+                |   
 {: 
     RESULT = new ArrayList<MethodDecl>(); 
 :}
@@ -119,7 +119,7 @@ FormalList  ::= Formal:formal FormalRest:list
     list.add(formal);
     RESULT = list;
 :}
-            |   empty
+            |   
 {:
     RESULT = new ArrayList<Formal>();
 :}
@@ -130,7 +130,7 @@ FormalRest ::= COMMA Formal:formal FormalRest:list
     list.add(formal);
     RESULT = list;
 :}
-            |   empty
+            |   
 {:
     RESULT = new ArrayList<Formal>();
 :}
@@ -151,7 +151,7 @@ StatementList   ::= Statement:stm StatementList:list
     list.add(stm); 
     RESULT = list;
 :}
-                |   empty
+                |   
 {:
     RESULT = new StatementList();
 :}
@@ -233,7 +233,7 @@ ExpRest ::= COMMA Exp:exp ExpRest:list
 list.add(exp); 
 RESULT = list;
 :}
-        |   empty
+        |   
 {: RESULT = new ArrayList<Exp>(); :}
         ;
 

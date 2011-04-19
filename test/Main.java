@@ -27,7 +27,7 @@ public class Main {
 
         try {
             parser p = new parser(scanner);
-            Object result = p.parse().value;
+            Object result = p.debug_parse().value;
             System.out.println(result.toString());
             
             
