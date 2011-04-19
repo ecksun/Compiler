@@ -54,6 +54,7 @@ Number = [0-9]+
     "length"            { return symbol(sym.LENGTH); }
     "this"              { return symbol(sym.THIS); }
     "new"               { return symbol(sym.NEW); }
+    "main"              { return symbol(sym.MAIN); }
 
 
     "void"              { return symbol(sym.VOID); }

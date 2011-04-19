@@ -7,7 +7,7 @@ import java.util.*;
 // init with {: getScanner().init(); :};
 scan with {: return getScanner().next_token(); :};
 
-terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, STATIC;
+terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, STATIC, MAIN;
 
 terminal String IDENTIFIER;
 terminal Boolean TRUE, FALSE;
@@ -71,7 +71,7 @@ ClassDecl   ::= CLASS Identifier:id LBRACE VarDeclList:varDeclList MethodDeclLis
 :}
             ;
 
-MainClass   ::= CLASS Identifier:className LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACK RBRACK Identifier:args RPAREN LBRACE StatementList:statements RBRACE RBRACE
+MainClass   ::= CLASS Identifier:className LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACK RBRACK Identifier:args RPAREN LBRACE StatementList:statements RBRACE RBRACE
 {:
     RESULT = new MainClass(className, args, statements);
 :}
