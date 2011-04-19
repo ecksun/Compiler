@@ -1,7 +1,6 @@
 lib_dir=../lib
 java_cup_jar=$(lib_dir)/java-cup-11a.jar
-
-java_cp=.:../lex:../parser:$(java_cup_jar)
+java_cp=..:$(java_cup_jar)
 
 JAVA=java
 JAVA_FLAGS=-cp $(java_cp)
