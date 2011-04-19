@@ -10,5 +10,5 @@ classes: *.java visitor/*.java
 	$(JAVAC) $(JAVAC_FLAGS) $^
 
 clean:
-	-rm -f *.class
+	-rm -f *.class visitor/*.class
 
