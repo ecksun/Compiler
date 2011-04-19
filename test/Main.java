@@ -2,6 +2,8 @@ package test;
 
 import lex.*;
 import parser.*;
+import syntaxtree.Program;
+import syntaxtree.visitor.SyntaxTreePrinter;
 
 public class Main {
 
@@ -30,6 +32,8 @@ public class Main {
             Object result = p.debug_parse().value;
             System.out.println(result.toString());
             
+            SyntaxTreePrinter visitor = new SyntaxTreePrinter(System.out);
+            ((Program)result).accept(visitor);
             
 //            IdentificationVisitor identification = new IdentificationVisitor();
 //            ((Prog)result).accept( identification );
