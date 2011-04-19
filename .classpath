@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="parser/|lib/jflex/examples/binary/|lib/jflex/examples/standalone-maven/src/test/java/|lib/jflex/examples/cup/|lib/jflex/src/|lib/jflex/examples/simple/|lib/jflex/examples/simple-maven/src/main/java/|lib/jflex/examples/simple-maven/src/test/java/|test/|lib/jflex/examples/interpreter/|lex/|lib/jflex/examples/java/" kind="src" path=""/>
-	<classpathentry kind="src" path="lex"/>
-	<classpathentry kind="src" path="lib/jflex/examples/binary"/>
-	<classpathentry kind="src" path="lib/jflex/examples/cup"/>
-	<classpathentry kind="src" path="lib/jflex/examples/interpreter"/>
-	<classpathentry kind="src" path="lib/jflex/examples/java"/>
-	<classpathentry kind="src" path="lib/jflex/examples/simple"/>
-	<classpathentry kind="src" path="lib/jflex/examples/simple-maven/src/main/java"/>
-	<classpathentry kind="src" path="lib/jflex/examples/simple-maven/src/test/java"/>
-	<classpathentry kind="src" path="lib/jflex/examples/standalone-maven/src/test/java"/>
-	<classpathentry kind="src" path="lib/jflex/src"/>
-	<classpathentry kind="src" path="parser"/>
-	<classpathentry kind="src" path="test"/>
+	<classpathentry excluding="lib/|lib/" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib"/>
+	<classpathentry kind="lib" path="lib/java-cup-11a.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

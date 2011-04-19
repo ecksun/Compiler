@@ -1,4 +1,7 @@
-import java.io.*;
+package test;
+
+import lex.*;
+import parser.*;
 
 public class Main {
 
@@ -26,6 +29,8 @@ public class Main {
             parser p = new parser(scanner);
             Object result = p.parse().value;
             System.out.println(result.toString());
+            
+            
 //            IdentificationVisitor identification = new IdentificationVisitor();
 //            ((Prog)result).accept( identification );
 //            System.out.println("Code:\n");

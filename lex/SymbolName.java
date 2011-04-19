@@ -1,3 +1,4 @@
+package lex;
 
 public class SymbolName {
 

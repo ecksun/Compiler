@@ -1,9 +1,12 @@
+package lex;
+
 import java_cup.runtime.*;
 import java_cup.*;
 
 %%
 
 %class Lexer
+%public
 %unicode
 %line
 %column
