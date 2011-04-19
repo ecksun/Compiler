@@ -32,6 +32,10 @@ non terminal Formal Formal;
 non terminal List<Formal> FormalList, FormalRest;
 non terminal Identifier Identifier;
 
+// XXX: behövs detta?
+//precedence left PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, STATIC;
+
+precedence left IDENTIFIER;
 
 precedence left ANDAND;
 precedence left LT;
@@ -65,7 +69,6 @@ ClassDecl   ::= CLASS Identifier:id LBRACE VarDeclList:varDeclList MethodDeclLis
 {:
     RESULT = new ClassDeclSimple(id, varDeclList, methodDeclList);
 :}
-            |   
             ;
 
 MainClass   ::= CLASS Identifier:className LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACK RBRACK Identifier:args RPAREN LBRACE RBRACE RBRACE
