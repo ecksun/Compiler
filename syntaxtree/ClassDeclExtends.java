@@ -1,14 +1,16 @@
 package syntaxtree;
+import java.util.*;
+
 import syntaxtree.visitor.*;
 
 public class ClassDeclExtends extends ClassDecl {
   public Identifier i;
   public Identifier j;
-  public VarDeclList vl;  
-  public MethodDeclList ml;
+  public List<VarDecl> vl;  
+  public List<MethodDecl> ml;
  
   public ClassDeclExtends(Identifier ai, Identifier aj, 
-                  VarDeclList avl, MethodDeclList aml) {
+                  List<VarDecl> avl, List<MethodDecl> aml) {
     i=ai; j=aj; vl=avl; ml=aml;
   }
 
