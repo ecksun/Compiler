@@ -2,11 +2,11 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class MainClass {
-  public Identifier i1,i2;
-  public StatementList s;
+  public Identifier className,argv;
+  public StatementList statements;
 
   public MainClass(Identifier ai1, Identifier ai2, StatementList as) {
-    i1=ai1; i2=ai2; s=as;
+    className=ai1; argv=ai2; statements=as;
   }
 
   public void accept(Visitor v) {

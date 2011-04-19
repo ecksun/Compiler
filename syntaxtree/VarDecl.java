@@ -2,11 +2,11 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class VarDecl {
-  public Type t;
-  public Identifier i;
+  public Type type;
+  public Identifier name;
   
   public VarDecl(Type at, Identifier ai) {
-    t=at; i=ai;
+    type=at; name=ai;
   }
 
   public void accept(Visitor v) {

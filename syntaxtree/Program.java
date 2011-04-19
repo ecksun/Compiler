@@ -6,13 +6,13 @@ import syntaxtree.visitor.*;
 
 public class Program
 {
-    public MainClass m;
-    public List<ClassDecl> cl;
+    public MainClass main;
+    public List<ClassDecl> classDecls;
 
     public Program(MainClass am, List<ClassDecl> acl)
     {
-        m = am;
-        cl = acl;
+        main = am;
+        classDecls = acl;
     }
 
     public void accept(Visitor v)

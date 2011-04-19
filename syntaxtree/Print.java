@@ -2,10 +2,10 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class Print implements Statement {
-  public Exp e;
+  public Exp exp;
 
   public Print(Exp ae) {
-    e=ae; 
+    exp=ae; 
   }
 
   public void accept(Visitor v) {

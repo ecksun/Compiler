@@ -6,22 +6,22 @@ import syntaxtree.visitor.*;
 
 public class MethodDecl
 {
-    public Type t;
-    public Identifier i;
-    public List<Formal> fl;
-    public List<VarDecl> vl;
-    public List<Statement> sl;
-    public Exp e;
+    public Type retType;
+    public Identifier methodName;
+    public List<Formal> args;
+    public List<VarDecl> varDecls;
+    public List<Statement> statements;
+    public Exp returnExpression;
 
     public MethodDecl(Type at, Identifier ai, List<Formal> afl,
             List<VarDecl> avl, StatementList asl, Exp ae)
     {
-        t = at;
-        i = ai;
-        fl = afl;
-        vl = avl;
-        sl = asl;
-        e = ae;
+        retType = at;
+        methodName = ai;
+        args = afl;
+        varDecls = avl;
+        statements = asl;
+        returnExpression = ae;
     }
 
     public void accept(Visitor v)

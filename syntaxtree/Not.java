@@ -2,10 +2,10 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class Not extends Exp {
-  public Exp e;
+  public Exp exp;
   
   public Not(Exp ae) {
-    e=ae; 
+    exp=ae; 
   }
 
   public void accept(Visitor v) {

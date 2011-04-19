@@ -2,11 +2,11 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class Assign implements Statement {
-  public Identifier i;
-  public Exp e;
+  public Identifier id;
+  public Exp exp;
 
   public Assign(Identifier ai, Exp ae) {
-    i=ai; e=ae; 
+    id=ai; exp=ae; 
   }
 
   public void accept(Visitor v) {

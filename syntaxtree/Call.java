@@ -6,17 +6,17 @@ import syntaxtree.visitor.*;
 
 public class Call extends Exp
 {
-    public Exp e;
+    public Exp obj;
     public String c = null; // class of e
 
-    public Identifier i;
-    public List<Exp> el;
+    public Identifier method;
+    public List<Exp> args;
 
     public Call(Exp ae, Identifier ai, List<Exp> ael)
     {
-        e = ae;
-        i = ai;
-        el = ael;
+        obj = ae;
+        method = ai;
+        args = ael;
     }
 
     public void accept(Visitor v)

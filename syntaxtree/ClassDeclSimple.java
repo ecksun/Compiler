@@ -6,16 +6,16 @@ import syntaxtree.visitor.*;
 
 public class ClassDeclSimple extends ClassDecl
 {
-    public Identifier i;
-    public List<VarDecl> vl;
-    public List<MethodDecl> ml;
+    public Identifier id;
+    public List<VarDecl> varDecls;
+    public List<MethodDecl> methodDecls;
 
     public ClassDeclSimple(Identifier ai, List<VarDecl> avl,
             List<MethodDecl> aml)
     {
-        i = ai;
-        vl = avl;
-        ml = aml;
+        id = ai;
+        varDecls = avl;
+        methodDecls = aml;
     }
 
     public void accept(Visitor v)

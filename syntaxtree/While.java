@@ -2,11 +2,11 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class While implements Statement {
-  public Exp e;
-  public Statement s;
+  public Exp exp;
+  public Statement stm;
 
   public While(Exp ae, Statement as) {
-    e=ae; s=as; 
+    exp=ae; stm=as; 
   }
 
   public void accept(Visitor v) {

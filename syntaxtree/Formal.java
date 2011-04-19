@@ -2,11 +2,11 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class Formal {
-  public Type t;
-  public Identifier i;
+  public Type type;
+  public Identifier name;
  
   public Formal(Type at, Identifier ai) {
-    t=at; i=ai;
+    type=at; name=ai;
   }
 
   public void accept(Visitor v) {

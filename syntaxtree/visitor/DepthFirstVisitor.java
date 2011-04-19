@@ -35,162 +35,168 @@ public class DepthFirstVisitor implements Visitor
     @Override
     public void visit(Call call)
     {
-        // TODO Auto-generated method stub
-        
+        for (Exp exp : call.args) {
+            exp.accept(this);
+        }
+        call.obj.accept(this);
+        call.method.accept(this);
     }
 
     @Override
     public void visit(ArrayLookup arrayLookup)
     {
-        // TODO Auto-generated method stub
-        
+        arrayLookup.index.accept(this);
+        arrayLookup.id.accept(this);
     }
 
     @Override
     public void visit(Assign assign)
     {
-        // TODO Auto-generated method stub
-        
+        assign.exp.accept(this);
+        assign.id.accept(this);
     }
 
     @Override
     public void visit(Block block)
     {
-        // TODO Auto-generated method stub
-        
+        // FIXME Block is unused
     }
 
     @Override
     public void visit(BooleanType booleanType)
     {
-        // TODO Auto-generated method stub
-        
+        // Nothing to be done, this is a leaf
     }
 
     @Override
     public void visit(MethodDecl methodDecl)
     {
-        // TODO Auto-generated method stub
-        
+        methodDecl.retType.accept(this);
+        methodDecl.methodName.accept(this);
+        for (Formal arg : methodDecl.args) {
+            arg.accept(this);
+        }
+        for (VarDecl decl : methodDecl.varDecls)
+            decl.accept(this);
+        for (Statement statement : methodDecl.statements)
+            statement.accept(this);
+        methodDecl.returnExpression.accept(this);
     }
 
     @Override
     public void visit(MainClass mainClass)
     {
-        // TODO Auto-generated method stub
-        
+        mainClass.className.accept(this);
+        mainClass.argv.accept(this);
+        for (Statement statement : mainClass.statements)
+            statement.accept(this);
     }
 
     @Override
     public void visit(LessThan lessThan)
     {
-        // TODO Auto-generated method stub
-        
+        lessThan.left.accept(this);
+        lessThan.right.accept(this);
     }
 
     @Override
     public void visit(IntegerType integerType)
     {
-        // TODO Auto-generated method stub
-        
+        // Nothing to be done, this is a leaf
     }
 
     @Override
     public void visit(IntegerLiteral integerLiteral)
     {
-        // TODO Auto-generated method stub
-        
+        // Nothing to be done, this is a leaf        
     }
 
     @Override
     public void visit(IntArrayType intArrayType)
     {
-        // TODO Auto-generated method stub
-        
+        // Nothing to be done, this is a leaf        
     }
 
     @Override
     public void visit(If if1)
     {
-        // TODO Auto-generated method stub
-        
+        if1.exp.accept(this);
+        if1.ifStm.accept(this);
+        if1.elseStm.accept(this);
     }
 
     @Override
     public void visit(IdentifierType identifierType)
     {
-        // TODO Auto-generated method stub
-        
+        // Nothing to be done, this is a leaf
     }
 
     @Override
     public void visit(IdentifierExp identifierExp)
     {
-        // TODO Auto-generated method stub
-        
+        // Nothing to be done, this is a leaf        
     }
 
     @Override
     public void visit(Identifier identifier)
     {
-        // TODO Auto-generated method stub
-        
+        // Nothing to be done, this is a leaf        
     }
 
     @Override
     public void visit(Formal formal)
     {
-        // TODO Auto-generated method stub
-        
+        formal.type.accept(this);
+        formal.name.accept(this);
     }
 
     @Override
-    public void visit(False false1)
+    public void visit(False fals)
     {
-        // TODO Auto-generated method stub
-        
+        // Nothing to be done, this is a leaf
     }
 
     @Override
     public void visit(ClassDeclSimple classDeclSimple)
     {
-        // TODO Auto-generated method stub
-        
+        classDeclSimple.id.accept(this);
+        for (VarDecl varDecl : classDeclSimple.varDecls)
+            varDecl.accept(this);
+        for (MethodDecl methodDecl : classDeclSimple.methodDecls)
+            methodDecl.accept(this);
     }
 
     @Override
     public void visit(ClassDeclExtends classDeclExtends)
     {
-        // TODO Auto-generated method stub
-        
+        // FIXME Unused
     }
 
     @Override
     public void visit(Program program)
     {
-        // TODO Auto-generated method stub
-        
+        program.main.accept(this);
+        for (ClassDecl classDecl : program.classDecls)
+            classDecl.accept(this);
     }
 
     @Override
     public void visit(Print print)
     {
-        // TODO Auto-generated method stub
-        
+        print.exp.accept(this);
     }
 
     @Override
     public void visit(Plus plus)
     {
-        // TODO Auto-generated method stub
-        
+        plus.left.accept(this);
+        plus.right.accept(this);
     }
 
     @Override
     public void visit(Not not)
     {
-        // TODO Auto-generated method stub
-        
+        not.exp.accept(this);
     }
 
     @Override
@@ -203,56 +209,53 @@ public class DepthFirstVisitor implements Visitor
     @Override
     public void visit(NewArray newArray)
     {
-        // TODO Auto-generated method stub
-        
+        newArray.exp.accept(this);
     }
 
     @Override
     public void visit(Minus minus)
     {
-        // TODO Auto-generated method stub
-        
+        minus.left.accept(this);
+        minus.right.accept(this);
     }
 
     @Override
-    public void visit(While while1)
+    public void visit(While whil)
     {
-        // TODO Auto-generated method stub
-        
+        whil.exp.accept(this);
+        whil.stm.accept(this);
     }
 
     @Override
     public void visit(VarDecl varDecl)
     {
-        // TODO Auto-generated method stub
-        
+        varDecl.type.accept(this);
+        varDecl.name.accept(this);
     }
 
     @Override
-    public void visit(True true1)
+    public void visit(True tru)
     {
-        // TODO Auto-generated method stub
-        
+        // Nothing to be done, this is a leaf        
     }
 
     @Override
     public void visit(Times times)
     {
-        // TODO Auto-generated method stub
-        
+        times.left.accept(this);
+        times.right.accept(this);
     }
 
     @Override
-    public void visit(This this1)
+    public void visit(This ths)
     {
-        // TODO Auto-generated method stub
-        
+        // Nothing to be done, this is a leaf
     }
 
     @Override
     public void visit(StatementList statementList) {
-	// TODO Auto-generated method stub
-	
+        for (Statement stm : statementList)
+            stm.accept(this);
     }
 
 }

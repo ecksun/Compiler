@@ -2,10 +2,10 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class ArrayLookup extends Exp {
-  public Exp e1,e2;
+  public Exp id,index;
   
   public ArrayLookup(Exp ae1, Exp ae2) { 
-    e1=ae1; e2=ae2;
+    id=ae1; index=ae2;
   }
 
   public void accept(Visitor v) {
