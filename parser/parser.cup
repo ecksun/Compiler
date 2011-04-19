@@ -71,7 +71,7 @@ ClassDecl   ::= CLASS Identifier:id LBRACE VarDeclList:varDeclList MethodDeclLis
 :}
             ;
 
-MainClass   ::= CLASS Identifier:className LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACK RBRACK Identifier:args RPAREN LBRACE RBRACE RBRACE
+MainClass   ::= CLASS Identifier:className LBRACE PUBLIC STATIC VOID IDENTIFIER LPAREN STRING LBRACK RBRACK Identifier:args RPAREN LBRACE StatementList RBRACE RBRACE
 {:
     RESULT = new MainClass(className, args, new StatementList());
 :}
