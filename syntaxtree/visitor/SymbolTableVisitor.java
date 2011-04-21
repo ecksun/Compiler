@@ -104,8 +104,7 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
             currentScope.addType(method);
         }
         catch (VariableDupeException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            complain(e.toString());
         }
         newScope();
         super.visit(method);
@@ -119,8 +118,18 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
             currentScope.addType(decl);
         }
         catch (VariableDupeException e) {
-            error = true;
-            e.printStackTrace();
+            complain(e.toString());
         }
+    }
+    
+    /**
+     * Complains with the given error message and flag this 
+     * {@link ErrorCollector} as having errors.
+     * 
+     * @param errorMessage The error message to output.
+     */
+    private void complain(String errorMessage) {
+	error = true;
+	System.out.println(errorMessage);
     }
 }

@@ -69,7 +69,7 @@ public class TypeMapping
     public void addType(VarDecl decl) throws VariableDupeException
     {
         if (typemap.containsKey(decl.name))
-            throw new VariableDupeException();
+            throw new VariableDupeException(decl.name.name);
         typemap.put(decl.name.name, decl.type.getClass().getName());
         System.out.println("|- " + decl.name.name + " => "
                 + getType(decl.name.name));
@@ -84,7 +84,7 @@ public class TypeMapping
     public void addType(MethodDecl decl) throws VariableDupeException
     {
         if (typemap.containsKey(decl.methodName))
-            throw new VariableDupeException();
+            throw new VariableDupeException(decl.methodName.name);
         typemap.put(decl.methodName.name, decl.retType.getClass().getName());
         System.out.println("|- " + decl.methodName.name + " => "
                 + getType(decl.methodName.name));
