@@ -1,7 +1,7 @@
 /**
- * This should pass grammar parse phase, but fail later.
+ * Correct program 2.
  */
-class Test01 {
+class Test2 {
 
     public static void main(String[] args) {
 

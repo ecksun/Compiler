@@ -42,6 +42,7 @@ Identifier = [:jletter:] [:jletterdigit:]*
 
 Number = [0-9]+
 
+/* XXX Why is this here? */
 %state STRING
 
 %%
