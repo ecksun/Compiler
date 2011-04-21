@@ -59,7 +59,9 @@ public class DepthFirstVisitor implements Visitor
     @Override
     public void visit(Block block)
     {
-        // FIXME Block is unused
+        for (Statement stm : block.statements) {
+            stm.accept(this);
+        }
     }
 
     @Override

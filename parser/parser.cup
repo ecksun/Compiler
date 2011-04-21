@@ -161,7 +161,7 @@ StatementList   ::= Statement:stm StatementList:list
                 ;
 
 Statement ::= LBRACE StatementList:list RBRACE
-{:  RESULT = list; :}
+{:  RESULT = new Block(list); :}
             | IF LPAREN Exp:exp RPAREN Statement:ifStm ELSE Statement:elseStm
 {: RESULT = new If(exp, ifStm, elseStm); :}
             | WHILE LPAREN Exp:exp RPAREN Statement:stm

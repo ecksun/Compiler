@@ -2,10 +2,10 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class Block implements Statement {
-  public StatementList sl;
+  public StatementList statements;
 
   public Block(StatementList asl) {
-    sl=asl;
+    statements=asl;
   }
 
   public void accept(Visitor v) {

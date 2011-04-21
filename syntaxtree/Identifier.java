@@ -2,10 +2,10 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class Identifier {
-  public String s;
+  public String name;
 
   public Identifier(String as) { 
-    s=as;
+    name=as;
   }
 
   public void accept(Visitor v) {
@@ -17,6 +17,6 @@ public class Identifier {
   }
 
   public String toString(){
-    return s;
+    return name;
   }
 }

@@ -4,6 +4,8 @@ import lex.*;
 import parser.*;
 import syntaxtree.Program;
 import syntaxtree.visitor.SyntaxTreePrinter;
+import syntaxtree.visitor.TypeCheckVisitor;
+import syntaxtree.visitor.Visitor;
 
 public class Main {
 
@@ -32,7 +34,11 @@ public class Main {
             Object result = p.debug_parse().value;
             System.out.println(result.toString());
             
-            SyntaxTreePrinter visitor = new SyntaxTreePrinter(System.out);
+            Visitor visitor = new SyntaxTreePrinter(System.out);
+            ((Program)result).accept(visitor);
+            
+            System.out.println("TypeCheckVisitor:");
+            visitor = new TypeCheckVisitor();
             ((Program)result).accept(visitor);
             
 //            IdentificationVisitor identification = new IdentificationVisitor();
