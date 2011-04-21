@@ -1,10 +1,10 @@
 package test;
 
-import lex.*;
-import parser.*;
+import lex.Lexer;
+import parser.parser;
 import syntaxtree.Program;
+import syntaxtree.visitor.SymbolTableVisitor;
 import syntaxtree.visitor.SyntaxTreePrinter;
-import syntaxtree.visitor.TypeCheckVisitor;
 import syntaxtree.visitor.Visitor;
 
 public class Main {
@@ -38,7 +38,7 @@ public class Main {
             ((Program)result).accept(visitor);
             
             System.out.println("TypeCheckVisitor:");
-            visitor = new TypeCheckVisitor();
+            visitor = new SymbolTableVisitor();
             ((Program)result).accept(visitor);
             
 //            IdentificationVisitor identification = new IdentificationVisitor();
