@@ -37,6 +37,39 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
         exception = null;
     }
 
+    @Override
+    public Exception getError()
+    {
+        if (exception == null)
+            return null;
+        return exception;
+    }
+
+    @Override
+    public boolean hasErrors()
+    {
+        return error;
+    }
+
+    private void newScope()
+    {
+        ++level;
+        printLevel();
+        currentScope = new TypeMapping(currentScope);
+    }
+
+    private void outOfScope()
+    {
+        currentScope = currentScope.parent;
+        --level;
+    }
+
+    private void printLevel()
+    {
+        for (int i = 0; i < level; ++i)
+            System.out.print("  ");
+    }
+
     public void visit(Block block)
     {
         newScope();
@@ -79,19 +112,6 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
         outOfScope();
     }
 
-    private void newScope()
-    {
-        ++level;
-        printLevel();
-        currentScope = new TypeMapping(currentScope);
-    }
-
-    private void outOfScope()
-    {
-        currentScope = currentScope.parent;
-        --level;
-    }
-
     public void visit(VarDecl decl)
     {
         printLevel();
@@ -102,25 +122,5 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
             error = true;
             e.printStackTrace();
         }
-    }
-
-    private void printLevel()
-    {
-        for (int i = 0; i < level; ++i)
-            System.out.print("  ");
-    }
-
-    @Override
-    public boolean hasErrors()
-    {
-        return error;
-    }
-
-    @Override
-    public Exception getError()
-    {
-        if (exception == null)
-            return null;
-        return exception;
     }
 }
