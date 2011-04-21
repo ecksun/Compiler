@@ -12,17 +12,19 @@ class Test4A {
     // a has already been declared.
     int a;
 
-    int x;
-    boolean y;
-    int[] z;
+    int b;
+    // b has already been declared.
+    boolean b;
+    // b has already been declared.
+    int[] b;
 
     public Test4B getTest4B() {
-        // x has already been declared in this scope.
-        boolean x;
-        // y has already been declared in this scope.
-        int[] y;
-        // z has already been declared in this scope.
-        int z;
+        int a;
+        int b;
+        // b has already been declared.
+        boolean b;
+        // b has already been declared.
+        int[] b;
 
         return new Test4B();
     }

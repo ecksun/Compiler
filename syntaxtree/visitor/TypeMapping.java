@@ -1,7 +1,6 @@
 /*
  * TODO:
  * - Fix nicer debug output
- * - Recurse upwards to check for dup var declarations in addType().
  */
 
 package syntaxtree.visitor;
