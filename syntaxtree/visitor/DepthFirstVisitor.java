@@ -8,70 +8,78 @@ import syntaxtree.*;
 /**
  *
  */
-public class DepthFirstVisitor implements Visitor
+public class DepthFirstVisitor implements Visitor<Void>
 {
 
     @Override
-    public void visit(And and)
+    public Void visit(And and)
     {
         and.e1.accept(this);
         and.e2.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(ArrayAssign arrayAssign)
+    public Void visit(ArrayAssign arrayAssign)
     {
         arrayAssign.id.accept(this);
         arrayAssign.index.accept(this);
         arrayAssign.value.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(ArrayLength arrayLength)
+    public Void visit(ArrayLength arrayLength)
     {
         arrayLength.exp.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(Call call)
+    public Void visit(Call call)
     {
         for (Exp exp : call.args) {
             exp.accept(this);
         }
         call.obj.accept(this);
         call.method.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(ArrayLookup arrayLookup)
+    public Void visit(ArrayLookup arrayLookup)
     {
         arrayLookup.index.accept(this);
         arrayLookup.id.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(Assign assign)
+    public Void visit(Assign assign)
     {
         assign.exp.accept(this);
         assign.id.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(Block block)
+    public Void visit(Block block)
     {
         for (Statement stm : block.statements) {
             stm.accept(this);
         }
+        return null;
     }
 
     @Override
-    public void visit(BooleanType booleanType)
+    public Void visit(BooleanType booleanType)
     {
         // Nothing to be done, this is a leaf
+        return null;
     }
 
     @Override
-    public void visit(MethodDecl methodDecl)
+    public Void visit(MethodDecl methodDecl)
     {
         methodDecl.retType.accept(this);
         methodDecl.methodName.accept(this);
@@ -83,181 +91,217 @@ public class DepthFirstVisitor implements Visitor
         for (Statement statement : methodDecl.statements)
             statement.accept(this);
         methodDecl.returnExpression.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(MainClass mainClass)
+    public Void visit(MainClass mainClass)
     {
         mainClass.className.accept(this);
         mainClass.argv.accept(this);
         for (Statement statement : mainClass.statements)
             statement.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(LessThan lessThan)
+    public Void visit(LessThan lessThan)
     {
         lessThan.left.accept(this);
         lessThan.right.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(IntegerType integerType)
+    public Void visit(IntegerType integerType)
     {
         // Nothing to be done, this is a leaf
+        return null;
     }
 
     @Override
-    public void visit(IntegerLiteral integerLiteral)
+    public Void visit(IntegerLiteral integerLiteral)
     {
-        // Nothing to be done, this is a leaf        
+        // Nothing to be done, this is a leaf
+        return null;
     }
 
     @Override
-    public void visit(IntArrayType intArrayType)
+    public Void visit(IntArrayType intArrayType)
     {
-        // Nothing to be done, this is a leaf        
+        // Nothing to be done, this is a leaf
+        return null;
+    }
+    
+    @Override
+    public Void visit(CustomType customType)
+    {
+        customType.id.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(If if1)
+    public Void visit(If if1)
     {
         if1.exp.accept(this);
         if1.ifStm.accept(this);
         if1.elseStm.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(IdentifierType identifierType)
+    public Void visit(IdentifierType identifierType)
     {
         // Nothing to be done, this is a leaf
+        return null;
     }
 
     @Override
-    public void visit(IdentifierExp identifierExp)
+    public Void visit(IdentifierExp identifierExp)
     {
-        // Nothing to be done, this is a leaf        
+        // Nothing to be done, this is a leaf
+        return null;
     }
 
     @Override
-    public void visit(Identifier identifier)
+    public Void visit(Identifier identifier)
     {
-        // Nothing to be done, this is a leaf        
+        // Nothing to be done, this is a leaf
+        return null;
     }
 
     @Override
-    public void visit(Formal formal)
+    public Void visit(Formal formal)
     {
         formal.type.accept(this);
         formal.name.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(False fals)
+    public Void visit(False fals)
     {
         // Nothing to be done, this is a leaf
+        return null;
     }
 
     @Override
-    public void visit(ClassDeclSimple classDeclSimple)
+    public Void visit(ClassDeclSimple classDeclSimple)
     {
         classDeclSimple.id.accept(this);
         for (VarDecl varDecl : classDeclSimple.varDecls)
             varDecl.accept(this);
         for (MethodDecl methodDecl : classDeclSimple.methodDecls)
             methodDecl.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(ClassDeclExtends classDeclExtends)
+    public Void visit(ClassDeclExtends classDeclExtends)
     {
         // FIXME Unused
+        return null;
     }
 
     @Override
-    public void visit(Program program)
+    public Void visit(Program program)
     {
         program.main.accept(this);
         for (ClassDecl classDecl : program.classDecls)
             classDecl.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(Print print)
+    public Void visit(Print print)
     {
         print.exp.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(Plus plus)
+    public Void visit(Plus plus)
     {
         plus.left.accept(this);
         plus.right.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(Not not)
+    public Void visit(Not not)
     {
         not.exp.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(NewObject newObject)
+    public Void visit(NewObject newObject)
     {
         // TODO Auto-generated method stub
-        
+
+        return null;
     }
 
     @Override
-    public void visit(NewArray newArray)
+    public Void visit(NewArray newArray)
     {
         newArray.exp.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(Minus minus)
+    public Void visit(Minus minus)
     {
         minus.left.accept(this);
         minus.right.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(While whil)
+    public Void visit(While whil)
     {
         whil.exp.accept(this);
         whil.stm.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(VarDecl varDecl)
+    public Void visit(VarDecl varDecl)
     {
         varDecl.type.accept(this);
         varDecl.name.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(True tru)
+    public Void visit(True tru)
     {
-        // Nothing to be done, this is a leaf        
+        // Nothing to be done, this is a leaf
+        return null;
     }
 
     @Override
-    public void visit(Times times)
+    public Void visit(Times times)
     {
         times.left.accept(this);
         times.right.accept(this);
+        return null;
     }
 
     @Override
-    public void visit(This ths)
+    public Void visit(This ths)
     {
         // Nothing to be done, this is a leaf
+        return null;
     }
 
     @Override
-    public void visit(StatementList statementList) {
+    public Void visit(StatementList statementList)
+    {
         for (Statement stm : statementList)
             stm.accept(this);
+        return null;
     }
+
 
 }

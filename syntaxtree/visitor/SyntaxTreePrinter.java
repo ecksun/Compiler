@@ -12,242 +12,276 @@ public class SyntaxTreePrinter extends DepthFirstVisitor
         out = o;
     }
 
-    public void visit(Program n)
+    public Void visit(Program n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(MainClass n)
+    public Void visit(MainClass n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(ClassDeclSimple n)
+    public Void visit(ClassDeclSimple n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(ClassDeclExtends n)
+    public Void visit(ClassDeclExtends n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(VarDecl n)
+    public Void visit(VarDecl n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(MethodDecl n)
+    public Void visit(MethodDecl n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(Formal n)
+    public Void visit(Formal n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(IntArrayType n)
+    public Void visit(IntArrayType n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(BooleanType n)
+    public Void visit(BooleanType n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(IntegerType n)
+    public Void visit(IntegerType n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(IdentifierType n)
+    public Void visit(IdentifierType n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(Block n)
+    public Void visit(Block n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(If n)
+    public Void visit(If n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(While n)
+    public Void visit(While n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(Print n)
+    public Void visit(Print n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(Assign n)
+    public Void visit(Assign n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(ArrayAssign n)
+    public Void visit(ArrayAssign n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(And n)
+    public Void visit(And n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(LessThan n)
+    public Void visit(LessThan n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(Plus n)
+    public Void visit(Plus n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(Minus n)
+    public Void visit(Minus n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(Times n)
+    public Void visit(Times n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(ArrayLookup n)
+    public Void visit(ArrayLookup n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(ArrayLength n)
+    public Void visit(ArrayLength n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(Call n)
+    public Void visit(Call n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(IntegerLiteral n)
+    public Void visit(IntegerLiteral n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(True n)
+    public Void visit(True n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(False n)
+    public Void visit(False n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(IdentifierExp n)
+    public Void visit(IdentifierExp n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(This n)
+    public Void visit(This n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(NewArray n)
+    public Void visit(NewArray n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(NewObject n)
+    public Void visit(NewObject n)
     {
         preWork(n);
         n.i.accept(this);
         postWork(n);
+        return null;
     }
 
-    public void visit(Not n)
+    public Void visit(Not n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
-    public void visit(Identifier n)
+    public Void visit(Identifier n)
     {
         preWork(n);
         super.visit(n);
         postWork(n);
+        return null;
     }
 
     String indent()

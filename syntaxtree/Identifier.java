@@ -15,6 +15,10 @@ public class Identifier {
   public Type accept(TypeVisitor v) {
     return v.visit(this);
   }
+  
+  public boolean equals(Identifier a) {
+      return a.name.equals(name);
+  }
 
   public String toString(){
     return name;

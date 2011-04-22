@@ -2,77 +2,79 @@ package syntaxtree.visitor;
 
 import syntaxtree.*;
 
-public interface Visitor
+public interface Visitor<T>
 {
 
-    void visit(And and);
+    T visit(And and);
 
-    void visit(ArrayAssign arrayAssign);
+    T visit(ArrayAssign arrayAssign);
 
-    void visit(ArrayLength arrayLength);
+    T visit(ArrayLength arrayLength);
 
-    void visit(Call call);
+    T visit(Call call);
 
-    void visit(ArrayLookup arrayLookup);
+    T visit(ArrayLookup arrayLookup);
 
-    void visit(Assign assign);
+    T visit(Assign assign);
 
-    void visit(Block block);
+    T visit(Block block);
 
-    void visit(BooleanType booleanType);
+    T visit(BooleanType booleanType);
 
-    void visit(MethodDecl methodDecl);
+    T visit(MethodDecl methodDecl);
 
-    void visit(MainClass mainClass);
+    T visit(MainClass mainClass);
 
-    void visit(LessThan lessThan);
+    T visit(LessThan lessThan);
 
-    void visit(IntegerType integerType);
+    T visit(IntegerType integerType);
 
-    void visit(IntegerLiteral integerLiteral);
+    T visit(IntegerLiteral integerLiteral);
 
-    void visit(IntArrayType intArrayType);
+    T visit(IntArrayType intArrayType);
+    
+    T visit(CustomType customType);
 
-    void visit(If if1);
+    T visit(If if1);
 
-    void visit(IdentifierType identifierType);
+    T visit(IdentifierType identifierType);
 
-    void visit(IdentifierExp identifierExp);
+    T visit(IdentifierExp identifierExp);
 
-    void visit(Identifier identifier);
+    T visit(Identifier identifier);
 
-    void visit(Formal formal);
+    T visit(Formal formal);
 
-    void visit(False false1);
+    T visit(False false1);
 
-    void visit(ClassDeclSimple classDeclSimple);
+    T visit(ClassDeclSimple classDeclSimple);
 
-    void visit(ClassDeclExtends classDeclExtends);
+    T visit(ClassDeclExtends classDeclExtends);
 
-    void visit(Program program);
+    T visit(Program program);
 
-    void visit(Print print);
+    T visit(Print print);
 
-    void visit(Plus plus);
+    T visit(Plus plus);
 
-    void visit(Not not);
+    T visit(Not not);
 
-    void visit(NewObject newObject);
+    T visit(NewObject newObject);
 
-    void visit(NewArray newArray);
+    T visit(NewArray newArray);
 
-    void visit(Minus minus);
+    T visit(Minus minus);
 
-    void visit(While while1);
+    T visit(While while1);
 
-    void visit(VarDecl varDecl);
+    T visit(VarDecl varDecl);
 
-    void visit(True true1);
+    T visit(True true1);
 
-    void visit(Times times);
+    T visit(Times times);
 
-    void visit(This this1);
+    T visit(This this1);
 
-    void visit(StatementList statementList);
+    T visit(StatementList statementList);
 
 }

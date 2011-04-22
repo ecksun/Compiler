@@ -9,6 +9,7 @@ import syntaxtree.ClassDeclSimple;
 import syntaxtree.If;
 import syntaxtree.MainClass;
 import syntaxtree.MethodDecl;
+import syntaxtree.Scopeable;
 import syntaxtree.VarDecl;
 
 /**
@@ -51,11 +52,12 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
         return error;
     }
 
-    private void newScope()
+    private void newScope(Scopeable obj)
     {
         ++level;
         printLevel();
-        currentScope = new TypeMapping(currentScope);
+        currentScope = new TypeMapping(obj.getName(), currentScope);
+        obj.setScope(currentScope);
     }
 
     private void outOfScope()
@@ -70,35 +72,39 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
             System.out.print("  ");
     }
 
-    public void visit(Block block)
+    public Void visit(Block block)
     {
-        newScope();
+        newScope(block);
         super.visit(block);
         outOfScope();
+        return null;
     }
 
-    public void visit(ClassDeclSimple classDecl)
+    public Void visit(ClassDeclSimple classDecl)
     {
-        newScope();
+        newScope(classDecl);
         super.visit(classDecl);
         outOfScope();
+        return null;
     }
 
-    public void visit(If ifstm)
+    public Void visit(If ifstm)
     {
-        newScope();
+        newScope(ifstm);
         super.visit(ifstm);
         outOfScope();
+        return null;
     }
 
-    public void visit(MainClass main)
+    public Void visit(MainClass main)
     {
-        newScope();
+        newScope(main);
         super.visit(main);
         outOfScope();
+        return null;
     }
 
-    public void visit(MethodDecl method)
+    public Void visit(MethodDecl method)
     {
         try {
             currentScope.addType(method);
@@ -106,12 +112,13 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
         catch (VariableDupeException e) {
             complain(e.toString());
         }
-        newScope();
+        newScope(method);
         super.visit(method);
         outOfScope();
+        return null;
     }
 
-    public void visit(VarDecl decl)
+    public Void visit(VarDecl decl)
     {
         printLevel();
         try {
@@ -120,16 +127,18 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
         catch (VariableDupeException e) {
             complain(e.toString());
         }
+        return null;
     }
-    
+
     /**
-     * Complains with the given error message and flag this 
+     * Complains with the given error message and flag this
      * {@link ErrorCollector} as having errors.
      * 
      * @param errorMessage The error message to output.
      */
-    private void complain(String errorMessage) {
-	error = true;
-	System.out.println(errorMessage);
+    private void complain(String errorMessage)
+    {
+        error = true;
+        System.out.println(errorMessage);
     }
 }

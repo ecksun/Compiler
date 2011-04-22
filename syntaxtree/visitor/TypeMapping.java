@@ -5,10 +5,16 @@
 
 package syntaxtree.visitor;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 import syntaxtree.MethodDecl;
+import syntaxtree.Type;
 import syntaxtree.VarDecl;
 
 /**
@@ -22,15 +28,20 @@ import syntaxtree.VarDecl;
 public class TypeMapping
 {
     TypeMapping parent;
-    HashMap<String, String> typemap;
-
+    public static TypeMapping programScope;
+    private HashMap<String, Type> typemap;
+    private HashMap<String, TypeMapping> childs;
+    private HashMap<String, List<MethodDecl>> methods;
+    
     /**
      * Create a new TypeMapping, this will set the parent to null which is
      * probably only wanted in the top level scope, i.e. the program mapping
      */
     public TypeMapping()
     {
-        this(null);
+        this(null, null);
+        if (programScope != null)
+            programScope = this;
     }
 
     /**
@@ -38,11 +49,18 @@ public class TypeMapping
      * 
      * @param parent The parent to this TypeMapping
      */
-    public TypeMapping(TypeMapping parent)
-    {
+    public TypeMapping(String name, TypeMapping parent) {
         System.out.println("New Scope:");
         this.parent = parent;
-        typemap = new HashMap<String, String>();
+        typemap = new HashMap<String, Type>();
+        childs = new HashMap<String, TypeMapping>();
+        methods = new HashMap<String, List<MethodDecl>>();
+        if (name != null)
+        parent.addChild(name, this);
+    }
+    
+    public void addChild(String name, TypeMapping child) {
+        childs.put(name, child);
     }
 
     /**
@@ -51,9 +69,9 @@ public class TypeMapping
      * @param var The variable to look up
      * @return The name of the type of the variable
      */
-    public String getType(String var)
+    public Type getType(String var)
     {
-        String type = typemap.get(var);
+        Type type = typemap.get(var);
         if (type == null && parent != null)
             return parent.getType(var);
         else
@@ -68,12 +86,11 @@ public class TypeMapping
      */
     public void addType(VarDecl decl) throws VariableDupeException
     {
-	String variableName = decl.name.name;
-        if (typemap.put(variableName, decl.type.getClass().getName()) != null) {
-            throw new VariableDupeException(variableName);
+        if (typemap.put(decl.name.name, decl.type) != null) {
+            throw new VariableDupeException(decl.name.name);
         }
-        System.out.println("|- " + variableName + " => "
-                + getType(variableName));
+        System.out.println("|- " + decl.name.name + " => "
+                + getType(decl.name.name));
     }
 
     /**
@@ -84,12 +101,36 @@ public class TypeMapping
      */
     public void addType(MethodDecl decl) throws VariableDupeException
     {
-        String variableName = decl.methodName.name;         
-        if (typemap.put(variableName, decl.retType.getClass().getName()) != null) {
-            throw new VariableDupeException(variableName);
+        List<MethodDecl> decls = methods.get(decl.methodName.name);
+        if (decls == null) {
+            decls = new ArrayList<MethodDecl>();
+            decls.add(decl);
+            methods.put(decl.methodName.name, decls);
         }
-        System.out.println("|- " + variableName + " => "
-                + getType(variableName));
+        else {
+            boolean fail = false;
+            for (int i = 0; i < decls.size(); ++i) {
+                if (decls.get(i).equals(decl)) {
+                    fail = true;
+                    break;
+                }
+            }
+            if (fail) {
+                throw new VariableDupeException(decl.getName());
+            }
+            else {
+                decls.add(decl);
+            }
+        }
+        System.out.println("|- " + decl);
+    }
+    
+    public TypeMapping getChild(String name) {
+        return childs.get(name);
+    }
+    
+    public List<MethodDecl> getMethod(String name) {
+        return methods.get(name);
     }
 
     /**

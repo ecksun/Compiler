@@ -2,7 +2,7 @@ package syntaxtree;
 
 import syntaxtree.visitor.*;
 
-public class If implements Statement
+public class If implements Statement, Scopeable
 {
     public Exp exp;
     public Statement ifStm, elseStm;
@@ -22,5 +22,23 @@ public class If implements Statement
     public Type accept(TypeVisitor v)
     {
         return v.visit(this);
+    }
+
+    private TypeMapping scope;
+
+    public void setScope(TypeMapping mapping)
+    {
+        scope = mapping;
+    }
+
+    public TypeMapping getScope()
+    {
+        return scope;
+    }
+
+    @Override
+    public String getName()
+    {
+        return null;
     }
 }
