@@ -13,6 +13,7 @@ import parser.sym;
 %cup
 %int
 %debug
+%yylexthrow lex.NoTokenMatchException
 
 %{
     private Symbol symbol(int type) {
@@ -92,5 +93,9 @@ Number = 0 | [1-9][0-9]*
     {WhiteSpace}        { }
     
     {Comment}           { }
+
+    /* error fallback */
+	.                   { throw new NoTokenMatchException(yytext(), yyline+1, yycolumn+1); }
+
 }
 

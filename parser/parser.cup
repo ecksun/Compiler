@@ -1,11 +1,24 @@
 package parser;
 
-import java_cup.runtime.*;
+import java.util.List;
+import java.util.ArrayList;
+
+import java_cup.runtime.Symbol;
+import lex.NoTokenMatchException;
 import syntaxtree.*;
-import java.util.*;
 
 // init with {: getScanner().init(); :};
-scan with {: return getScanner().next_token(); :};
+scan with {:
+Symbol sym = null;
+while (sym == null) {
+    try {
+        sym = getScanner().next_token();
+    } catch (NoTokenMatchException e) {
+        System.out.println(e);
+    }
+}
+return sym;
+:};
 
 terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, STATIC, MAIN;
 
@@ -47,6 +60,8 @@ precedence right NOT;
 precedence left DOT;
 precedence left LBRACK, RBRACK;
 precedence left LPAREN, RPAREN;
+
+/* TODO: Lägg till "error"-terminals för felhantering.
 
 start with Program;
 
