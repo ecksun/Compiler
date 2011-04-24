@@ -14,6 +14,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import syntaxtree.MethodDecl;
+import syntaxtree.Scopeable;
 import syntaxtree.Type;
 import syntaxtree.VarDecl;
 
@@ -30,14 +31,13 @@ public class TypeMapping {
 	public static TypeMapping programScope;
 	private HashMap<String, Type> typemap;
 	/**
-	 * Container that maps
+	 * Container that maps the name of a {@link Scopeable} block to the
+	 * corresponding scope {@link TypeMapping}.
 	 */
 	private HashMap<String, TypeMapping> children;
 	/**
-	 * Container that maps a method name to a list of
-	 * 
-	 * Map that holds lists of {@link MethodDecl}s with the corresponding method
-	 * names as keys.
+	 * Container that maps a method name to the corresponding list of
+	 * {@link MethodDecl}s.
 	 */
 	private HashMap<String, List<MethodDecl>> methods;
 
