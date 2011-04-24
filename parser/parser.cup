@@ -61,7 +61,7 @@ precedence left DOT;
 precedence left LBRACK, RBRACK;
 precedence left LPAREN, RPAREN;
 
-/* TODO: Lägg till "error"-terminals för felhantering.
+/* TODO: Lägg till "error"-terminals för felhantering. */
 
 start with Program;
 
