@@ -15,8 +15,6 @@ import parser.sym;
 %debug
 
 %{
-    StringBuilder string = new StringBuilder();
-    
     private Symbol symbol(int type) {
         return new Symbol(type, yyline, yycolumn);
     }
@@ -28,7 +26,7 @@ import parser.sym;
 
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
-WhiteSpace     = {LineTerminator} | [ \t]
+WhiteSpace     = {LineTerminator} | [ \t]*
 
 /* comments */
 Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
@@ -38,12 +36,10 @@ EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}
 DocumentationComment = "/**" {CommentContent} "*"+ "/"
 CommentContent       = ( [^*] | \*+ [^/*] )*
 
+// XXX: Is "4711B" really the tokens "4711" and "B"?
 Identifier = [:jletter:] [:jletterdigit:]*
 
-Number = [0-9]+
-
-/* XXX Why is this here? */
-%state STRING
+Number = 0 | [1-9][0-9]*
 
 %%
 
@@ -93,7 +89,7 @@ Number = [0-9]+
 
     {Number}           { return symbol(sym.NUMBER, Integer.parseInt(yytext())); }
 
-    {WhiteSpace}        { /* Ignore */ }
+    {WhiteSpace}        { }
     
     {Comment}           { }
 }
