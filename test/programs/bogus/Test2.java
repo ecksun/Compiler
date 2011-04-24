@@ -1,5 +1,5 @@
 /**
- * Bogus test program 2.
+ * Bogus test program 2 with syntax errors.
  */
 class Test2 {
     // Missing MainClass because this is not a valid main method declaration;
