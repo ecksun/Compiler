@@ -5,15 +5,16 @@ class TestPrimeSieve {
 }
 
 class MiniJavaIsAPain  {
-    MiniJavaIsAPain() {
+    int miniJavaIsStupid() {
         PrimeSieve ps = new PrimeSieve(); 
-        for (int i = 0; i < ps.getSize(); ++i) {
+        ps.run();
+        int i = 0;
+        while (i < ps.getSize()) {
             if (ps.isPrime(i)) {
                 System.out.println(i);
             }
+            i = i + 1;
         }
-    }
-    int miniJavaIsStupid() {
         return -1;
     }
 }
@@ -21,21 +22,26 @@ class MiniJavaIsAPain  {
 class PrimeSieve {
     int is_prime[];
     int size;
-    PrimeSieve() {
+    int run() {
         this.size = 10000;
         is_prime = new int[size]; // Based on that java sets all ints to 0
         is_prime[0] = 1;
         is_prime[1] = 1;
         sieve();
+        return 1;
     }
 
     boolean sieve() {
-        for (int i = 2; i < size; ++i) {
+        int i = 2;
+        while (i < size) {
             if (is_prime[i] == 0) {
-                for (int j = i*2; j < size; j = j + i) {
+                int j = i * 2;
+                while (j < size) {
                     is_prime[j] = 1;
+                    j = j + i;
                 }
             }
+            i = i + 1;
         }
         return true;
     }
