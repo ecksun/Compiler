@@ -5,9 +5,10 @@ class TestFactorial {
     }
 }
 
-class MiniJavaIsAPain  {
-    int recFac(int n) {
-        int ret = 1;
+class MiniJavaIsAPain {
+    public int recFac(int n) {
+        int ret;
+        ret = 1;
         if (n == 1) {
             ret = 1;
         }
@@ -16,9 +17,11 @@ class MiniJavaIsAPain  {
         }
         return ret;
     }
-    int itFac(int n) {
-        int res = 1;
-        int i = 1;
+    public int itFac(int n) {
+        int res;
+        int i;
+        res = 1;
+        i = 1;
         while (i < n+1) {
             res = res * i;
             i = i + 1;
