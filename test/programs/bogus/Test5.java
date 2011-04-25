@@ -14,7 +14,7 @@ class Test5A {
 
     public int setX(int[] illegalX) {
         // Trying to assign int[] to a boolean variable.
-        this.x = illegalX;
+        x = illegalX;
 
         return 0;
     } 

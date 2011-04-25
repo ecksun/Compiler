@@ -160,9 +160,16 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector
 
     @Override
     public Type visit(ArrayLookup arrayLookup)
-    {
-        // TODO Auto-generated method stub
-        return null;
+    { 	
+    	Type id = arrayLookup.id.accept(this);
+    	if (!(id instanceof IntArrayType)) {
+    		complain(new WrongTypeException(IntArrayType.class, id.getClass(), "Array identifier must be an IntArrayType."));
+    	}
+    	Type index = arrayLookup.index.accept(this);
+    	if (!(index instanceof IntegerType)) {
+    		complain(new WrongTypeException(IntegerType.class, index.getClass(), "Array index must be an IntegerType."));
+    	}
+    	return new IntegerType();
     }
 
     @Override
@@ -217,8 +224,7 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector
     @Override
     public Type visit(IntegerLiteral integerLiteral)
     {
-        // TODO Auto-generated method stub
-        return null;
+    	return new IntegerType();
     }
 
     @Override

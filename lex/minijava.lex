@@ -57,8 +57,8 @@ Number = 0 | [1-9][0-9]*
 
     "void"              { return symbol(sym.VOID); }
     "boolean"           { return symbol(sym.BOOLEAN); }
-    "true"              { return symbol(sym.FALSE); }
-    "false"             { return symbol(sym.TRUE); }
+    "true"              { return symbol(sym.TRUE); }
+    "false"             { return symbol(sym.FALSE); }
     "int"               { return symbol(sym.INT); }
     "String"            { return symbol(sym.STRING); }
 

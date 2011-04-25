@@ -9,11 +9,12 @@ class TestSymbolTable {
 class test {
     int b;
     public boolean asdf() {
-        int a;
-        return true;
+        boolean b;
+        b = true;
+        return b;
     }
     public int lol() {
-        boolean b;
-        return false;
+        b = 10;
+        return b;
     }
 }
