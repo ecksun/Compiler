@@ -7,9 +7,9 @@ import syntaxtree.visitor.*;
 public class Program
 {
     public MainClass main;
-    public List<ClassDecl> classDecls;
+    public Deque<ClassDecl> classDecls;
 
-    public Program(MainClass am, List<ClassDecl> acl)
+    public Program(MainClass am, Deque<ClassDecl> acl)
     {
         main = am;
         classDecls = acl;

@@ -8,13 +8,13 @@ public class MethodDecl implements Scopeable
 {
     public Type retType;
     public Identifier methodName;
-    public List<Formal> args;
-    public List<VarDecl> varDecls;
-    public List<Statement> statements;
+    public Deque<Formal> args;
+    public Deque<VarDecl> varDecls;
+    public Deque<Statement> statements;
     public Exp returnExpression;
 
-    public MethodDecl(Type at, Identifier ai, List<Formal> afl,
-            List<VarDecl> avl, StatementList asl, Exp ae)
+    public MethodDecl(Type at, Identifier ai, Deque<Formal> afl,
+            Deque<VarDecl> avl, StatementList asl, Exp ae)
     {
         retType = at;
         methodName = ai;
@@ -50,23 +50,26 @@ public class MethodDecl implements Scopeable
             return false;
         if (other.args.size() != args.size())
             return false;
-        for (int i = 0; i < args.size(); ++i) {
-            if (!args.get(i).type.equals(other.args.get(i).type))
-                return false;
-        }
-        return true;
+        
+        Iterator<Formal> otherArgs = other.args.descendingIterator();
+        Iterator<Formal> myArgs = args.descendingIterator();
+        
+        while (myArgs.hasNext() && otherArgs.hasNext()) { 
+            if (!myArgs.next().type.equals(otherArgs.next().type))
+        	return false;
+        }   
+    	return true;
     }
     
     public String toString() {
         String tmp = String.format("%s %s(", retType, methodName);
-        for (int i = 0; i < args.size(); ++i) {
-            if (i == args.size()-1) {
-                tmp += args.get(i);
-            }
-            else {
-                tmp += args.get(i) + ", ";
-            }
+        
+        Iterator<Formal> myArgs = args.descendingIterator();
+        while (myArgs.hasNext()) {
+            tmp += myArgs.next() + ", ";
         }
+        tmp = tmp.substring(0, tmp.length()-2);
+        
         tmp += ")";
         return tmp;
     }

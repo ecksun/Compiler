@@ -2,6 +2,8 @@ package syntaxtree.visitor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
 
 import syntaxtree.*;
@@ -124,9 +126,11 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector
                     
                     for (MethodDecl matchingMethod : matchingMethods) {
                         if (matchingMethod.args.size() == types.size()) {
+                            Iterator<Formal> matchingArgs = matchingMethod.args.descendingIterator();
+                            
                             boolean match = true;
                             for (int i = 0; i < call.args.size(); ++i) {
-                                if (!matchingMethod.args.get(i).type.equals(types.get(i))) {
+                        	if (!matchingArgs.next().type.equals(types.get(i))) {
                                     match = false;
                                     break;
                                 }
