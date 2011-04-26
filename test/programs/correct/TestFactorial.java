@@ -9,11 +9,11 @@ class MiniJavaIsAPain {
     public int recFac(int n) {
         int ret;
         ret = 1;
-        if (n == 1) {
+        if (0 < n && n < 2) {
             ret = 1;
         }
         else {
-            ret = n * recFac(n-1);
+            ret = n * this.recFac(n-1);
         }
         return ret;
     }
