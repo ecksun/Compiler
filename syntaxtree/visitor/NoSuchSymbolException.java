@@ -7,8 +7,8 @@ import syntaxtree.Type;
 public class NoSuchSymbolException extends CompileTimeException
 {
     Identifier id;
-    public NoSuchSymbolException(Identifier id) {
-        this.id = id;
+    public NoSuchSymbolException(Identifier method) {
+        this.id = method;
     }
     public String toString() {
         return String.format("No such symbol: %s", id.toString());

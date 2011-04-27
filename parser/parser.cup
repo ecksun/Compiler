@@ -161,7 +161,7 @@ Type    ::= INT LBRACK RBRACK
         |   INT
 {: RESULT = new IntegerType(); :}
         |   IDENTIFIER:id
-{: RESULT = new IdentifierType(id); :}
+{: RESULT = new IdentifierType(new Identifier(id)); :}
         ;
 
 StatementList   ::=  StatementList:list Statement:stm

@@ -33,8 +33,6 @@ public interface Visitor<T>
 
     T visit(IntArrayType intArrayType);
     
-    T visit(CustomType customType);
-
     T visit(If if1);
 
     T visit(IdentifierType identifierType);

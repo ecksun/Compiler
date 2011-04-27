@@ -2,16 +2,16 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class IdentifierType extends Type {
-    public String s;
+    public Identifier id;
     
     public boolean equals(Type tp)
     {
 	if (! (tp instanceof IdentifierType) ) return false;
-	return ((IdentifierType)tp).s.equals(s);
+	return ((IdentifierType)tp).id.equals(id);
     }
     
-  public IdentifierType(String as) {
-    s=as;
+  public IdentifierType(Identifier as) {
+    id=as;
   }
 
   public void accept(Visitor v) {

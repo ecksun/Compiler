@@ -109,9 +109,9 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector
         Type object = call.obj.accept(this);
         TypeMapping objectScope = null;
 
-        if (object instanceof CustomType) {
+        if (object instanceof IdentifierType) {
             objectScope = TypeMapping.programScope
-                    .getChild(((CustomType) (object)).id.name);
+                    .getChild(((IdentifierType) (object)).id.name);
             if (objectScope != null) {
                 if (objectScope.getType(call.method.name) != null) {
                     List<MethodDecl> matchingMethods = objectScope.getMethod(call.method.name);
@@ -149,13 +149,13 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector
                 }
             }
             else {
-                complain(new NoSuchSymbolException(((CustomType)object).id));
+                complain(new NoSuchSymbolException(((IdentifierType)object).id));
             }
         }
         else {
-            complain(new WrongTypeException(CustomType.class, object.getClass(), " Object does not contain any callable methods"));
+            complain(new WrongTypeException(IdentifierType.class, object.getClass(), " Object does not contain any callable methods"));
         }
-        return new CustomType(new Identifier("Unknown Type"));
+        return new IdentifierType(new Identifier("Unknown Type"));
     }
 
     @Override
@@ -380,12 +380,4 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector
         // TODO Auto-generated method stub
         return null;
     }
-
-    @Override
-    public Type visit(CustomType customType)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

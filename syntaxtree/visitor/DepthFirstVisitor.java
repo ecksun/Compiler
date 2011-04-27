@@ -132,13 +132,6 @@ public class DepthFirstVisitor implements Visitor<Void>
         // Nothing to be done, this is a leaf
         return null;
     }
-    
-    @Override
-    public Void visit(CustomType customType)
-    {
-        customType.id.accept(this);
-        return null;
-    }
 
     @Override
     public Void visit(If if1)
@@ -302,6 +295,5 @@ public class DepthFirstVisitor implements Visitor<Void>
             stm.accept(this);
         return null;
     }
-
 
 }
