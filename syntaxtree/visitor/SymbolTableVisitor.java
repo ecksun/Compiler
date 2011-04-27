@@ -56,7 +56,7 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
     {
         ++level;
         printLevel();
-        currentScope = new TypeMapping(obj.getName(), currentScope);
+        currentScope = new TypeMapping(obj, currentScope);
         obj.setScope(currentScope);
     }
 
