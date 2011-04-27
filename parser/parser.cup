@@ -239,8 +239,12 @@ op          ::=   Exp:left ANDAND Exp:right
 
 ExpList ::= Exp:exp ExpRest:list
 {: 
-list.add(exp); 
-RESULT = list;
+    list.add(exp); 
+    RESULT = list;
+:}
+            |
+{:
+                RESULT = new ArrayList<Exp>();
 :}
             ;
 
