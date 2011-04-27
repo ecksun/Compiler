@@ -48,8 +48,6 @@ non terminal Identifier Identifier;
 // XXX: behövs detta?
 //precedence left PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, STRING, IF, ELSE, WHILE, PRINT, LBRACE, RBRACE, LPAREN, RPAREN, LBRACK, RBRACK, SEMICOLON, COMMA, DOT, EQ, NOT, ANDAND, LT, PLUS, MINUS, MULT, STATIC;
 
-precedence left IDENTIFIER;
-
 precedence left ANDAND;
 precedence left LT;
 precedence left PLUS, MINUS;
@@ -164,9 +162,9 @@ Type    ::= INT LBRACK RBRACK
 {: RESULT = new IdentifierType(new Identifier(id)); :}
         ;
 
-StatementList   ::=  StatementList:list Statement:stm
+StatementList   ::=  Statement:stm StatementList:list
 {: 
-    list.add(stm); 
+    list.addFirst(stm); 
     RESULT = list;
 :}
                 |   

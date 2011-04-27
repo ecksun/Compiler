@@ -4,7 +4,7 @@ import java.util.*;
 
 import syntaxtree.visitor.*;
 
-public class StatementList extends ArrayList<Statement> implements Statement
+public class StatementList extends LinkedList<Statement> implements Statement
 {
     public StatementList()
     {
