@@ -175,43 +175,92 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector
     @Override
     public Type visit(Assign assign)
     {
-        // TODO Auto-generated method stub
-        return null;
+	Type id = assign.id.accept(this);
+	Type exp = assign.exp.accept(this);
+	
+	if (!(id.equals(exp))) {
+	    complain(new WrongTypeException(id.getClass(), exp.getClass(), "Right hand side of assignment type must match left hand side variable."));
+	}
+	
+        return id;
     }
 
     @Override
     public Type visit(Block block)
     {
-        // TODO Auto-generated method stub
+	scope = block.getScope();
+        for (Statement stm : block.statements) {
+            stm.accept(this);
+        }
+        scope = scope.parent;
         return null;
     }
 
     @Override
     public Type visit(BooleanType booleanType)
     {
-        // TODO Auto-generated method stub
-        return null;
+	return booleanType;
     }
 
     @Override
     public Type visit(MethodDecl methodDecl)
     {
-        // TODO Auto-generated method stub
-        return null;
+	scope = methodDecl.getScope();
+	
+	methodDecl.retType.accept(this);
+	
+        for (Formal arg : methodDecl.args) {
+            arg.accept(this);
+        }
+        
+        for (VarDecl decl : methodDecl.varDecls) {
+            decl.accept(this);
+        }
+        
+        for (Statement statement : methodDecl.statements) {
+            statement.accept(this);
+        }
+	
+	Type methodType = methodDecl.retType;
+	Type retType = methodDecl.returnExpression.accept(this);
+
+	if (!methodType.equals(retType)) {
+	    complain(new WrongTypeException(methodType.getClass(), retType.getClass(), "Return expression in method must match method type definition."));    
+	}
+	
+	scope = scope.parent;
+	
+	return methodType;
     }
 
     @Override
     public Type visit(MainClass mainClass)
     {
-        // TODO Auto-generated method stub
+	scope = mainClass.getScope();
+
+        for (Statement statement : mainClass.statements) {
+            statement.accept(this);
+        }
+        
+        scope = scope.parent;
+        
         return null;
     }
 
     @Override
     public Type visit(LessThan lessThan)
     {
-        // TODO Auto-generated method stub
-        return null;
+	Type left = lessThan.left.accept(this);
+        if (!(left instanceof IntegerType)) {
+            complain(new WrongTypeException(IntegerType.class, left.getClass(),
+                    "Left hand side of less than must be of integer type."));
+        }
+        Type right = lessThan.right.accept(this);
+        if (!(right instanceof IntegerType)) {
+            complain(new WrongTypeException(IntegerType.class, left.getClass(),
+                    "Right hand side of less than must be of integer type."));
+        }
+        return new IntegerType();
     }
 
     @Override
