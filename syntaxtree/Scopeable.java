@@ -2,11 +2,10 @@ package syntaxtree;
 
 import syntaxtree.visitor.TypeMapping;
 
-public interface Scopeable
-{
-    public void setScope(TypeMapping mapping);
+public interface Scopeable {
+    public String getName();
 
     public TypeMapping getScope();
-    
-    public String getName();
+
+    public void setScope(TypeMapping mapping);
 }

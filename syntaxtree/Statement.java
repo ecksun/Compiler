@@ -1,7 +1,10 @@
 package syntaxtree;
-import syntaxtree.visitor.*;
+
+import syntaxtree.visitor.TypeVisitor;
+import syntaxtree.visitor.Visitor;
 
 public interface Statement {
-  public void accept(Visitor v);
-  public Type accept(TypeVisitor v);
+    public Type accept(TypeVisitor v);
+
+    public void accept(Visitor v);
 }

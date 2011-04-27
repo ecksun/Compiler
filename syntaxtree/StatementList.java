@@ -1,22 +1,24 @@
 package syntaxtree;
 
-import java.util.*;
+import java.util.LinkedList;
 
-import syntaxtree.visitor.*;
+import syntaxtree.visitor.TypeVisitor;
+import syntaxtree.visitor.Visitor;
 
-public class StatementList extends LinkedList<Statement> implements Statement
-{
-    public StatementList()
-    {
+public class StatementList extends LinkedList<Statement> implements Statement {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    public StatementList() {
     }
 
-    public void accept(Visitor v)
-    {
-        v.visit(this);
-    }
-
-    public Type accept(TypeVisitor v)
-    {
+    public Type accept(TypeVisitor v) {
         return v.visit(this);
+    }
+
+    public void accept(Visitor v) {
+        v.visit(this);
     }
 }

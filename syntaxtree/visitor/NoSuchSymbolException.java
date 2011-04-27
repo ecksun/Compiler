@@ -1,15 +1,19 @@
 package syntaxtree.visitor;
 
-import syntaxtree.Call;
 import syntaxtree.Identifier;
-import syntaxtree.Type;
 
-public class NoSuchSymbolException extends CompileTimeException
-{
+public class NoSuchSymbolException extends CompileTimeException {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     Identifier id;
-    public NoSuchSymbolException(Identifier method) {
-        this.id = method;
+
+    public NoSuchSymbolException(Identifier id) {
+        this.id = id;
     }
+
+    @Override
     public String toString() {
         return String.format("No such symbol: %s", id.toString());
     }

@@ -20,8 +20,7 @@ import syntaxtree.VarDecl;
  *         all possible scopes.
  */
 public class SymbolTableVisitor extends DepthFirstVisitor implements
-        ErrorCollector
-{
+        ErrorCollector {
     int level;
     TypeMapping currentScope;
     boolean error;
@@ -30,86 +29,93 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
     /**
      * Create a new SymbolTableVistor.
      */
-    public SymbolTableVisitor()
-    {
+    public SymbolTableVisitor() {
         level = 0;
         currentScope = new TypeMapping();
         error = false;
         exception = null;
     }
 
+    /**
+     * Complains with the given error message and flag this
+     * {@link ErrorCollector} as having errors.
+     * 
+     * @param errorMessage
+     *            The error message to output.
+     */
+    private void complain(String errorMessage) {
+        error = true;
+        System.out.println(errorMessage);
+    }
+
     @Override
-    public Exception getError()
-    {
-        if (exception == null)
+    public Exception getError() {
+        if (exception == null) {
             return null;
+        }
         return exception;
     }
 
     @Override
-    public boolean hasErrors()
-    {
+    public boolean hasErrors() {
         return error;
     }
 
-    private void newScope(Scopeable obj)
-    {
+    private void newScope(Scopeable obj) {
         ++level;
         printLevel();
         currentScope = new TypeMapping(obj, currentScope);
         obj.setScope(currentScope);
     }
 
-    private void outOfScope()
-    {
+    private void outOfScope() {
         currentScope = currentScope.parent;
         --level;
     }
 
-    private void printLevel()
-    {
-        for (int i = 0; i < level; ++i)
+    private void printLevel() {
+        for (int i = 0; i < level; ++i) {
             System.out.print("  ");
+        }
     }
 
-    public Void visit(Block block)
-    {
+    @Override
+    public Void visit(Block block) {
         newScope(block);
         super.visit(block);
         outOfScope();
         return null;
     }
 
-    public Void visit(ClassDeclSimple classDecl)
-    {
+    @Override
+    public Void visit(ClassDeclSimple classDecl) {
         newScope(classDecl);
         super.visit(classDecl);
         outOfScope();
         return null;
     }
 
-    public Void visit(If ifstm)
-    {
+    @Override
+    public Void visit(If ifstm) {
         newScope(ifstm);
         super.visit(ifstm);
         outOfScope();
         return null;
     }
 
-    public Void visit(MainClass main)
-    {
+    @Override
+    public Void visit(MainClass main) {
         newScope(main);
         super.visit(main);
         outOfScope();
         return null;
     }
 
-    public Void visit(MethodDecl method)
-    {
+    @Override
+    public Void visit(MethodDecl method) {
         try {
             currentScope.addType(method);
-        }
-        catch (VariableDupeException e) {
+        } catch (VariableDupeException e) {
             complain(e.toString());
         }
         newScope(method);
@@ -118,27 +124,14 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
         return null;
     }
 
-    public Void visit(VarDecl decl)
-    {
+    @Override
+    public Void visit(VarDecl decl) {
         printLevel();
         try {
             currentScope.addType(decl);
-        }
-        catch (VariableDupeException e) {
+        } catch (VariableDupeException e) {
             complain(e.toString());
         }
         return null;
-    }
-
-    /**
-     * Complains with the given error message and flag this
-     * {@link ErrorCollector} as having errors.
-     * 
-     * @param errorMessage The error message to output.
-     */
-    private void complain(String errorMessage)
-    {
-        error = true;
-        System.out.println(errorMessage);
     }
 }

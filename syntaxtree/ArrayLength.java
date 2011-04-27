@@ -1,18 +1,22 @@
 package syntaxtree;
-import syntaxtree.visitor.*;
+
+import syntaxtree.visitor.TypeVisitor;
+import syntaxtree.visitor.Visitor;
 
 public class ArrayLength extends Exp {
-  public Exp exp;
-  
-  public ArrayLength(Exp ae) {
-    exp=ae; 
-  }
+    public Exp exp;
 
-  public void accept(Visitor v) {
-    v.visit(this);
-  }
+    public ArrayLength(Exp ae) {
+        exp = ae;
+    }
 
-  public Type accept(TypeVisitor v) {
-    return v.visit(this);
-  }
+    @Override
+    public Type accept(TypeVisitor v) {
+        return v.visit(this);
+    }
+
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
 }

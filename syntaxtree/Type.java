@@ -1,21 +1,24 @@
 package syntaxtree;
 
-import syntaxtree.visitor.*;
+import syntaxtree.visitor.TypeVisitor;
+import syntaxtree.visitor.Visitor;
 
-public abstract class Type
-{
-    public boolean equals(Type tp)
-    {
-        return getClass().equals(tp.getClass());
-    }
+public abstract class Type {
+    public abstract Type accept(TypeVisitor v);
 
     public abstract void accept(Visitor v);
 
-    public abstract Type accept(TypeVisitor v);
-    public String toString() {
-        return this.getClass().getSimpleName();
+    public boolean equals(Type tp) {
+        return getClass().equals(tp.getClass());
     }
+
+    @Override
     public int hashCode() {
         return this.getClass().getName().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName();
     }
 }

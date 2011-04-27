@@ -1,17 +1,23 @@
 package syntaxtree;
-import syntaxtree.visitor.*;
+
+import syntaxtree.visitor.TypeVisitor;
+import syntaxtree.visitor.Visitor;
 
 public class IdentifierExp extends Exp {
-  public String s;
-  public IdentifierExp(String as) { 
-      s=as;
-  }
+    // FIXME Change s from string to identifier
+    public String s;
 
-  public void accept(Visitor v) {
-    v.visit(this);
-  }
+    public IdentifierExp(String as) {
+        s = as;
+    }
 
-  public Type accept(TypeVisitor v) {
-    return v.visit(this);
-  }
+    @Override
+    public Type accept(TypeVisitor v) {
+        return v.visit(this);
+    }
+
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
 }

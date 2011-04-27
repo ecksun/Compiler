@@ -1,24 +1,22 @@
 package syntaxtree;
 
-import java.util.*;
+import java.util.List;
 
-import syntaxtree.visitor.*;
+import syntaxtree.visitor.TypeVisitor;
+import syntaxtree.visitor.Visitor;
 
-public class ClassDeclSimple extends ClassDecl implements Scopeable
-{
+public class ClassDeclSimple extends ClassDecl implements Scopeable {
     public ClassDeclSimple(Identifier ai, List<VarDecl> avl,
-            List<MethodDecl> aml)
-    {
+            List<MethodDecl> aml) {
         super(ai, avl, aml);
     }
 
-    public void accept(Visitor v)
-    {
-        v.visit(this);
+    public Type accept(TypeVisitor v) {
+        return v.visit(this);
     }
 
-    public Type accept(TypeVisitor v)
-    {
-        return v.visit(this);
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
     }
 }
