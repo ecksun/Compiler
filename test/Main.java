@@ -5,6 +5,7 @@ import parser.parser;
 import syntaxtree.Program;
 import syntaxtree.visitor.SymbolTableVisitor;
 import syntaxtree.visitor.SyntaxTreePrinter;
+import syntaxtree.visitor.TypeVisitor;
 import syntaxtree.visitor.Visitor;
 
 public class Main {
@@ -27,23 +28,20 @@ public class Main {
 
         try {
             parser p = new parser(scanner);
-            Object result = p.debug_parse().value;
+            Program result = (Program) p.debug_parse().value;
             System.out.println(result.toString());
 
             Visitor visitor = new SyntaxTreePrinter(System.out);
-            ((Program) result).accept(visitor);
+            result.accept(visitor);
 
             System.out.println("TypeCheckVisitor:");
             visitor = new SymbolTableVisitor();
-            ((Program) result).accept(visitor);
+            result.accept(visitor);
 
-            // IdentificationVisitor identification = new
-            // IdentificationVisitor();
-            // ((Prog)result).accept( identification );
-            // System.out.println("Code:\n");
-            // EmitCodeVisitor emitcode = new EmitCodeVisitor();
-            // // ((Prog)result).accept( emitcode );
-            // ((Prog)result).traverseBottomUp( emitcode );
+            System.out.println("TypeVisitor");
+            visitor = new TypeVisitor();
+            result.accept(visitor);
+
         } catch (java.io.IOException e) {
             System.out.println("An I/O error occured while parsing : \n" + e);
             System.exit(1);
