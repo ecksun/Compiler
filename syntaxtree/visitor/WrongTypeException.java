@@ -33,7 +33,7 @@ public class WrongTypeException extends CompileTimeException {
      */
     @Override
     public String toString() {
-        return String.format("Expected %s but got %s: %s", expected, gotten,
-                description);
+        return String.format("Expected %s but got %s: %s", expected
+                .getSimpleName(), gotten.getSimpleName(), description);
     }
 }
