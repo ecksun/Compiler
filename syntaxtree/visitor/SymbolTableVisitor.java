@@ -6,6 +6,7 @@ package syntaxtree.visitor;
 
 import syntaxtree.Block;
 import syntaxtree.ClassDeclSimple;
+import syntaxtree.Formal;
 import syntaxtree.If;
 import syntaxtree.MainClass;
 import syntaxtree.MethodDecl;
@@ -92,6 +93,19 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
         newScope(classDecl);
         super.visit(classDecl);
         outOfScope();
+        return null;
+    }
+
+    @Override
+    public Void visit(Formal formal) {
+        try {
+            currentScope.addVariableMapping(formal.name, formal.type);
+        } catch (VariableDupeException e) {
+            complain(e.toString());
+        }
+        
+        formal.type.accept(this);
+        formal.name.accept(this);
         return null;
     }
 

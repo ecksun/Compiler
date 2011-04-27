@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import syntaxtree.ClassDecl;
+import syntaxtree.Identifier;
 import syntaxtree.IdentifierType;
 import syntaxtree.MethodDecl;
 import syntaxtree.Scopeable;
@@ -120,11 +121,24 @@ public class TypeMapping {
      *             If the name is already used in this scope
      */
     public void addType(VarDecl decl) throws VariableDupeException {
-        if (typemap.put(decl.name.name, decl.type) != null) {
-            throw new VariableDupeException(decl.name.name);
+        addVariableMapping(decl.name, decl.type);
+    }
+
+    /**
+     * Adds a new variable mapping.
+     * 
+     * @param name
+     *            The variable name to use as key in the mapping.
+     * @param type
+     *            The type that should be mapped by the name.
+     * @throws VariableDupeException
+     */
+    public void addVariableMapping(Identifier name, Type type)
+            throws VariableDupeException {
+        if (typemap.put(name.name, type) != null) {
+            throw new VariableDupeException(name.name);
         }
-        System.out.println("|- " + decl.name.name + " => "
-                + getType(decl.name.name));
+        System.out.println("|- " + name.name + " => " + getType(name.name));
     }
 
     public TypeMapping getChild(String name) {
