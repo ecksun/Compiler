@@ -44,8 +44,11 @@ public class TypeMapping {
     /**
      * Create a new TypeMapping, this will set the parent to null which is
      * probably only wanted in the top level scope, i.e. the program mapping
+     * 
+     * @throws VariableDupeException
+     *             This should never happen, if so, internal error is incorrect
      */
-    public TypeMapping() {
+    public TypeMapping() throws VariableDupeException {
         this(null, null);
         if (programScope == null) {
             programScope = this;
@@ -58,8 +61,11 @@ public class TypeMapping {
      * @param obj
      * @param parent
      *            The parent to this TypeMapping
+     * @throws VariableDupeException
+     *             Thrown if this is a class and it already is defined
      */
-    public TypeMapping(Scopeable obj, TypeMapping parent) {
+    public TypeMapping(Scopeable obj, TypeMapping parent)
+            throws VariableDupeException {
         System.out.println("New Scope:");
         this.parent = parent;
         typemap = new HashMap<String, Type>();
@@ -70,6 +76,8 @@ public class TypeMapping {
             if (obj instanceof ClassDecl) {
                 typemap.put("this", new IdentifierType(
                         ((ClassDecl) obj).className));
+                parent.addVariableMapping(((ClassDecl) obj).className,
+                        new IdentifierType(((ClassDecl) obj).className));
             }
         }
     }

@@ -32,7 +32,11 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
      */
     public SymbolTableVisitor() {
         level = 0;
-        currentScope = new TypeMapping();
+        try {
+            currentScope = new TypeMapping();
+        } catch (VariableDupeException e) {
+            // Should never happen, see constructor javadoc.
+        }
         error = false;
         exception = null;
     }
@@ -65,7 +69,11 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
     private void newScope(Scopeable obj) {
         ++level;
         printLevel();
-        currentScope = new TypeMapping(obj, currentScope);
+        try {
+            currentScope = new TypeMapping(obj, currentScope);
+        } catch (VariableDupeException e) {
+            complain(e.toString());
+        }
         obj.setScope(currentScope);
     }
 
