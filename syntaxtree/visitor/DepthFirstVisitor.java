@@ -181,7 +181,7 @@ public class DepthFirstVisitor implements Visitor<Void>
     @Override
     public Void visit(ClassDeclSimple classDeclSimple)
     {
-        classDeclSimple.id.accept(this);
+        classDeclSimple.className.accept(this);
         for (VarDecl varDecl : classDeclSimple.varDecls)
             varDecl.accept(this);
         for (MethodDecl methodDecl : classDeclSimple.methodDecls)

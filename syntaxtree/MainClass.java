@@ -2,14 +2,12 @@ package syntaxtree;
 
 import syntaxtree.visitor.*;
 
-public class MainClass implements Scopeable
+public class MainClass extends ClassDecl implements Scopeable
 {
-    public Identifier className, argv;
-    public StatementList statements;
-
+    public Identifier argv;
     public MainClass(Identifier ai1, Identifier ai2, StatementList as)
     {
-        className = ai1;
+        super(ai1, null, null);
         argv = ai2;
         statements = as;
     }
@@ -22,23 +20,5 @@ public class MainClass implements Scopeable
     public Type accept(TypeVisitor v)
     {
         return v.visit(this);
-    }
-
-    private TypeMapping scope;
-
-    public void setScope(TypeMapping mapping)
-    {
-        scope = mapping;
-    }
-
-    public TypeMapping getScope()
-    {
-        return scope;
-    }
-
-    @Override
-    public String getName()
-    {
-        return className.name;
     }
 }

@@ -4,14 +4,12 @@ import java.util.*;
 import syntaxtree.visitor.*;
 
 public class ClassDeclExtends extends ClassDecl {
-  public Identifier i;
-  public Identifier j;
-  public List<VarDecl> vl;  
-  public List<MethodDecl> ml;
+  public Identifier extending;
  
   public ClassDeclExtends(Identifier ai, Identifier aj, 
                   List<VarDecl> avl, List<MethodDecl> aml) {
-    i=ai; j=aj; vl=avl; ml=aml;
+      super(ai, avl, aml);
+      extending = aj;
   }
 
   public void accept(Visitor v) {
