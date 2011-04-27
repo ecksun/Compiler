@@ -21,16 +21,16 @@ class Test5A {
 
     public boolean getX() {
         // Returning int when boolean was expected.
-        return getY();
+        return this.getY();
     }
 
     public int getY() {
         // Returning int[] when int was expected.
-        return getZ();
+        return this.getZ();
     }
 
     public int[] getZ() {
-        return this.z;
+        return z;
     }
 
 }
@@ -40,18 +40,20 @@ class Test5B {
     boolean x;
 
     public boolean testScope() {
+        int x;
+        boolean x;
         {
-            int x = 10;
+            x = 10;
             {
-                boolean x = true;
+                x = true;
             }
-            // Returning an integer, but a boolean was expected.
-            return x;
         }
+        // Returning an integer, but a boolean was expected.
+        return x;
     }
 
     public boolean testCall(int a, boolean b, int[] c) {
-        return a == c[0] && b;
+        return a < c[0] && b;
     }
 
     public int testCall() {
@@ -60,10 +62,13 @@ class Test5B {
 
     public int invokeCallTest() {
         // Trying to assign boolean to an int variable. 
-        int x = testCall(10, true, new int[10]);
+        int x;
+        boolean y;
+
+        x = this.testCall(10, true, new int[10]);
 
         // Trying to assign int to a boolean variable.
-        boolean y = testCall();
+        y = this.testCall();
 
         // Returning an object of type Test5A instead of an int.
         return new Test5A();
