@@ -46,7 +46,7 @@ public class TypeMapping {
      */
     public TypeMapping() {
         this(null, null);
-        if (programScope != null) {
+        if (programScope == null) {
             programScope = this;
         }
     }
