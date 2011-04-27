@@ -274,7 +274,7 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector {
 
     @Override
     public Type visit(IdentifierExp identifierExp) {
-        return new Identifier(identifierExp.s).accept(this);
+        return identifierExp.id.accept(this);
     }
 
     @Override

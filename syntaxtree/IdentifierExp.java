@@ -4,11 +4,10 @@ import syntaxtree.visitor.TypeVisitor;
 import syntaxtree.visitor.Visitor;
 
 public class IdentifierExp extends Exp {
-    // FIXME Change s from string to identifier
-    public String s;
+    public Identifier id;
 
-    public IdentifierExp(String as) {
-        s = as;
+    public IdentifierExp(Identifier id) {
+        this.id = id;
     }
 
     @Override

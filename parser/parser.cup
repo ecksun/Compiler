@@ -202,7 +202,7 @@ Exp         ::=   op:operator
                 | FALSE
 {: RESULT = new False(); :}
                 | IDENTIFIER:id
-{: RESULT = new IdentifierExp(id); :}
+{: RESULT = new IdentifierExp(new Identifier(id)); :}
                 | THIS
 {: RESULT = new This(); :}
                 | NEW INT LBRACK Exp:size RBRACK
