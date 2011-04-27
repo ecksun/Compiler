@@ -64,6 +64,7 @@ class Test5B {
         // Trying to assign boolean to an int variable. 
         int x;
         boolean y;
+        Test5C doesNotExist;
 
         x = this.testCall(10, true, new int[10]);
 
