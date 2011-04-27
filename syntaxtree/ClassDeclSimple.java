@@ -7,11 +7,11 @@ import syntaxtree.visitor.*;
 public class ClassDeclSimple extends ClassDecl implements Scopeable
 {
     public Identifier id;
-    public Deque<VarDecl> varDecls;
-    public Deque<MethodDecl> methodDecls;
+    public List<VarDecl> varDecls;
+    public List<MethodDecl> methodDecls;
 
-    public ClassDeclSimple(Identifier ai, Deque<VarDecl> avl,
-            Deque<MethodDecl> aml)
+    public ClassDeclSimple(Identifier ai, List<VarDecl> avl,
+            List<MethodDecl> aml)
     {
         id = ai;
         varDecls = avl;

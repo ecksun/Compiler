@@ -10,9 +10,9 @@ public class Call extends Exp
     public String c = null; // class of e
 
     public Identifier method;
-    public Deque<Exp> args;
+    public List<Exp> args;
 
-    public Call(Exp ae, Identifier ai, Deque<Exp> ael)
+    public Call(Exp ae, Identifier ai, List<Exp> ael)
     {
         obj = ae;
         method = ai;

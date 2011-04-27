@@ -1,6 +1,7 @@
 package parser;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 import java_cup.runtime.Symbol;
 import lex.NoTokenMatchException;
@@ -30,18 +31,18 @@ terminal IntegerType INT;
 non terminal Program Program;
 non terminal MainClass MainClass;
 non terminal ClassDeclSimple ClassDecl;
-non terminal Deque<ClassDecl> ClassDeclList;
+non terminal List<ClassDecl> ClassDeclList;
 non terminal Exp Exp, op;
-non terminal Deque<Exp> ExpList, ExpRest;
+non terminal List<Exp> ExpList, ExpRest;
 non terminal MethodDecl MethodDecl;
-non terminal Deque<MethodDecl> MethodDeclList;
+non terminal List<MethodDecl> MethodDeclList;
 non terminal VarDecl VarDecl;
-non terminal Deque<VarDecl> VarDeclList;
+non terminal List<VarDecl> VarDeclList;
 non terminal Statement Statement;
 non terminal StatementList StatementList;
 non terminal Type Type;
 non terminal Formal Formal;
-non terminal Deque<Formal> FormalList, FormalRest;
+non terminal List<Formal> FormalList, FormalRest;
 non terminal Identifier Identifier;
 
 // XXX: behövs detta?
@@ -70,12 +71,12 @@ Program ::= MainClass:mainClass ClassDeclList:classDeclList
 
 ClassDeclList   ::= ClassDecl:classDecl ClassDeclList:list
 {:  
-    list.addFirst(classDecl);
+    list.add(classDecl);
     RESULT = list; 
 :}
                 |   
 {:
-    RESULT = new LinkedList<ClassDecl>(); 
+    RESULT = new ArrayList<ClassDecl>(); 
 :}
                 ;
 
@@ -93,12 +94,12 @@ MainClass   ::= CLASS Identifier:className LBRACE PUBLIC STATIC VOID MAIN LPAREN
 
 VarDeclList ::= VarDecl:varDecl VarDeclList:list
 {: 
-    list.addFirst(varDecl); 
+    list.add(varDecl); 
     RESULT = list;
 :}
             |   
 {: 
-    RESULT = new LinkedList<VarDecl>(); 
+    RESULT = new ArrayList<VarDecl>(); 
 :}
             ;
 
@@ -110,12 +111,12 @@ VarDecl ::= Type:type Identifier:name SEMICOLON
 
 MethodDeclList  ::= MethodDecl:methodDecl MethodDeclList:list
 {: 
-    list.addFirst(methodDecl); 
+    list.add(methodDecl); 
     RESULT = list;
 :}
                 |   
 {: 
-    RESULT = new LinkedList<MethodDecl>(); 
+    RESULT = new ArrayList<MethodDecl>(); 
 :}
                 ;
 
@@ -133,23 +134,23 @@ Formal  ::= Type:type Identifier:name
 
 FormalList  ::= Formal:formal FormalRest:list
 {:
-    list.addFirst(formal);
+    list.add(formal);
     RESULT = list;
 :}
             |   
 {:
-    RESULT = new LinkedList<Formal>();
+    RESULT = new ArrayList<Formal>();
 :}
             ;
 
 FormalRest ::= COMMA Formal:formal FormalRest:list
 {:
-    list.addFirst(formal);
+    list.add(formal);
     RESULT = list;
 :}
             |   
 {:
-    RESULT = new LinkedList<Formal>();
+    RESULT = new ArrayList<Formal>();
 :}
 ;
 
@@ -165,7 +166,7 @@ Type    ::= INT LBRACK RBRACK
 
 StatementList   ::= Statement:stm StatementList:list
 {: 
-    list.addFirst(stm); 
+    list.add(stm); 
     RESULT = list;
 :}
                 |   
@@ -240,18 +241,18 @@ op          ::=   Exp:left ANDAND Exp:right
 
 ExpList ::= Exp:exp ExpRest:list
 {: 
-list.addFirst(exp); 
+list.add(exp); 
 RESULT = list;
 :}
             ;
 
 ExpRest ::= COMMA Exp:exp ExpRest:list
 {: 
-list.addFirst(exp); 
+list.add(exp); 
 RESULT = list;
 :}
         |   
-{: RESULT = new LinkedList<Exp>(); :}
+{: RESULT = new ArrayList<Exp>(); :}
         ;
 
     
