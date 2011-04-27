@@ -263,7 +263,7 @@ public class SyntaxTreePrinter extends DepthFirstVisitor
     public Void visit(NewObject n)
     {
         preWork(n);
-        n.i.accept(this);
+        n.id.accept(this);
         postWork(n);
         return null;
     }

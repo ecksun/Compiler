@@ -2,10 +2,10 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class NewObject extends Exp {
-  public Identifier i;
+  public Identifier id;
   
-  public NewObject(Identifier ai) {
-    i=ai;
+  public NewObject(Identifier id) {
+    this.id=id;
   }
 
   public void accept(Visitor v) {

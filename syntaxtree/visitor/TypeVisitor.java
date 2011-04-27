@@ -279,56 +279,70 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector
     @Override
     public Type visit(IntArrayType intArrayType)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new IntArrayType();
     }
 
     @Override
     public Type visit(If if1)
     {
-        // TODO Auto-generated method stub
+        Type exp = if1.exp.accept(this);
+        if (!(exp instanceof BooleanType)) {
+            complain(new WrongTypeException(BooleanType.class, exp.getClass(),
+            " if statements need a boolean expression."));
+        }
+        if1.ifStm.accept(this);
+        if1.elseStm.accept(this);
         return null;
     }
 
     @Override
     public Type visit(IdentifierType identifierType)
     {
-        // TODO Auto-generated method stub
-        return null;
+        identifierType.id.accept(this);
+        return identifierType;
     }
 
     @Override
     public Type visit(IdentifierExp identifierExp)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new Identifier(identifierExp.s).accept(this);
     }
 
     @Override
     public Type visit(Identifier identifier)
     {
-        // TODO Auto-generated method stub
-        return null;
+        Type type = scope.getType(identifier.name);
+        if (type == null) {
+            complain(new NoSuchSymbolException(identifier));
+            return new IdentifierType(identifier);
+        }
+        return type;
     }
 
     @Override
     public Type visit(Formal formal)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return formal.type.accept(this);
     }
 
     @Override
     public Type visit(False false1)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new BooleanType();
     }
 
     @Override
     public Type visit(ClassDeclSimple classDeclSimple)
     {
-        // TODO Auto-generated method stub
+        scope = classDeclSimple.getScope();
+        
+        for (VarDecl decl : classDeclSimple.varDecls)
+            decl.accept(this);
+        
+        for (MethodDecl method : classDeclSimple.methodDecls)
+            method.accept(this);
+        
+        scope = scope.parent;
         return null;
     }
 
@@ -342,91 +356,132 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector
     @Override
     public Type visit(Program program)
     {
-        // TODO Auto-generated method stub
+        program.main.accept(this);
+        for (ClassDecl classDecl : program.classDecls)
+            classDecl.accept(this);
         return null;
     }
 
+    /**
+     * TODO Fix Exception thrown as to take into account that there are two
+     * acceptable types
+     */
     @Override
     public Type visit(Print print)
     {
-        // TODO Auto-generated method stub
+        Type exp = print.exp.accept(this);
+        if (!(exp instanceof IntegerType || exp instanceof BooleanType)) {
+            complain(new WrongTypeException(IntegerType.class, exp.getClass(),
+                    " can only print Integer or Boolean"));
+        }
         return null;
     }
 
     @Override
     public Type visit(Plus plus)
     {
-        // TODO Auto-generated method stub
-        return null;
+        Type left = plus.left.accept(this);
+        if (!(left instanceof IntegerType)) {
+            complain(new WrongTypeException(IntegerType.class, left.getClass(),
+                    " left hand side of +"));
+        }
+        Type right = plus.right.accept(this);
+        if (!(right instanceof IntegerType)) {
+            complain(new WrongTypeException(IntegerType.class, left.getClass(),
+                    " right hand side of +"));
+        }
+        return new IntegerType();
     }
 
     @Override
     public Type visit(Not not)
     {
-        // TODO Auto-generated method stub
-        return null;
+        Type exp = not.exp.accept(this);
+        if (!(exp instanceof BooleanType)) {
+            complain(new WrongTypeException(BooleanType.class, exp.getClass(), "Expected boolean expression in boolean negation"));
+        }
+        return new BooleanType();
     }
 
     @Override
     public Type visit(NewObject newObject)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return newObject.id.accept(this);
     }
 
     @Override
     public Type visit(NewArray newArray)
     {
-        // TODO Auto-generated method stub
-        return null;
+        Type exp = newArray.exp.accept(this);
+        if (!(exp instanceof IntegerType)) {
+            complain(new WrongTypeException(IntegerType.class, exp.getClass(), "Expected integer expression as array assigment index"));
+        }
+        return new IntArrayType();
     }
 
     @Override
     public Type visit(Minus minus)
     {
-        // TODO Auto-generated method stub
-        return null;
+        Type left = minus.left.accept(this);
+        if (!(left instanceof IntegerType)) {
+            complain(new WrongTypeException(IntegerType.class, left.getClass(),
+                    " left hand side of -"));
+        }
+        Type right = minus.right.accept(this);
+        if (!(right instanceof IntegerType)) {
+            complain(new WrongTypeException(IntegerType.class, left.getClass(),
+                    " right hand side of -"));
+        }
+        return new IntegerType();
     }
 
     @Override
-    public Type visit(While while1)
+    public Type visit(While whil)
     {
-        // TODO Auto-generated method stub
+        whil.exp.accept(this);
+        whil.stm.accept(this);
         return null;
     }
 
     @Override
     public Type visit(VarDecl varDecl)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return varDecl.type.accept(this);
     }
 
     @Override
     public Type visit(True true1)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new BooleanType();
     }
 
     @Override
     public Type visit(Times times)
     {
-        // TODO Auto-generated method stub
-        return null;
+        Type left = times.left.accept(this);
+        if (!(left instanceof IntegerType)) {
+            complain(new WrongTypeException(IntegerType.class, left.getClass(),
+                    " left hand side of *"));
+        }
+        Type right = times.right.accept(this);
+        if (!(right instanceof IntegerType)) {
+            complain(new WrongTypeException(IntegerType.class, left.getClass(),
+                    " right hand side of *"));
+        }
+        return new IntegerType();
     }
 
     @Override
     public Type visit(This this1)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return scope.getType("this");
     }
 
     @Override
     public Type visit(StatementList statementList)
     {
-        // TODO Auto-generated method stub
+        for (Statement stm : statementList)
+            stm.accept(this);
         return null;
     }
 }
