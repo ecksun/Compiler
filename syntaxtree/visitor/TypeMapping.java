@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import syntaxtree.ClassDecl;
+import syntaxtree.ClassDeclSimple;
+import syntaxtree.IdentifierType;
+import syntaxtree.MainClass;
 import syntaxtree.MethodDecl;
 import syntaxtree.Scopeable;
 import syntaxtree.Type;
@@ -54,18 +58,22 @@ public class TypeMapping {
 	/**
 	 * Create a new TypeMapping with a defined parent
 	 * 
-	 * @param name
+	 * @param obj
 	 * @param parent
 	 *            The parent to this TypeMapping
 	 */
-	public TypeMapping(String name, TypeMapping parent) {
+	public TypeMapping(Scopeable obj, TypeMapping parent) {
 		System.out.println("New Scope:");
 		this.parent = parent;
 		typemap = new HashMap<String, Type>();
 		children = new HashMap<String, TypeMapping>();
 		methods = new HashMap<String, List<MethodDecl>>();
-		if (name != null)
-			parent.addChild(name, this);
+		if (obj.getName() != null) {
+			parent.addChild(obj.getName(), this);
+			if (obj instanceof ClassDecl) {
+			    typemap.put("this", new IdentifierType(((ClassDecl)obj).className));
+			}
+		}
 	}
 
 	public void addChild(String name, TypeMapping child) {
