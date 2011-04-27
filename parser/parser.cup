@@ -69,7 +69,7 @@ Program ::= MainClass:mainClass ClassDeclList:classDeclList
 {: RESULT = new Program(mainClass, classDeclList); :}
             ;
 
-ClassDeclList   ::= ClassDecl:classDecl ClassDeclList:list
+ClassDeclList   ::= ClassDeclList:list ClassDecl:classDecl
 {:  
     list.add(classDecl);
     RESULT = list; 
@@ -92,7 +92,7 @@ MainClass   ::= CLASS Identifier:className LBRACE PUBLIC STATIC VOID MAIN LPAREN
 :}
             ;
 
-VarDeclList ::= VarDecl:varDecl VarDeclList:list
+VarDeclList ::= VarDeclList:list VarDecl:varDecl
 {: 
     list.add(varDecl); 
     RESULT = list;
@@ -109,7 +109,7 @@ VarDecl ::= Type:type Identifier:name SEMICOLON
 :}
         ;
 
-MethodDeclList  ::= MethodDecl:methodDecl MethodDeclList:list
+MethodDeclList  ::= MethodDeclList:list MethodDecl:methodDecl 
 {: 
     list.add(methodDecl); 
     RESULT = list;
@@ -164,7 +164,7 @@ Type    ::= INT LBRACK RBRACK
 {: RESULT = new IdentifierType(id); :}
         ;
 
-StatementList   ::= Statement:stm StatementList:list
+StatementList   ::=  StatementList:list Statement:stm
 {: 
     list.add(stm); 
     RESULT = list;
