@@ -184,9 +184,8 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector {
             objectScope = TypeMapping.programScope
                     .getChild(((IdentifierType) (object)).id.name);
             if (objectScope != null) {
-                if (objectScope.getType(call.method.name) != null) {
-                    List<MethodDecl> matchingMethods = objectScope
-                            .getMethod(call.method.name);
+                List<MethodDecl> matchingMethods = objectScope.getMethod(call.method.name);
+                if (matchingMethods != null) {
                     MethodDecl methodMatch = null;
 
                     List<Type> types = new ArrayList<Type>();
