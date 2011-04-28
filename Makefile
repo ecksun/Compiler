@@ -5,13 +5,24 @@
 # Every Makefile should contain this line:
 SHELL = /bin/sh
 
+# Runtime program for executing compiled Java programs.
+JAVA = java
+# Extra flags to pass to the Java runtime program.
+JAVAFLAGS = 
+# All flags to pass to the Java runtime program.
+java_all_flags = $(JAVAFLAGS)\
+				 -classpath $(bin_dir):$(jcup_jar)
+
 # Program for compiling Java programs. 
 JAVAC = javac
+# Extra flags to give to the Java compiler (could be set when calling `make`).
+JAVACFLAGS =
+# All flags to pass to the Java compiler.
+javac_all_flags = $(JAVACFLAGS)\
+				  -classpath $(jcup_jar)\
+				  -d $(bin_dir)\
+				  -sourcepath .:$(lex_dir):$(parser_dir):$(syntaxtree_dir)
 
-# Extra flags to give to the Java compiler.
-JAVACFLAGS = -classpath $(jcup_jar)\
-			 -d $(bin_dir)\
-			 -sourcepath .:$(lex_dir):$(parser_dir):$(syntaxtree_dir)
 
 # JFlex binary to use for lexer generation.
 JFLEX = $(lib_dir)/jflex/bin/jflex
@@ -41,6 +52,9 @@ jcup_jar = $(lib_dir)/java-cup-11a.jar
 # Java source files.
 java_sources = **/*.java
 
+# Default test input file to pass to test main program.
+TEST_FILE = $(test_dir)/programs/correct/TestPrimeSieve.java
+
 
 ##################################################
 ## Targets
@@ -50,8 +64,11 @@ java_sources = **/*.java
 
 all: lex parser classes
 
+run_test: all
+	$(JAVA) $(java_all_flags) test.Main $(TEST_FILE)
+
 classes: $(bin_dir)
-	$(JAVAC) $(JAVACFLAGS) $(java_sources)
+	$(JAVAC) $(javac_all_flags) $(java_sources)
 
 $(bin_dir):
 	-mkdir -p $@
