@@ -26,6 +26,13 @@ public class ClassCreator {
                     .println("File not found while trying to open the filewriter to the .j file");
             e.printStackTrace();
         }
+        println(".class " + className.name);
+        println(".super java/lang/Object");
+        println(".method public <init>()V");
+        println("aload_0");
+        println("invokespecial java/lang/Object/<init>()V");
+        println("return");
+        println(".end method");
     }
 
     private void close() {

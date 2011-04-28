@@ -36,6 +36,8 @@ import syntaxtree.VarDecl;
 import syntaxtree.While;
 
 public class CodeGeneratorVisitor extends DepthFirstVisitor {
+    private ClassCreator output;
+
     @Override
     public Void visit(And n) {
 
@@ -198,9 +200,9 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(MainClass n) {
-
+        output = ClassCreator.createClass(n.className);
+        output.println(".method public static main([Ljava/lang/String;)V");
         super.visit(n);
-
         return null;
     }
 
@@ -262,9 +264,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Program n) {
-
         super.visit(n);
-
         return null;
     }
 
