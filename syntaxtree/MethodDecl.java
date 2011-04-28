@@ -51,7 +51,7 @@ public class MethodDecl implements Scopeable {
 
     @Override
     public String getName() {
-        return null;
+        return methodName.name;
     }
 
     public TypeMapping getScope() {
