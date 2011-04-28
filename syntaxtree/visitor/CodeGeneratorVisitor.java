@@ -29,6 +29,7 @@ import syntaxtree.Not;
 import syntaxtree.Plus;
 import syntaxtree.Print;
 import syntaxtree.Program;
+import syntaxtree.Statement;
 import syntaxtree.This;
 import syntaxtree.Times;
 import syntaxtree.True;
@@ -199,10 +200,13 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     }
 
     @Override
-    public Void visit(MainClass n) {
-        output = ClassCreator.createClass(n.className);
+    public Void visit(MainClass mainClass) {
+        output = ClassCreator.createClass(mainClass.className);
         output.println(".method public static main([Ljava/lang/String;)V");
-        super.visit(n);
+        for (Statement statement : mainClass.statements) {
+            statement.accept(this);
+        }
+        output.println(".end method");
         return null;
     }
 
