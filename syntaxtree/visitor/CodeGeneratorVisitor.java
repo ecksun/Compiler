@@ -41,33 +41,42 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(And n) {
-
+        // Visit AND expressions and let them generate code that pushes the two
+        // operands to the stack.
         super.visit(n);
 
+        output.println("iand"); // value1, value2 => result
         return null;
     }
 
     @Override
     public Void visit(ArrayAssign n) {
-
+        // Visit ArrayAssign and let Identifier generate code that pushes a
+        // reference to the stack, and the two expressions pushes the index and
+        // value.
         super.visit(n);
 
+        output.println("iastore"); // arrayref, index, value =>
         return null;
     }
 
     @Override
     public Void visit(ArrayLength n) {
-
+        // Assume ArrayLength identifying Expressions leaves an array reference
+        // on top of the stack.
         super.visit(n);
 
+        output.println("arraylength"); // arrayref => length
         return null;
     }
 
     @Override
     public Void visit(ArrayLookup n) {
-
+        // Visit ArrayLookup and assume it leaves an arrayref and index on the
+        // stack.
         super.visit(n);
 
+        output.println("iaload"); // arrayref, index => value
         return null;
     }
 
