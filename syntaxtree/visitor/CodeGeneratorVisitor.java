@@ -306,8 +306,18 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(While n) {
+        String expLabel = LabelCreator.getLabel();
+        String endLabel = LabelCreator.getLabel();
+        String stmLabel = LabelCreator.getLabel();
+        output.println(expLabel + ":");
+        n.exp.accept(this);
 
-        super.visit(n);
+        output.println("ifne " + endLabel
+                + "; if not true, jump to after while, otherwise fallthrough");
+        output.println(stmLabel + ":");
+        n.stm.accept(this);
+        output.println("goto " + expLabel + "; Begin while again");
+        output.println(endLabel + ":");
 
         return null;
     }
