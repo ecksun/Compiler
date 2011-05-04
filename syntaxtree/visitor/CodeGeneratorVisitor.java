@@ -34,6 +34,7 @@ import syntaxtree.Statement;
 import syntaxtree.This;
 import syntaxtree.Times;
 import syntaxtree.True;
+import syntaxtree.Type;
 import syntaxtree.VarDecl;
 import syntaxtree.While;
 
@@ -45,6 +46,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
      */
     private TypeMapping scope;
 
+    private LocalVariableIndexMapper indexMapper;
+    
     /**
      * Gets the scope from the {@link Scopeable} block and updates the internal
      * scope reference.
@@ -105,9 +108,18 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Assign n) {
-
-        super.visit(n);
-
+        n.exp.accept(this);
+        
+        Type type = scope.getType(n.id.name);
+        int id = indexMapper.getIndex(n.id);
+        
+        if (type instanceof IdentifierType) {
+            output.println("astore " + id);
+        }
+        else if (type instanceof IntegerType || type instanceof BooleanType) {
+            output.println("istore " + id);
+        }
+        
         return null;
     }
 
@@ -254,12 +266,15 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(MethodDecl n) {
+        getScope(n);
         output.print(".method public " + n.retType + " " + n.getName() + "(");
         for (Formal arg : n.args) {
             arg.type.accept(this); // XXX Note, requires that Type doesnt print newline
         }
         output.print(")");
         n.retType.accept(this); // FIXME will this actually work? need to print V/I/Whatever
+        indexMapper = scope.getIndexMapper(n);
+        restoreScope();
         return null;
     }
 
