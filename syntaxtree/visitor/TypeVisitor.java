@@ -71,6 +71,12 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector {
         return exception;
     }
 
+    /**
+     * Gets the scope from the {@link Scopeable} block and updates the internal
+     * scope reference.
+     * 
+     * @param block The scopeable block to update type mapping from. 
+     */
     private void getScope(Scopeable block) {
         scope = block.getScope();
     }
@@ -80,6 +86,9 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector {
         return error;
     }
 
+    /**
+     * Restores the type-mapping scope to the parent of the current.
+     */
     private void restoreScope() {
         scope = scope.parent;
     }
@@ -162,11 +171,11 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector {
 
     @Override
     public Type visit(Block block) {
-        scope = block.getScope();
+        getScope(block);
         for (Statement stm : block.statements) {
             stm.accept(this);
         }
-        scope = scope.parent;
+        restoreScope();
         return null;
     }
 
@@ -237,7 +246,7 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector {
 
     @Override
     public Type visit(ClassDeclSimple classDeclSimple) {
-        scope = classDeclSimple.getScope();
+        getScope(classDeclSimple);
 
         for (VarDecl decl : classDeclSimple.varDecls) {
             decl.accept(this);
@@ -247,7 +256,7 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector {
             method.accept(this);
         }
 
-        scope = scope.parent;
+        restoreScope();
         return null;
     }
 
@@ -327,20 +336,19 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector {
 
     @Override
     public Type visit(MainClass mainClass) {
-        scope = mainClass.getScope();
+        getScope(mainClass);
 
         for (Statement statement : mainClass.statements) {
             statement.accept(this);
         }
 
-        scope = scope.parent;
-
+        restoreScope();
         return null;
     }
 
     @Override
     public Type visit(MethodDecl methodDecl) {
-        scope = methodDecl.getScope();
+        getScope(methodDecl);
 
         methodDecl.retType.accept(this);
 
@@ -365,8 +373,7 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector {
                     "Return expression in method must match method type definition."));
         }
 
-        scope = scope.parent;
-
+        restoreScope();
         return methodType;
     }
 
