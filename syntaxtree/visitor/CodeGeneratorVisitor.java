@@ -29,6 +29,7 @@ import syntaxtree.Not;
 import syntaxtree.Plus;
 import syntaxtree.Print;
 import syntaxtree.Program;
+import syntaxtree.Scopeable;
 import syntaxtree.Statement;
 import syntaxtree.This;
 import syntaxtree.Times;
@@ -38,7 +39,29 @@ import syntaxtree.While;
 
 public class CodeGeneratorVisitor extends DepthFirstVisitor {
     private ClassCreator output;
+    /**
+     * The type mapping for the current scope. Should always be kept up to date
+     * whenever changing scope.
+     */
+    private TypeMapping scope;
 
+    /**
+     * Gets the scope from the {@link Scopeable} block and updates the internal
+     * scope reference.
+     * 
+     * @param block The scopeable block to update type mapping from. 
+     */
+    private void getScope(Scopeable block) {
+        scope = block.getScope();
+    }
+
+    /**
+     * Restores the type-mapping scope to the parent of the current.
+     */
+    private void restoreScope() {
+        scope = scope.parent;
+    }
+    
     @Override
     public Void visit(And n) {
         // Visit AND expressions and let them generate code that pushes the two
@@ -90,9 +113,12 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Block n) {
-
+        getScope(n);
+        
         super.visit(n);
 
+        restoreScope();
+        
         return null;
     }
 
@@ -122,9 +148,12 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(ClassDeclSimple n) {
-
+        getScope(n);
+        
         super.visit(n);
 
+        restoreScope();
+        
         return null;
     }
 
@@ -209,6 +238,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(MainClass mainClass) {
+        getScope(mainClass);
+        
         output = ClassCreator.createClass(mainClass.className);
         output.println(".method public static main([Ljava/lang/String;)V");
         for (Statement statement : mainClass.statements) {
@@ -216,6 +247,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         }
         output.println("return");
         output.println(".end method");
+        
+        restoreScope();
         return null;
     }
 
