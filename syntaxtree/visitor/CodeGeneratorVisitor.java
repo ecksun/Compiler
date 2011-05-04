@@ -171,7 +171,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(False n) {
-        output.println("dconst_0");
+        output.println("iconst_0");
         super.visit(n);
         return null;
     }
@@ -210,8 +210,15 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(If n) {
-
-        super.visit(n);
+        n.exp.accept(this);
+        String endLabel = LabelCreator.getLabel();
+        String elseLabel = LabelCreator.getLabel();
+        output.println("ifne " + elseLabel);
+        n.ifStm.accept(this);
+        output.println("goto " + endLabel);
+        output.println(elseLabel + ":");
+        n.elseStm.accept(this);
+        output.println(endLabel + ":");
 
         return null;
     }
@@ -242,9 +249,16 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(LessThan n) {
-
         super.visit(n);
-
+        String label = LabelCreator.getLabel();
+        String endLabel = LabelCreator.getLabel();
+        output.println("if_icmplt " + label + "; if less than, goto label");
+        output.println("istore_0; else store false");
+        output.println("goto " + endLabel + "; and finish LessThan");
+        output.println(label + ":");
+        output.println("istore_1; Store 1 if true");
+        output.println(endLabel);
+        
         return null;
     }
 
@@ -287,17 +301,16 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(NewArray n) {
-
         super.visit(n);
-
+        output.println("newarray int");
         return null;
     }
 
     @Override
     public Void visit(NewObject n) {
-
-        n.id.accept(this);
-
+        output.print("new ");
+        n.id.accept(this); 
+        // output.println(); // Depending on if visit(Identifier) prints with newline or not.
         return null;
     }
 
@@ -340,26 +353,21 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Times n) {
-
         super.visit(n);
         output.println("imul");
-
         return null;
     }
 
     @Override
     public Void visit(True n) {
-        output.println("dconst_1");
+        output.println("iconst_1");
         super.visit(n);
-
         return null;
     }
 
     @Override
     public Void visit(VarDecl n) {
-
-        super.visit(n);
-
+        // Don't want to visit anything further down the tree from here.
         return null;
     }
 
