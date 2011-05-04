@@ -130,9 +130,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(False n) {
-
+        output.println("dconst_0");
         super.visit(n);
-
         return null;
     }
 
@@ -215,23 +214,26 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         for (Statement statement : mainClass.statements) {
             statement.accept(this);
         }
+        output.println("return");
         output.println(".end method");
         return null;
     }
 
     @Override
     public Void visit(MethodDecl n) {
-
-        super.visit(n);
-
+        output.print(".method public " + n.retType + " " + n.getName() + "(");
+        for (Formal arg : n.args) {
+            arg.type.accept(this); // XXX Note, requires that Type doesnt print newline
+        }
+        output.print(")");
+        n.retType.accept(this); // FIXME will this actually work? need to print V/I/Whatever
         return null;
     }
 
     @Override
     public Void visit(Minus n) {
-
         super.visit(n);
-
+        output.println("isub");
         return null;
     }
 
@@ -253,17 +255,15 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Not n) {
-
         super.visit(n);
-
+        output.println("ineg");
         return null;
     }
 
     @Override
     public Void visit(Plus n) {
-
         super.visit(n);
-
+        output.println("iadd");
         return null;
     }
 
@@ -271,6 +271,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     public Void visit(Print n) {
 
         super.visit(n);
+        
 
         return null;
     }
@@ -293,13 +294,14 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     public Void visit(Times n) {
 
         super.visit(n);
+        output.println("imul");
 
         return null;
     }
 
     @Override
     public Void visit(True n) {
-
+        output.println("dconst_1");
         super.visit(n);
 
         return null;

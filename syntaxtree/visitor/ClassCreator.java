@@ -35,11 +35,16 @@ public class ClassCreator {
         println(".end method");
     }
 
+    // TODO this needs to be run at program exit.
     private void close() {
         stream.close();
     }
 
     public void println(String str) {
         stream.println(str);
+    }
+
+    public void print(String str) {
+        stream.print(str);
     }
 }
