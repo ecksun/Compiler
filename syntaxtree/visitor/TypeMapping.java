@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import syntaxtree.ClassDecl;
+import syntaxtree.Formal;
 import syntaxtree.Identifier;
 import syntaxtree.IdentifierType;
 import syntaxtree.MethodDecl;
@@ -28,6 +29,10 @@ import syntaxtree.VarDecl;
  */
 public class TypeMapping {
     TypeMapping parent;
+    /**
+     * The root TypeMapping of the TypeMapping tree, this will be the
+     * TypeMapping that handles the program scope.
+     */
     public static TypeMapping programScope;
     private HashMap<String, Type> typemap;
     /**
@@ -40,6 +45,8 @@ public class TypeMapping {
      * {@link MethodDecl}s.
      */
     private HashMap<String, List<MethodDecl>> methods;
+
+    private HashMap<MethodDecl, LocalVariableIndexMapper> indexMappers;
 
     /**
      * Create a new TypeMapping, this will set the parent to null which is
@@ -115,6 +122,15 @@ public class TypeMapping {
                 throw new VariableDupeException(decl.getName());
             } else {
                 decls.add(decl);
+                LocalVariableIndexMapper indexMapping = new LocalVariableIndexMapper(
+                        this);
+                // XXX Will fail if there is types of different sizes, as
+                // LocalVariableIndexMapper.getIndex requires that the formals
+                // are in the TypeMapping in order for it to work.
+                for (Formal arg : decl.args) {
+                    indexMapping.getIndex(arg.name);
+                }
+                indexMappers.put(decl, indexMapping);
             }
         }
         System.out.println("|- " + decl);
@@ -151,6 +167,18 @@ public class TypeMapping {
 
     public TypeMapping getChild(String name) {
         return children.get(name);
+    }
+
+    /**
+     * Get the {@link LocalVariableIndexMapper} of a {@link MethodDecl}
+     * 
+     * @param decl
+     *            The {@link MethodDecl} to look up
+     * @return A {@link LocalVariableIndexMapper} corresponding to the provided
+     *         {@link MethodDecl}, or null if there is no such method.
+     */
+    public LocalVariableIndexMapper getIndexMapper(MethodDecl decl) {
+        return indexMappers.get(decl);
     }
 
     public List<MethodDecl> getMethod(String name) {
