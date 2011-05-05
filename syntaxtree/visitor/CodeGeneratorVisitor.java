@@ -153,7 +153,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(BooleanType n) {
-        output.println("BooleanType unimplemented");
+        System.err.println("BooleanType unimplemented");
         super.visit(n);
 
         return null;
@@ -185,7 +185,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(ClassDeclExtends n) {
-        output.println("ClassDeclExtends unimplemented");
+        System.err.println("ClassDeclExtends unimplemented");
         super.visit(n);
 
         return null;
@@ -194,7 +194,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(ClassDeclSimple n) {
         getScope(n);
-        output.println("ClassDeclSimple unimplemented");
+        System.err.println("ClassDeclSimple unimplemented");
         super.visit(n);
 
         restoreScope();
@@ -211,7 +211,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Formal n) {
-        output.println("Formal unimplemented");
+        System.err.println("Formal unimplemented");
         super.visit(n);
 
         return null;
@@ -219,9 +219,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Identifier n) {
-        output.println("Identifier unimplemented");
-        super.visit(n);
-
+        // TODO jag tror vi hellre vill att den här pushar en objref på stacken än att skriva ut sitt eget namn (det kan den anropande visit-metoden göra)
+        //output.println(n.name);
         return null;
     }
 
@@ -233,7 +232,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(IdentifierType n) {
-        output.println("IdentifierType unimplemented");
+        System.err.println("IdentifierType unimplemented");
         super.visit(n);
 
         return null;
@@ -256,7 +255,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(IntArrayType n) {
-        output.println("IntArrayType unimplemented");
+        System.err.println("IntArrayType unimplemented");
         super.visit(n);
 
         return null;
@@ -280,7 +279,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(IntegerType n) {
-        output.println("IntegerType unimplemented");
+        System.err.println("IntegerType unimplemented");
         super.visit(n);
 
         return null;
@@ -320,8 +319,9 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(MethodDecl n) {
+        // TODO fixa in så det blir rätt osv.
         getScope(n);
-        output.print(".method public " + n.retType + " " + n.getName() + "(");
+        output.print(".method public " + getShortName(n.retType) + "(");
         for (Formal arg : n.args) {
             output.print(getShortName(arg.type));
         }
@@ -329,7 +329,23 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.println(getShortName(n.retType));
         indexMapper = scope.getIndexMapper(n);
         restoreScope();
+        output.println(".end method");
         return null;
+
+
+        // TODO vill inte köra super.visit(n), utan handplocka lite härifrån, bara tillräckligt så att trädet traverseras korrekt.
+        //methodDecl.methodName.accept(this);
+        //for (Formal arg : methodDecl.args) {
+            //arg.accept(this);
+        //}
+        //for (VarDecl decl : methodDecl.varDecls) {
+            //decl.accept(this);
+        //}
+        //for (Statement statement : methodDecl.statements) {
+            //statement.accept(this);
+        //}
+        //methodDecl.returnExpression.accept(this);
+        //return null;
     }
 
     @Override
@@ -348,8 +364,9 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(NewObject n) {
-        output.print("new ");
-        n.id.accept(this);
+        output.println("new " + n.id.name);
+        // TODO 
+        //n.id.accept(this);
         // output.println(); // Depending on if visit(Identifier) prints with
         // newline or not.
         return null;
@@ -391,7 +408,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(This n) {
 
-        output.println("This unimplemented");
+        System.err.println("This unimplemented");
         super.visit(n);
 
         return null;
