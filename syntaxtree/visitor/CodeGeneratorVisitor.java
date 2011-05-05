@@ -368,14 +368,20 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Print n) {
-
         super.visit(n);
-
+        
+        Type expType = scope.getType(n.exp);
+        
+        output.println("getstatic java/lang/System/out Ljava/io/PrintStream");
+        output.print("invokevirtual java/io/PrintStream/println(");
+        output.print(getShortName(expType));
+        output.println(")V");
         return null;
     }
 
     @Override
     public Void visit(Program n) {
+        // TODO need to do something here?
         super.visit(n);
         return null;
     }
