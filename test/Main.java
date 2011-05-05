@@ -3,6 +3,7 @@ package test;
 import lex.Lexer;
 import parser.parser;
 import syntaxtree.Program;
+import syntaxtree.visitor.CodeGeneratorVisitor;
 import syntaxtree.visitor.SymbolTableVisitor;
 import syntaxtree.visitor.SyntaxTreePrinter;
 import syntaxtree.visitor.TypeVisitor;
@@ -40,6 +41,10 @@ public class Main {
 
             System.out.println("TypeVisitor");
             visitor = new TypeVisitor();
+            result.accept(visitor);
+            
+            visitor = new CodeGeneratorVisitor();
+            System.out.println(visitor.getClass().getName());
             result.accept(visitor);
 
         } catch (java.io.IOException e) {
