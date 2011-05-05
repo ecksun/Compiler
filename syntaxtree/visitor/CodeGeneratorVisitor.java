@@ -321,31 +321,32 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     public Void visit(MethodDecl n) {
         // TODO fixa in så det blir rätt osv.
         getScope(n);
-        output.print(".method public " + getShortName(n.retType) + "(");
+
+        // Prepare the .method directive, incl. formal and return types.
+        output.print(".method public " + n.methodName + "(");
         for (Formal arg : n.args) {
             output.print(getShortName(arg.type));
         }
         output.print(")");
         output.println(getShortName(n.retType));
+
+        // Update index mapper reference.
         indexMapper = scope.getIndexMapper(n);
-        restoreScope();
+
+        // Traverse the given method; first variable declarations.
+        for (VarDecl decl : n.varDecls) {
+            decl.accept(this);
+        }
+        // Then statements.
+        for (Statement statement : n.statements) {
+            statement.accept(this);
+        }
+        // And at last the return expression.
+        n.returnExpression.accept(this);
+
         output.println(".end method");
+        restoreScope();
         return null;
-
-
-        // TODO vill inte köra super.visit(n), utan handplocka lite härifrån, bara tillräckligt så att trädet traverseras korrekt.
-        //methodDecl.methodName.accept(this);
-        //for (Formal arg : methodDecl.args) {
-            //arg.accept(this);
-        //}
-        //for (VarDecl decl : methodDecl.varDecls) {
-            //decl.accept(this);
-        //}
-        //for (Statement statement : methodDecl.statements) {
-            //statement.accept(this);
-        //}
-        //methodDecl.returnExpression.accept(this);
-        //return null;
     }
 
     @Override
