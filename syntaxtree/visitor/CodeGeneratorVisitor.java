@@ -153,7 +153,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(BooleanType n) {
-
+        output.println("BooleanType unimplemented");
         super.visit(n);
 
         return null;
@@ -161,6 +161,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Call n) {
+        // TODO check if this is indeed the right order of everything on the
+        // stack
         for (Exp arg : n.args) { // Put the arguments on the "bottom" of the
             // stack
             arg.accept(this);
@@ -183,7 +185,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(ClassDeclExtends n) {
-
+        output.println("ClassDeclExtends unimplemented");
         super.visit(n);
 
         return null;
@@ -192,7 +194,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(ClassDeclSimple n) {
         getScope(n);
-
+        output.println("ClassDeclSimple unimplemented");
         super.visit(n);
 
         restoreScope();
@@ -209,7 +211,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Formal n) {
-
+        output.println("Formal unimplemented");
         super.visit(n);
 
         return null;
@@ -217,7 +219,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Identifier n) {
-
+        output.println("Identifier unimplemented");
         super.visit(n);
 
         return null;
@@ -231,7 +233,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(IdentifierType n) {
-
+        output.println("IdentifierType unimplemented");
         super.visit(n);
 
         return null;
@@ -254,7 +256,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(IntArrayType n) {
-
+        output.println("IntArrayType unimplemented");
         super.visit(n);
 
         return null;
@@ -262,12 +264,12 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     /**
      * Pushes value of the integer literal onto the stack.
-     *
-     * @param n The integer literal to be pushed onto operation stack.
+     * 
+     * @param n
+     *            The integer literal to be pushed onto operation stack.
      */
     @Override
     public Void visit(IntegerLiteral n) {
-
         // According to Jasmin docs, 'ldc' takes a constant to be pushed onto
         // the stack, in contrast to the Java bytecode instruction 'ldc', which
         // takes an index for the runtime constant pool.
@@ -278,7 +280,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(IntegerType n) {
-
+        output.println("IntegerType unimplemented");
         super.visit(n);
 
         return null;
@@ -305,6 +307,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
         output = ClassCreator.createClass(mainClass.className);
         output.println(".method public static main([Ljava/lang/String;)V");
+        output.println(".limit stack 4"); // TODO is this correct?
         for (Statement statement : mainClass.statements) {
             statement.accept(this);
         }
@@ -368,11 +371,10 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Print n) {
-        super.visit(n);
-        
         Type expType = scope.getType(n.exp);
-        
-        output.println("getstatic java/lang/System/out Ljava/io/PrintStream");
+
+        output.println("getstatic java/lang/System/out Ljava/io/PrintStream;");
+        super.visit(n);
         output.print("invokevirtual java/io/PrintStream/println(");
         output.print(getShortName(expType));
         output.println(")V");
@@ -389,6 +391,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(This n) {
 
+        output.println("This unimplemented");
         super.visit(n);
 
         return null;
