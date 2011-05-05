@@ -249,8 +249,8 @@ public class TypeMapping {
                     if (method.args.size() == call.args.size()) {
                         boolean match = true;
                         for (int i = 0; i < call.args.size(); ++i) {
-                            if (!method.args.get(i).type.equals(call.args
-                                    .get(i))) {
+                            if (!method.args.get(i).type
+                                    .equals(getType(call.args.get(i)))) {
                                 match = false;
                                 break;
                             }
@@ -265,6 +265,9 @@ public class TypeMapping {
                 System.err.println("öhm, error!!");
             }
         }
+        System.err
+                .println("Should not happen, we have mised implemented support for "
+                        + exp + " in TypeMapping.getType(Exp)");
         return null; // In case we missed implementing a type
     }
 
