@@ -16,6 +16,7 @@ public class LocalVariableIndexMapper {
 
     public LocalVariableIndexMapper(TypeMapping typeMapping) {
         nextId = 1;
+        this.indexMap = new HashMap<String, Integer>();
         this.typeMapping = typeMapping;
     }
 

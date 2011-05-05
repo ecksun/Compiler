@@ -11,7 +11,9 @@ class Test4A {
 
     public int test() {
         int test1;
+        int test2;
         test1 = this.test1(1, 2, 3);
+        test2 = 100;
         return test1;
     }
 
@@ -19,6 +21,12 @@ class Test4A {
         System.out.println(a);
         System.out.println(b);
         System.out.println(c);
+        return 0;
+    }
+
+    public int test1(int a, int b) {
+        System.out.println(a);
+        System.out.println(b);
         return 0;
     }
 

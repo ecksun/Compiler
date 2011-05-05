@@ -129,9 +129,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         n.exp.accept(this);
 
         Type type = scope.getType(n.id.name);
-        //int id = indexMapper.getIndex(n.id);
-        // TODO fix indexMapper NPE
-        int id = 1;
+        int id = indexMapper.getIndex(n.id);
 
         if (type instanceof IdentifierType) {
             output.println("astore " + id);
