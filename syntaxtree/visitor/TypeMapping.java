@@ -98,6 +98,7 @@ public class TypeMapping {
         typemap = new HashMap<String, Type>();
         children = new HashMap<String, TypeMapping>();
         methods = new HashMap<String, List<MethodDecl>>();
+        indexMappers = new HashMap<MethodDecl, LocalVariableIndexMapper>();
         if (obj != null && obj.getName() != null) {
             parent.addChild(obj.getName(), this);
             if (obj instanceof ClassDecl) {
