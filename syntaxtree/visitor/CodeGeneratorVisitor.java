@@ -129,7 +129,9 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         n.exp.accept(this);
 
         Type type = scope.getType(n.id.name);
-        int id = indexMapper.getIndex(n.id);
+        //int id = indexMapper.getIndex(n.id);
+        // TODO fix indexMapper NPE
+        int id = 1;
 
         if (type instanceof IdentifierType) {
             output.println("astore " + id);
@@ -194,7 +196,10 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(ClassDeclSimple n) {
         getScope(n);
-        System.err.println("ClassDeclSimple unimplemented");
+
+        // Create a new class (and close previous implicitly).
+        output = ClassCreator.createClass(n.className);
+
         super.visit(n);
 
         restoreScope();
@@ -221,12 +226,15 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     public Void visit(Identifier n) {
         // TODO jag tror vi hellre vill att den här pushar en objref på stacken än att skriva ut sitt eget namn (det kan den anropande visit-metoden göra)
         //output.println(n.name);
+        output.println("; //identifier objref for " + n);
         return null;
     }
 
     @Override
     public Void visit(IdentifierExp n) {
-        output.print(n.id.name);
+        //output.print(n.id.name);
+        // TODO push an objref to this identifier onto the stack
+        output.println("; //identifier exp objref for " + n.id);
         return null;
     }
 
@@ -434,6 +442,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(VarDecl n) {
         // Don't want to visit anything further down the tree from here.
+        output.println("; // VarDecl for " + n.name);
         return null;
     }
 
