@@ -260,10 +260,18 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         return null;
     }
 
+    /**
+     * Pushes value of the integer literal onto the stack.
+     *
+     * @param n The integer literal to be pushed onto operation stack.
+     */
     @Override
     public Void visit(IntegerLiteral n) {
 
-        super.visit(n);
+        // According to Jasmin docs, 'ldc' takes a constant to be pushed onto
+        // the stack, in contrast to the Java bytecode instruction 'ldc', which
+        // takes an index for the runtime constant pool.
+        output.println("ldc " + n.i);
 
         return null;
     }
@@ -382,6 +390,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Times n) {
+        // Visit TIMES left and right expressions so that
+        // their values are pushed onto the stack.
         super.visit(n);
         output.println("imul");
         return null;
