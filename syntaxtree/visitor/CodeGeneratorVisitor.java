@@ -10,6 +10,7 @@ import syntaxtree.BooleanType;
 import syntaxtree.Call;
 import syntaxtree.ClassDeclExtends;
 import syntaxtree.ClassDeclSimple;
+import syntaxtree.Exp;
 import syntaxtree.False;
 import syntaxtree.Formal;
 import syntaxtree.Identifier;
@@ -47,15 +48,32 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     private TypeMapping scope;
 
     private LocalVariableIndexMapper indexMapper;
-    
+
+    private String getLongName(Type type) {
+        // TODO
+        return type.toString();
+    }
+
     /**
      * Gets the scope from the {@link Scopeable} block and updates the internal
      * scope reference.
      * 
-     * @param block The scopeable block to update type mapping from. 
+     * @param block
+     *            The scopeable block to update type mapping from.
      */
     private void getScope(Scopeable block) {
         scope = block.getScope();
+    }
+
+    private String getShortName(Type type) {
+        if (type instanceof IntegerType || type instanceof BooleanType) {
+            return "I";
+        } else if (type instanceof IntArrayType) {
+            return "[I";
+        } else if (type instanceof IdentifierType) {
+            return "L" + getLongName(type) + ";";
+        }
+        return null;
     }
 
     /**
@@ -64,7 +82,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     private void restoreScope() {
         scope = scope.parent;
     }
-    
+
     @Override
     public Void visit(And n) {
         // Visit AND expressions and let them generate code that pushes the two
@@ -109,28 +127,27 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(Assign n) {
         n.exp.accept(this);
-        
+
         Type type = scope.getType(n.id.name);
         int id = indexMapper.getIndex(n.id);
-        
+
         if (type instanceof IdentifierType) {
             output.println("astore " + id);
-        }
-        else if (type instanceof IntegerType || type instanceof BooleanType) {
+        } else if (type instanceof IntegerType || type instanceof BooleanType) {
             output.println("istore " + id);
         }
-        
+
         return null;
     }
 
     @Override
     public Void visit(Block n) {
         getScope(n);
-        
+
         super.visit(n);
 
         restoreScope();
-        
+
         return null;
     }
 
@@ -144,8 +161,22 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Call n) {
+        for (Exp arg : n.args) { // Put the arguments on the "bottom" of the
+            // stack
+            arg.accept(this);
+        }
+        n.obj.accept(this); // And the this reference on the top
+        output.print("invokevirtual ");
+        output.print(getLongName(scope.getType(n.obj))); // Might need to do
+        // s/./\//
+        output.print("/" + n.method.name + "("); // Method name
+        for (Exp arg : n.args) { // All arguments
+            Type type = scope.getType(arg);
+            output.print(getShortName(type));
+        }
+        output.println(")" + getShortName(scope.getType(n))); // The return type
 
-        super.visit(n);
+        n.method.accept(this); // The actual method
 
         return null;
     }
@@ -161,11 +192,11 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(ClassDeclSimple n) {
         getScope(n);
-        
+
         super.visit(n);
 
         restoreScope();
-        
+
         return null;
     }
 
@@ -194,9 +225,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(IdentifierExp n) {
-
-        super.visit(n);
-
+        output.print(n.id.name);
         return null;
     }
 
@@ -258,14 +287,14 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.println(label + ":");
         output.println("istore_1; Store 1 if true");
         output.println(endLabel);
-        
+
         return null;
     }
 
     @Override
     public Void visit(MainClass mainClass) {
         getScope(mainClass);
-        
+
         output = ClassCreator.createClass(mainClass.className);
         output.println(".method public static main([Ljava/lang/String;)V");
         for (Statement statement : mainClass.statements) {
@@ -273,7 +302,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         }
         output.println("return");
         output.println(".end method");
-        
+
         restoreScope();
         return null;
     }
@@ -283,10 +312,10 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         getScope(n);
         output.print(".method public " + n.retType + " " + n.getName() + "(");
         for (Formal arg : n.args) {
-            arg.type.accept(this); // XXX Note, requires that Type doesnt print newline
+            output.print(getShortName(arg.type));
         }
         output.print(")");
-        n.retType.accept(this); // FIXME will this actually work? need to print V/I/Whatever
+        output.println(getShortName(n.retType));
         indexMapper = scope.getIndexMapper(n);
         restoreScope();
         return null;
@@ -309,8 +338,9 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(NewObject n) {
         output.print("new ");
-        n.id.accept(this); 
-        // output.println(); // Depending on if visit(Identifier) prints with newline or not.
+        n.id.accept(this);
+        // output.println(); // Depending on if visit(Identifier) prints with
+        // newline or not.
         return null;
     }
 
@@ -332,7 +362,6 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     public Void visit(Print n) {
 
         super.visit(n);
-        
 
         return null;
     }

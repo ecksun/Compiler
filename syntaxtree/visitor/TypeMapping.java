@@ -10,12 +10,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import syntaxtree.And;
+import syntaxtree.ArrayLength;
+import syntaxtree.ArrayLookup;
+import syntaxtree.BooleanType;
+import syntaxtree.Call;
 import syntaxtree.ClassDecl;
+import syntaxtree.Exp;
+import syntaxtree.False;
 import syntaxtree.Formal;
 import syntaxtree.Identifier;
+import syntaxtree.IdentifierExp;
 import syntaxtree.IdentifierType;
+import syntaxtree.IntArrayType;
+import syntaxtree.IntegerLiteral;
+import syntaxtree.IntegerType;
+import syntaxtree.LessThan;
 import syntaxtree.MethodDecl;
+import syntaxtree.Minus;
+import syntaxtree.NewArray;
+import syntaxtree.NewObject;
+import syntaxtree.Not;
+import syntaxtree.Plus;
 import syntaxtree.Scopeable;
+import syntaxtree.This;
+import syntaxtree.Times;
+import syntaxtree.True;
 import syntaxtree.Type;
 import syntaxtree.VarDecl;
 
@@ -183,6 +203,71 @@ public class TypeMapping {
 
     public List<MethodDecl> getMethod(String name) {
         return methods.get(name);
+    }
+
+    /**
+     * Get the type of an expressions
+     * 
+     * @param exp
+     *            The expression to look up
+     * @return The type of the expression
+     */
+    public Type getType(Exp exp) {
+        if (exp instanceof And || exp instanceof LessThan || exp instanceof Not
+                || exp instanceof True || exp instanceof False) {
+            return new BooleanType();
+        }
+
+        if (exp instanceof Plus || exp instanceof Minus || exp instanceof Times
+                || exp instanceof ArrayLength || exp instanceof ArrayLookup
+                || exp instanceof IntegerLiteral) {
+            return new IntegerType();
+        }
+
+        if (exp instanceof NewArray) {
+            return new IntArrayType();
+        }
+
+        if (exp instanceof NewObject) {
+            return new IdentifierType(((NewObject) exp).id);
+        }
+        if (exp instanceof IdentifierExp) {
+            return new IdentifierType(((IdentifierExp) exp).id);
+        }
+        if (exp instanceof This) {
+            return getType("this");
+        }
+        if (exp instanceof Call) {
+            Call call = (Call) exp;
+            Type type = getType(call.obj);
+            if (type instanceof IdentifierType) { // TODO should be assert
+                TypeMapping objectScope = TypeMapping.programScope
+                        .getChild(((IdentifierType) type).id.name);
+
+                List<MethodDecl> matchingMethods = objectScope
+                        .getMethod(call.method.name);
+
+                for (MethodDecl method : matchingMethods) {
+                    if (method.args.size() == call.args.size()) {
+                        boolean match = true;
+                        for (int i = 0; i < call.args.size(); ++i) {
+                            if (!method.args.get(i).type.equals(call.args
+                                    .get(i))) {
+                                match = false;
+                                break;
+                            }
+                        }
+                        if (match) {
+                            return method.retType;
+                        }
+                    }
+                }
+
+            } else {
+                System.err.println("öhm, error!!");
+            }
+        }
+        return null; // In case we missed implementing a type
     }
 
     /**
