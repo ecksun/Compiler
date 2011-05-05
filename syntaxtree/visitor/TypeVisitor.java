@@ -331,7 +331,7 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector {
             complain(new WrongTypeException(IntegerType.class, left.getClass(),
                     "Right hand side of less than must be of integer type."));
         }
-        return new IntegerType();
+        return new BooleanType();
     }
 
     @Override
