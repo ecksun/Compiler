@@ -66,7 +66,7 @@ public class TypeMapping {
      */
     private HashMap<String, List<MethodDecl>> methods;
 
-    private HashMap<MethodDecl, LocalVariableIndexMapper> indexMappers;
+    private LocalVariableIndexMapper indexMapper;
 
     /**
      * Create a new TypeMapping, this will set the parent to null which is
@@ -98,7 +98,13 @@ public class TypeMapping {
         typemap = new HashMap<String, Type>();
         children = new HashMap<String, TypeMapping>();
         methods = new HashMap<String, List<MethodDecl>>();
-        indexMappers = new HashMap<MethodDecl, LocalVariableIndexMapper>();
+        if (obj instanceof MethodDecl) {
+            indexMapper = new LocalVariableIndexMapper(this);
+            for (Formal arg : ((MethodDecl) obj).args) {
+                indexMapper.getIndex(arg.name);
+            }
+        } else
+            indexMapper = null;
         if (obj != null && obj.getName() != null) {
             parent.addChild(obj.getName(), this);
             if (obj instanceof ClassDecl) {
@@ -129,17 +135,6 @@ public class TypeMapping {
             decls = new ArrayList<MethodDecl>();
             decls.add(decl);
             methods.put(decl.methodName.name, decls);
-            
-            // Create a new index mapping.
-            LocalVariableIndexMapper indexMapping = new LocalVariableIndexMapper(
-                    this);
-            // XXX Will fail if there are types of different sizes, as
-            // LocalVariableIndexMapper.getIndex requires that the formals
-            // are in the TypeMapping in order for it to work.
-            for (Formal arg : decl.args) {
-                indexMapping.getIndex(arg.name);
-            }
-            indexMappers.put(decl, indexMapping);
         } else {
             // Method name has already occurred -- try add declaration to list.
             boolean fail = false;
@@ -156,14 +151,6 @@ public class TypeMapping {
             } else {
                 // Add alternative method declaration with same name as earlier.
                 decls.add(decl);
-
-                // XXX: Duplication of code in if-block above!!
-                // Create a new index mapping.
-                LocalVariableIndexMapper indexMapper = new LocalVariableIndexMapper(this);
-                for (Formal arg : decl.args) {
-                    indexMapper.getIndex(arg.name);
-                }
-                indexMappers.put(decl, indexMapper);
             }
         }
         System.out.println("|- " + decl);
@@ -203,25 +190,13 @@ public class TypeMapping {
     }
 
     /**
-     * Get the {@link LocalVariableIndexMapper} of a {@link MethodDecl}
+     * Get the {@link LocalVariableIndexMapper} of a this TypeMapping
      * 
-     * @param decl
-     *            The {@link MethodDecl} to look up
-     * @return A {@link LocalVariableIndexMapper} corresponding to the provided
-     *         {@link MethodDecl}, or null if there is no such method.
+     * @return A {@link LocalVariableIndexMapper} or null if this scope does not
+     *         correspond to a {@link MethodDecl}
      */
-    public LocalVariableIndexMapper getIndexMapper(MethodDecl decl) {
-        // TODO SymbolTableVisitor.visit(MethodDecl) antyder att indexMappningen
-        // ligger i parent-scoopet, snarare än i oss själva.
-        // Antingen bör vi göra om så att indexMappningen hamnar i det här
-        // scoopet (vilket nog skulle kännas naturligast) eller så bör vi
-        // returnera parent.get(decl) direkt.
-        
-        if (indexMappers.get(decl) == null) {
-            return parent.getIndexMapper(decl);
-        }
-
-        return indexMappers.get(decl);
+    public LocalVariableIndexMapper getIndexMapper() {
+        return indexMapper;
     }
 
     public List<MethodDecl> getMethod(String name) {

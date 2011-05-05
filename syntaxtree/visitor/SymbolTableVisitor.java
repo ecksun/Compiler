@@ -140,6 +140,7 @@ public class SymbolTableVisitor extends DepthFirstVisitor implements
         } catch (VariableDupeException e) {
             complain(e.toString());
         }
+        
         newScope(method);
         super.visit(method);
         outOfScope();

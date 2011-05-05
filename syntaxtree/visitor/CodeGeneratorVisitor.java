@@ -337,7 +337,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.println(getShortName(n.retType));
 
         // Update index mapper reference.
-        indexMapper = scope.getIndexMapper(n);
+        indexMapper = scope.getIndexMapper();
 
         // Traverse the given method; first variable declarations.
         for (VarDecl decl : n.varDecls) {
