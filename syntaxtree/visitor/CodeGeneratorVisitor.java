@@ -140,10 +140,17 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         Type type = scope.getType(n.id.name);
         int id = indexMapper.getIndex(n.id);
 
-        if (type instanceof IdentifierType) {
-            output.println("astore " + id);
-        } else if (type instanceof IntegerType || type instanceof BooleanType) {
-            output.println("istore " + id);
+        // Store value on the stack either in local variable or class field.
+        if (scope.isLocal(n.id.name)) {
+            if (type instanceof IdentifierType) {
+                output.println("astore" + (id <= 3 ? "_" : " ") + id);
+            } else if (type instanceof IntegerType || type instanceof BooleanType) {
+                output.println("istore" + (id <= 3 ? "_" : " ") + id);
+            }    
+        } else {
+            String fieldSpec = getLongName(type) + "/" + n.id.name;
+            String descriptor = getShortName(type);
+            output.println(String.format("putfield %s %s", fieldSpec, descriptor));
         }
 
         return null;
@@ -170,8 +177,6 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Call n) {
-        // TODO check if this is indeed the right order of everything on the
-        // stack
         // First add the object in which the method is to be found. 
         n.obj.accept(this);        
 
@@ -182,8 +187,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         }
 
         output.print("invokevirtual ");
-        output.print(getLongName(scope.getType(n.obj))); // Might need to do
-        // s/./\//
+        // TODO Might need to do s/./\// on getLongName below.
+        output.print(getLongName(scope.getType(n.obj)));
         output.print("/" + n.method.name + "("); // Method name
         for (Exp arg : n.args) { // All arguments
             Type type = scope.getType(arg);
@@ -211,10 +216,22 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         // Create a new class (and close previous implicitly).
         output = ClassCreator.createClass(n.className);
 
-        super.visit(n);
-
+        // Field definitions.
+        for (VarDecl varDecl : n.varDecls) {
+            String fieldName = varDecl.name.name;
+            String descriptor = getShortName(varDecl.type);
+            output.println(String.format(".field public %s %s", fieldName, descriptor));
+        }
+        
+        // Default constructor.
+        output.addDefaultConstructor();
+        
+        // Visit method declarations as usual.
+        for (MethodDecl methodDecl : n.methodDecls) {
+            methodDecl.accept(this);
+        }
+        
         restoreScope();
-
         return null;
     }
 
@@ -245,10 +262,18 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(IdentifierExp n) {
-        // output.print(n.id.name);
-        // TODO push an objref to this identifier onto the stack
-        output.println("iload " + indexMapper.getIndex(n.id)
-                + " ; identifier exp objref for " + n.id);
+        // Load either local variable OR class field. 
+        if (scope.isLocal(n.id.name)) {
+            int index = indexMapper.getIndex(n.id);
+            output.println("iload" + (index <= 3 ? "_" : " ") + index
+                    + " ; identifier exp objref for " + n.id);    
+        } else {
+            Type type = scope.getType(n);
+            String fieldSpec = getLongName(type) + "/" + n.id.name;
+            String descriptor = getShortName(type);
+            output.println(String.format("getfield %s %s", fieldSpec, descriptor));    
+        }
+        
         return null;
     }
 
@@ -299,6 +324,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.println("ldc " + n.i);
 
         // TODO Use bipush and sipush for numbers fitting into bytes and shorts, respectively.
+        // TODO use iconst_x for x = 0, 1, 2, 3.
 
         return null;
     }
@@ -331,9 +357,10 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         getScope(mainClass);
 
         output = ClassCreator.createClass(mainClass.className);
+        output.addDefaultConstructor();
         output.println(".method public static main([Ljava/lang/String;)V");
-        output.println(".limit locals " + (scope.getLocalVariablesCount() + 1));
-        output.println(".limit stack 4"); // TODO is this correct? mnjae
+        output.println(".limit locals 1");
+        output.println(".limit stack 4"); // TODO is this correct?
         for (Statement statement : mainClass.statements) {
             statement.accept(this);
         }
@@ -359,8 +386,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.print(")");
         output.println(getShortName(n.retType));
 
-        // All local variables plus "this" variable.
-        output.println(".limit locals " + (scope.getLocalVariablesCount() + 1));
+        // All local variables, including formals, plus "this" variable.
+        output.println(".limit locals " + (1 + n.varDecls.size() + n.args.size()));
         // FIXME Räkna maximala antalet operander som ligger på stacken i metoden.
         output.println(".limit stack 20"); 
 
@@ -371,9 +398,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         }
         
         // Then statements.
-        ListIterator<Statement> statementsIt = n.statements.listIterator(n.statements.size());
-        while (statementsIt.hasPrevious()) {
-            statementsIt.previous().accept(this);
+        for (Statement statement : n.statements) {
+            statement.accept(this);
         }
         
         // And at last the return expression.

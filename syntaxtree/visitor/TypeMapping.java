@@ -54,6 +54,9 @@ public class TypeMapping {
      * TypeMapping that handles the program scope.
      */
     public static TypeMapping programScope;
+    /**
+     * Contains mappings from a variable name to its corresponding type.
+     */
     private HashMap<String, Type> typemap;
     /**
      * Container that maps the name of a {@link Scopeable} block to the
@@ -288,11 +291,36 @@ public class TypeMapping {
     }
 
     /**
+     * Returns whether the given variable name is a local variable in this scope
+     * or not (that is, it is a field).
+     * 
+     * @param var
+     *            The variable name to check.
+     * @return True only if the given variable name corresponds to some local
+     *         variable in this scope or any of its ancestors' scopes, as long
+     *         as that scope is not Program or Class scope.
+     */
+    public boolean isLocal(String var) {
+        // Program scope's parent and Class scope's grandparent are always null. 
+        if (parent == null || parent.parent == null) {
+            return false;
+        }
+        
+        if (typemap.containsKey(var)) {
+            // Assume that we are still deeper than Class scope.
+            return true;
+        } else {
+            // Recurse upwards.
+            return parent.isLocal(var);
+        }
+    }
+    
+    /**
      * Returns the number of variable mappings that are local to this scope.
      * 
      * @return The number of local variables declared in this scope.
      */
-    public int getLocalVariablesCount() {
+    public int getVariableMappingsCount() {
         return typemap.size();
     }
 

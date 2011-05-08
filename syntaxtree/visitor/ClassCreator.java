@@ -28,6 +28,12 @@ public class ClassCreator {
         }
         println(".class " + className.name);
         println(".super java/lang/Object");
+    }
+    
+    /**
+     * Adds a default constructor to the current class.
+     */
+    public void addDefaultConstructor() {
         println(".method public <init>()V");
         println("aload_0");
         println("invokespecial java/lang/Object/<init>()V");
