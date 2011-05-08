@@ -32,15 +32,16 @@ public class Main {
             Program result = (Program) p.debug_parse().value;
             System.out.println(result.toString());
 
-            Visitor visitor = new SyntaxTreePrinter(System.out);
+            Visitor<?> visitor = new SyntaxTreePrinter(System.out);
+            System.out.println(visitor.getClass().getName());
             result.accept(visitor);
 
-            System.out.println("TypeCheckVisitor:");
             visitor = new SymbolTableVisitor();
+            System.out.println(visitor.getClass().getName());
             result.accept(visitor);
 
-            System.out.println("TypeVisitor");
             visitor = new TypeVisitor();
+            System.out.println(visitor.getClass().getName());
             result.accept(visitor);
             
             visitor = new CodeGeneratorVisitor();
