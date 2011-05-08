@@ -135,21 +135,27 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Assign n) {
-        n.exp.accept(this);
-
         Type type = scope.getType(n.id.name);
         int id = indexMapper.getIndex(n.id);
 
         // Store value on the stack either in local variable or class field.
         if (scope.isLocal(n.id.name)) {
+            n.exp.accept(this);
             if (type instanceof IdentifierType) {
                 output.println("astore" + (id <= 3 ? "_" : " ") + id);
             } else if (type instanceof IntegerType || type instanceof BooleanType) {
                 output.println("istore" + (id <= 3 ? "_" : " ") + id);
             }    
         } else {
-            String fieldSpec = getLongName(type) + "/" + n.id.name;
+            // MiniJava does only allow modification of fields in "this" object.
+            // Therefore, we simply lookup the "this" type and push an object
+            // reference to "this" object onto the stack. However, we must make
+            // sure that the "this"-reference is placed under the value returned
+            // from the expression.
+            String fieldSpec = getLongName(scope.getType("this")) + "/" + n.id.name;
             String descriptor = getShortName(type);
+            output.println("aload_0");
+            n.exp.accept(this);
             output.println(String.format("putfield %s %s", fieldSpec, descriptor));
         }
 
@@ -269,8 +275,12 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
                     + " ; identifier exp objref for " + n.id);    
         } else {
             Type type = scope.getType(n);
-            String fieldSpec = getLongName(type) + "/" + n.id.name;
+            // MiniJava does only allow modification of fields in "this" object.
+            // Therefore, we simply lookup the "this" type and push an object
+            // reference to "this" object onto the stack.
+            String fieldSpec = getLongName(scope.getType("this")) + "/" + n.id.name;
             String descriptor = getShortName(type);
+            output.println("aload_0");
             output.println(String.format("getfield %s %s", fieldSpec, descriptor));    
         }
         
