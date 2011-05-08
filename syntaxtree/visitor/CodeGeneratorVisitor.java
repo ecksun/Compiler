@@ -365,13 +365,17 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.println(".limit stack 20"); 
 
         // Traverse the given method; first variable declarations.
-        for (VarDecl decl : n.varDecls) {
-            decl.accept(this);
+        ListIterator<VarDecl> varDeclsIt = n.varDecls.listIterator(n.varDecls.size());
+        while (varDeclsIt.hasPrevious()) {
+            varDeclsIt.previous().accept(this);   
         }
+        
         // Then statements.
-        for (Statement statement : n.statements) {
-            statement.accept(this);
+        ListIterator<Statement> statementsIt = n.statements.listIterator(n.statements.size());
+        while (statementsIt.hasPrevious()) {
+            statementsIt.previous().accept(this);
         }
+        
         // And at last the return expression.
         output.println(";ret:");
         n.returnExpression.accept(this);
