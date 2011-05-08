@@ -322,7 +322,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
         output = ClassCreator.createClass(mainClass.className);
         output.println(".method public static main([Ljava/lang/String;)V");
-        output.println(".limit locals " + scope.getLocalVariablesCount() + 1);
+        output.println(".limit locals " + (scope.getLocalVariablesCount() + 1));
         output.println(".limit stack 4"); // TODO is this correct? mnjae
         for (Statement statement : mainClass.statements) {
             statement.accept(this);
@@ -350,7 +350,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.println(getShortName(n.retType));
 
         // All local variables plus "this" variable.
-        output.println(".limit locals " + scope.getLocalVariablesCount() + 1);
+        output.println(".limit locals " + (scope.getLocalVariablesCount() + 1));
         // FIXME Räkna maximala antalet operander som ligger på stacken i metoden.
         output.println(".limit stack 20"); 
 
