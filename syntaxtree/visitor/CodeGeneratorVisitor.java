@@ -1,5 +1,7 @@
 package syntaxtree.visitor;
 
+import java.util.ListIterator;
+
 import syntaxtree.And;
 import syntaxtree.ArrayAssign;
 import syntaxtree.ArrayLength;
@@ -170,11 +172,15 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     public Void visit(Call n) {
         // TODO check if this is indeed the right order of everything on the
         // stack
-        for (Exp arg : n.args) { // Put the arguments on the "bottom" of the
-            // stack
-            arg.accept(this);
+        // First add the object in which the method is to be found. 
+        n.obj.accept(this);        
+
+        // Then add the arguments, from left to right.
+        ListIterator<Exp> iterator = n.args.listIterator(n.args.size());
+        while (iterator.hasPrevious()) {
+            iterator.previous().accept(this);
         }
-        n.obj.accept(this); // And the this reference on the top
+
         output.print("invokevirtual ");
         output.print(getLongName(scope.getType(n.obj))); // Might need to do
         // s/./\//
@@ -285,10 +291,14 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
      */
     @Override
     public Void visit(IntegerLiteral n) {
-        // According to Jasmin docs, 'ldc' takes a constant to be pushed onto
-        // the stack, in contrast to the Java bytecode instruction 'ldc', which
-        // takes an index for the runtime constant pool.
+        // The Jasmin instruction 'ldc' takes a constant to be pushed onto the
+        // stack, in contrast to the Java bytecode instruction 'ldc', which
+        // takes an index for the runtime constant pool. Behind the scenes,
+        // Jasmin creates a record in that pool with the given constant, and
+        // replaces the constant with the corresponding pool index.
         output.println("ldc " + n.i);
+
+        // TODO Use bipush and sipush for numbers fitting into bytes and shorts, respectively.
 
         return null;
     }
