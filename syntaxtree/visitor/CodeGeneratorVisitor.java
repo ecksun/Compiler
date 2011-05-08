@@ -347,17 +347,21 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         return null;
     }
 
+    /**
+     * Visits a LessThan expression and loads either 1 or 0 onto the stack,
+     * representing TRUE and FALSE, respectively.
+     */
     @Override
     public Void visit(LessThan n) {
         super.visit(n);
         String label = LabelCreator.getLabel();
         String endLabel = LabelCreator.getLabel();
-        output.println("if_icmplt " + label + "; if less than, goto label");
-        output.println("istore_0; else store false");
-        output.println("goto " + endLabel + "; and finish LessThan");
+        output.println("if_icmplt " + label + " ; if less than, goto label");
+        output.println("iconst_0 ; load FALSE onto the stack");
+        output.println("goto " + endLabel + " ; and finish LessThan");
         output.println(label + ":");
-        output.println("istore_1; Store 1 if true");
-        output.println(endLabel);
+        output.println("iconst_1 ; load TRUE onto the stack");
+        output.println(endLabel + ":");
 
         return null;
     }
@@ -534,10 +538,10 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         n.exp.accept(this);
 
         output.println("ifne " + endLabel
-                + "; if not true, jump to after while, otherwise fallthrough");
+                + " ; if not true, jump to after while, otherwise fallthrough");
         output.println(stmLabel + ":");
         n.stm.accept(this);
-        output.println("goto " + expLabel + "; Begin while again");
+        output.println("goto " + expLabel + " ; Begin while again");
         output.println(endLabel + ":");
 
         return null;
