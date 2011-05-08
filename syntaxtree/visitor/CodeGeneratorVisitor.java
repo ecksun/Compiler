@@ -49,7 +49,17 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
      */
     private TypeMapping scope;
 
+    /**
+     * A {@link LocalVariableIndexMapper} that holds indices for local variables
+     * in methods. Should always be kept up-to-date whenever changing scope to
+     * another method.
+     */
     private LocalVariableIndexMapper indexMapper;
+
+    /**
+     * A Jasmin type descriptor of the type that was most recently visited.
+     */
+    private String typeDescriptor;
 
     private String getLongName(Type type) {
         // TODO
@@ -67,15 +77,17 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         scope = block.getScope();
     }
 
+    /**
+     * Visits the appropriate xType method, which should update the
+     * typeDescriptor field that is returned afterwards.
+     * 
+     * @param type
+     *            The type to visit and return short type descriptor name for.
+     * @return The Jasmin type descriptor for the given type.
+     */
     private String getShortName(Type type) {
-        if (type instanceof IntegerType || type instanceof BooleanType) {
-            return "I";
-        } else if (type instanceof IntArrayType) {
-            return "[I";
-        } else if (type instanceof IdentifierType) {
-            return "L" + getLongName(type) + ";";
-        }
-        return null;
+        type.accept(this);
+        return typeDescriptor;
     }
 
     /**
@@ -108,7 +120,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         // reference to the stack, and the two expressions pushes the index and
         // value.
         super.visit(n);
-
+        
         output.println("iastore"); // arrayref, index, value =>
         return null;
     }
@@ -125,10 +137,11 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(ArrayLookup n) {
-        // Visit ArrayLookup and assume it leaves an arrayref and index on the
-        // stack.
-        super.visit(n);
-
+        // Load array object reference and array index onto stack.
+        n.id.accept(this);
+        n.index.accept(this);
+        
+        // Finally, eat array reference and index, and load value onto stack.
         output.println("iaload"); // arrayref, index => value
         return null;
     }
@@ -139,13 +152,17 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         int id = indexMapper.getIndex(n.id);
 
         // Store value on the stack either in local variable or class field.
-        if (scope.isLocal(n.id.name)) {
+        if (scope.isLocalVariable(n.id.name)) {
             n.exp.accept(this);
             if (type instanceof IdentifierType) {
                 output.println("astore" + (id <= 3 ? "_" : " ") + id);
             } else if (type instanceof IntegerType || type instanceof BooleanType) {
                 output.println("istore" + (id <= 3 ? "_" : " ") + id);
-            }    
+            } else {
+                System.err
+                        .println("Type of variable to assign was unrecognized: "
+                                + type.getClass());
+            }
         } else {
             // MiniJava does only allow modification of fields in "this" object.
             // Therefore, we simply lookup the "this" type and push an object
@@ -175,9 +192,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(BooleanType n) {
-        System.err.println("BooleanType unimplemented");
-        super.visit(n);
-
+        // We use integers to represent boolean variables.
+        typeDescriptor = "I";
         return null;
     }
 
@@ -201,8 +217,6 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
             output.print(getShortName(type));
         }
         output.println(")" + getShortName(scope.getType(n))); // The return type
-
-        n.method.accept(this); // The actual method
 
         return null;
     }
@@ -256,46 +270,52 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         return null;
     }
 
+    /**
+     * Visits an Identifier and loads the corresponding value onto the stack.
+     * 
+     * Assumes the given {@link Identifier} identifies a field or local
+     * variable, i.e. not a class or method name.
+     */
     @Override
     public Void visit(Identifier n) {
-        // TODO jag tror vi hellre vill att den här pushar en objref på stacken
-        // än att skriva ut sitt eget namn (det kan den anropande visit-metoden
-        // göra)
-        // output.println(n.name);
-        output.println("; //identifier objref for " + n);
+        Type type = scope.getType(n.name);
+        
+        // Load either local variable OR class field.
+        if (scope.isLocalVariable(n.name)) {
+            int index = indexMapper.getIndex(n);
+            if (type instanceof IdentifierType) {
+                output.println("aload" + (index <= 3 ? "_" : " ") + index);
+            } else if (type instanceof IntegerType
+                    || type instanceof BooleanType) {
+                output.println("iload" + (index <= 3 ? "_" : " ") + index);
+            } else {
+                System.out.println("Identifier type was not recognized: "
+                        + type.getClass());
+            }
+        } else {
+            // MiniJava does only allow modification of fields in "this" object.
+            // Therefore, we simply lookup the "this" type and push an object
+            // reference to "this" object onto the stack.
+            String fieldSpec = getLongName(scope.getType("this")) + "/"
+                    + n.name;
+            String descriptor = getShortName(type);
+            output.println("aload_0");
+            output.println(String.format("getfield %s %s", fieldSpec,
+                    descriptor));
+        }   
+
         return null;
     }
 
     @Override
     public Void visit(IdentifierExp n) {
-        // Load either local variable OR class field. 
-        if (scope.isLocal(n.id.name)) {
-            Type type = scope.getType(n);
-            int index = indexMapper.getIndex(n.id);
-            if (type instanceof IdentifierType) {
-                output.println("aload" + (index <= 3 ? "_" : " ") + index);            
-            } else if (type instanceof IntegerType || type instanceof BooleanType) {
-                output.println("iload" + (index <= 3 ? "_" : " ") + index);
-            }
-        } else {
-            Type type = scope.getType(n);
-            // MiniJava does only allow modification of fields in "this" object.
-            // Therefore, we simply lookup the "this" type and push an object
-            // reference to "this" object onto the stack.
-            String fieldSpec = getLongName(scope.getType("this")) + "/" + n.id.name;
-            String descriptor = getShortName(type);
-            output.println("aload_0");
-            output.println(String.format("getfield %s %s", fieldSpec, descriptor));    
-        }
-        
+        super.visit(n);
         return null;
     }
 
     @Override
     public Void visit(IdentifierType n) {
-        System.err.println("IdentifierType unimplemented");
-        super.visit(n);
-
+        typeDescriptor = "L" + getLongName(n) + ";";
         return null;
     }
 
@@ -316,9 +336,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(IntArrayType n) {
-        System.err.println("IntArrayType unimplemented");
-        super.visit(n);
-
+        typeDescriptor = "[I";
         return null;
     }
 
@@ -345,9 +363,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(IntegerType n) {
-        System.err.println("IntegerType unimplemented");
-        super.visit(n);
-
+        typeDescriptor = "I";
         return null;
     }
 
@@ -462,10 +478,6 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.println("new " + n.id.name);
         output.println("dup");
         output.println("invokespecial " + n.id.name + "/<init>()V");
-        // TODO
-        // n.id.accept(this);
-        // output.println(); // Depending on if visit(Identifier) prints with
-        // newline or not.
         return null;
     }
 
@@ -497,7 +509,6 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Program n) {
-        // TODO need to do something here?
         super.visit(n);
         return null;
     }
@@ -505,7 +516,6 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(This n) {
         output.println("aload_0");
-
         return null;
     }
 

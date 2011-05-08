@@ -300,7 +300,7 @@ public class TypeMapping {
      *         variable in this scope or any of its ancestors' scopes, as long
      *         as that scope is not Program or Class scope.
      */
-    public boolean isLocal(String var) {
+    public boolean isLocalVariable(String var) {
         // Program scope's parent and Class scope's grandparent are always null. 
         if (parent == null || parent.parent == null) {
             return false;
@@ -311,7 +311,7 @@ public class TypeMapping {
             return true;
         } else {
             // Recurse upwards.
-            return parent.isLocal(var);
+            return parent.isLocalVariable(var);
         }
     }
     

@@ -145,7 +145,7 @@ public class DepthFirstVisitor implements Visitor<Void> {
 
     @Override
     public Void visit(IdentifierExp identifierExp) {
-        // Nothing to be done, this is a leaf
+        identifierExp.id.accept(this);
         return null;
     }
 
