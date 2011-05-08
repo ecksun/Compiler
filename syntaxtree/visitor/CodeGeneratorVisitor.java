@@ -300,7 +300,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         n.exp.accept(this);
         String endLabel = LabelCreator.getLabel();
         String elseLabel = LabelCreator.getLabel();
-        output.println("ifne " + elseLabel);
+        output.println("ifeq " + elseLabel);
         n.ifStm.accept(this);
         output.println("goto " + endLabel);
         output.println(elseLabel + ":");
@@ -537,11 +537,11 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.println(expLabel + ":");
         n.exp.accept(this);
 
-        output.println("ifne " + endLabel
-                + " ; if not true, jump to after while, otherwise fallthrough");
+        // If conditional expression is 0, go to endLabel.
+        output.println("ifeq " + endLabel);
         output.println(stmLabel + ":");
         n.stm.accept(this);
-        output.println("goto " + expLabel + " ; Begin while again");
+        output.println("goto " + expLabel);
         output.println(endLabel + ":");
 
         return null;
