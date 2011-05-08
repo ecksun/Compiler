@@ -83,12 +83,19 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         scope = scope.parent;
     }
 
+    /**
+     * Visits an AND expression.
+     * 
+     * Assumes the two operand {@link Exp}s leaves one value each on the stack,
+     * when visited.
+     */
     @Override
     public Void visit(And n) {
-        // Visit AND expressions and let them generate code that pushes the two
-        // operands to the stack.
+        // Visit operand expressions.
         super.visit(n);
 
+        // Perform bitwise integer AND on the two values that have now been
+        // pushed to the stack.
         output.println("iand"); // value1, value2 => result
         return null;
     }
@@ -357,12 +364,17 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.println(";ret:");
         n.returnExpression.accept(this);
 
+        // Add appropriate return stm, depending on return type.
         if (n.retType instanceof IntegerType
                 || n.retType instanceof BooleanType) {
             output.println("ireturn");
+        } else if (n.retType instanceof IntArrayType
+                || n.retType instanceof IdentifierType) {
+            output.println("areturn");
         } else {
-            System.err
-                    .println("Unimplemented return type in CodeGeraratorVisitor.visit(MethodDecl)");
+            // Should not happen if type checking in front-end is correct.
+            System.err.println("Return expression type was not recognized: "
+                    + n.retType);
         }
 
         output.println("; end ret");
