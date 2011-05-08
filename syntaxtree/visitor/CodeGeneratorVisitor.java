@@ -270,9 +270,13 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     public Void visit(IdentifierExp n) {
         // Load either local variable OR class field. 
         if (scope.isLocal(n.id.name)) {
+            Type type = scope.getType(n);
             int index = indexMapper.getIndex(n.id);
-            output.println("iload" + (index <= 3 ? "_" : " ") + index
-                    + " ; identifier exp objref for " + n.id);    
+            if (type instanceof IdentifierType) {
+                output.println("aload" + (index <= 3 ? "_" : " ") + index);            
+            } else if (type instanceof IntegerType || type instanceof BooleanType) {
+                output.println("iload" + (index <= 3 ? "_" : " ") + index);
+            }
         } else {
             Type type = scope.getType(n);
             // MiniJava does only allow modification of fields in "this" object.
@@ -406,9 +410,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.println(".limit stack 20"); 
 
         // Traverse the given method; first variable declarations.
-        ListIterator<VarDecl> varDeclsIt = n.varDecls.listIterator(n.varDecls.size());
-        while (varDeclsIt.hasPrevious()) {
-            varDeclsIt.previous().accept(this);   
+        for (VarDecl varDecl : n.varDecls) {
+            varDecl.accept(this);
         }
         
         // Then statements.
@@ -524,8 +527,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(VarDecl n) {
-        // Don't want to visit anything further down the tree from here.
-        output.println("; // VarDecl for " + n.name);
+        // Add index mapping for this variable declaration.
+        indexMapper.getIndex(n.name);
         return null;
     }
 
