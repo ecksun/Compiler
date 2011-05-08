@@ -288,6 +288,15 @@ public class TypeMapping {
     }
 
     /**
+     * Returns the number of variable mappings that are local to this scope.
+     * 
+     * @return The number of local variables declared in this scope.
+     */
+    public int getLocalVariablesCount() {
+        return typemap.size();
+    }
+
+    /**
      * Get the keys from the underlying map Should only be used for walking
      * through the types in this scope
      * 

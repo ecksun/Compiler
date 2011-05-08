@@ -322,7 +322,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
         output = ClassCreator.createClass(mainClass.className);
         output.println(".method public static main([Ljava/lang/String;)V");
-        output.println(".limit stack 4"); // TODO is this correct?
+        output.println(".limit locals " + scope.getLocalVariablesCount() + 1);
+        output.println(".limit stack 4"); // TODO is this correct? mnjae
         for (Statement statement : mainClass.statements) {
             statement.accept(this);
         }
@@ -335,8 +336,10 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(MethodDecl n) {
-        // TODO fixa in så det blir rätt osv.
         getScope(n);
+        
+        // Update index mapper reference.
+        indexMapper = scope.getIndexMapper();
 
         // Prepare the .method directive, incl. formal and return types.
         output.print(".method public " + n.methodName + "(");
@@ -346,11 +349,10 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.print(")");
         output.println(getShortName(n.retType));
 
-        output.println(".limit locals 10"); // FIXME
-        output.println(".limit stack " + n.args.size());
-
-        // Update index mapper reference.
-        indexMapper = scope.getIndexMapper();
+        // All local variables plus "this" variable.
+        output.println(".limit locals " + scope.getLocalVariablesCount() + 1);
+        // FIXME Räkna maximala antalet operander som ligger på stacken i metoden.
+        output.println(".limit stack 20"); 
 
         // Traverse the given method; first variable declarations.
         for (VarDecl decl : n.varDecls) {
