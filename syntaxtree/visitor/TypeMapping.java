@@ -230,7 +230,7 @@ public class TypeMapping {
             return new IdentifierType(((NewObject) exp).id);
         }
         if (exp instanceof IdentifierExp) {
-            return new IdentifierType(((IdentifierExp) exp).id);
+            return getType(((IdentifierExp) exp).id.name);
         }
         if (exp instanceof This) {
             return getType("this");

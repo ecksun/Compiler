@@ -222,17 +222,20 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Identifier n) {
-        // TODO jag tror vi hellre vill att den här pushar en objref på stacken än att skriva ut sitt eget namn (det kan den anropande visit-metoden göra)
-        //output.println(n.name);
+        // TODO jag tror vi hellre vill att den här pushar en objref på stacken
+        // än att skriva ut sitt eget namn (det kan den anropande visit-metoden
+        // göra)
+        // output.println(n.name);
         output.println("; //identifier objref for " + n);
         return null;
     }
 
     @Override
     public Void visit(IdentifierExp n) {
-        //output.print(n.id.name);
+        // output.print(n.id.name);
         // TODO push an objref to this identifier onto the stack
-        output.println("; //identifier exp objref for " + n.id);
+        output.println("iload " + indexMapper.getIndex(n.id)
+                + " ; identifier exp objref for " + n.id);
         return null;
     }
 
@@ -336,6 +339,9 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.print(")");
         output.println(getShortName(n.retType));
 
+        output.println(".limit locals 10"); // FIXME
+        output.println(".limit stack " + n.args.size());
+
         // Update index mapper reference.
         indexMapper = scope.getIndexMapper();
 
@@ -348,7 +354,18 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
             statement.accept(this);
         }
         // And at last the return expression.
+        output.println(";ret:");
         n.returnExpression.accept(this);
+
+        if (n.retType instanceof IntegerType
+                || n.retType instanceof BooleanType) {
+            output.println("ireturn");
+        } else {
+            System.err
+                    .println("Unimplemented return type in CodeGeraratorVisitor.visit(MethodDecl)");
+        }
+
+        output.println("; end ret");
 
         output.println(".end method");
         restoreScope();
@@ -372,8 +389,10 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(NewObject n) {
         output.println("new " + n.id.name);
-        // TODO 
-        //n.id.accept(this);
+        output.println("dup");
+        output.println("invokespecial " + n.id.name + "/<init>()V");
+        // TODO
+        // n.id.accept(this);
         // output.println(); // Depending on if visit(Identifier) prints with
         // newline or not.
         return null;
@@ -414,9 +433,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(This n) {
-
-        System.err.println("This unimplemented");
-        super.visit(n);
+        output.println("aload_0");
 
         return null;
     }

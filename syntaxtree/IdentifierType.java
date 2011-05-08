@@ -27,4 +27,9 @@ public class IdentifierType extends Type {
         }
         return ((IdentifierType) tp).id.equals(id);
     }
+
+    @Override
+    public String toString() {
+        return id.name;
+    }
 }

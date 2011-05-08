@@ -21,10 +21,11 @@ public class LocalVariableIndexMapper {
     }
 
     public int getIndex(Identifier id) {
-        Integer index = indexMap.get(id);
+        Integer index = indexMap.get(id.name);
         if (index == null) { // add new index if it doesn't exist
             index = nextId++; // Assumes all our types have size 1 (int, bool
                               // and references to objects or arrays)
+            indexMap.put(id.name, index);
         }
         return index;
     }
