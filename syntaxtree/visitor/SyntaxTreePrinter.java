@@ -35,7 +35,7 @@ import syntaxtree.True;
 import syntaxtree.VarDecl;
 import syntaxtree.While;
 
-public class SyntaxTreePrinter extends DepthFirstVisitor {
+public class SyntaxTreePrinter extends DepthFirstVisitor<Void> {
     int level = 0;
     java.io.PrintStream out;
 

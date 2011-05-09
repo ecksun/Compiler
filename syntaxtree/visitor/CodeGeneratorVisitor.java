@@ -41,7 +41,7 @@ import syntaxtree.Type;
 import syntaxtree.VarDecl;
 import syntaxtree.While;
 
-public class CodeGeneratorVisitor extends DepthFirstVisitor {
+public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
     private ClassCreator output;
     /**
      * The type mapping for the current scope. Should always be kept up to date

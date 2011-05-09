@@ -20,7 +20,7 @@ import syntaxtree.VarDecl;
  *         Walk through the abstract syntax tree and create symbol tables for
  *         all possible scopes.
  */
-public class SymbolTableVisitor extends DepthFirstVisitor implements
+public class SymbolTableVisitor extends DepthFirstVisitor<Void> implements
         ErrorCollector {
     int level;
     TypeMapping currentScope;
