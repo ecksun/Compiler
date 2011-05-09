@@ -174,8 +174,17 @@ public class StackSizeVisitor extends DepthFirstVisitor<Integer> {
 
     @Override
     public Integer visit(MethodDecl n) {
+        // Reset counters.
+        currentSize = 0;
+        maxSize = 0;
+
+        // Visit all statements etc. in the MethodDecl.
         super.visit(n);
-        return updateSize(2, 1);
+
+        // Now, maxOperandStackSize for this method should be up-to-date.
+        n.getScope().setMaxOperandStackSize(maxSize);
+
+        return maxSize;
     }
 
     @Override
