@@ -42,6 +42,7 @@ import syntaxtree.While;
 public class StackSizeVisitor extends DepthFirstVisitor<Integer> {
     private int maxSize;
     private int currentSize;
+    private TypeMapping scope;
 
     /**
      * Updates the stack size and records maximum values.
@@ -134,8 +135,11 @@ public class StackSizeVisitor extends DepthFirstVisitor<Integer> {
     @Override
     public Integer visit(Identifier n) {
         super.visit(n);
+        if (scope != null && scope.isLocalVariable(n.name)) {
+            return updateSize(1, 0);
+        }
         return updateSize(2, 1); // Need at maximum 2, for getfield from this,
-        // and will in such a case remove that one. XXX Check if correct
+        // and will in such a case remove that one.
     }
 
     @Override
@@ -191,12 +195,13 @@ public class StackSizeVisitor extends DepthFirstVisitor<Integer> {
         // Reset counters.
         currentSize = 0;
         maxSize = 0;
+        scope = n.getScope();
 
         // Visit all statements etc. in the MethodDecl.
         super.visit(n);
 
         // Now, maxOperandStackSize for this method should be up-to-date.
-        n.getScope().setMaxOperandStackSize(maxSize);
+        scope.setMaxOperandStackSize(maxSize);
 
         return maxSize;
     }
