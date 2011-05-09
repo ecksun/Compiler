@@ -120,7 +120,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         // reference to the stack, and the two expressions pushes the index and
         // value.
         super.visit(n);
-        
+
         output.println("iastore"); // arrayref, index, value =>
         return null;
     }
@@ -140,7 +140,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         // Load array object reference and array index onto stack.
         n.id.accept(this);
         n.index.accept(this);
-        
+
         // Finally, eat array reference and index, and load value onto stack.
         output.println("iaload"); // arrayref, index => value
         return null;
@@ -156,7 +156,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
             n.exp.accept(this);
             if (type instanceof IdentifierType) {
                 output.println("astore" + (id <= 3 ? "_" : " ") + id);
-            } else if (type instanceof IntegerType || type instanceof BooleanType) {
+            } else if (type instanceof IntegerType
+                    || type instanceof BooleanType) {
                 output.println("istore" + (id <= 3 ? "_" : " ") + id);
             } else {
                 System.err
@@ -169,11 +170,13 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
             // reference to "this" object onto the stack. However, we must make
             // sure that the "this"-reference is placed under the value returned
             // from the expression.
-            String fieldSpec = getLongName(scope.getType("this")) + "/" + n.id.name;
+            String fieldSpec = getLongName(scope.getType("this")) + "/"
+                    + n.id.name;
             String descriptor = getShortName(type);
             output.println("aload_0");
             n.exp.accept(this);
-            output.println(String.format("putfield %s %s", fieldSpec, descriptor));
+            output.println(String.format("putfield %s %s", fieldSpec,
+                    descriptor));
         }
 
         return null;
@@ -199,8 +202,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Call n) {
-        // First add the object in which the method is to be found. 
-        n.obj.accept(this);        
+        // First add the object in which the method is to be found.
+        n.obj.accept(this);
 
         // Then add the arguments, from left to right.
         ListIterator<Exp> iterator = n.args.listIterator(n.args.size());
@@ -240,17 +243,18 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         for (VarDecl varDecl : n.varDecls) {
             String fieldName = varDecl.name.name;
             String descriptor = getShortName(varDecl.type);
-            output.println(String.format(".field public %s %s", fieldName, descriptor));
+            output.println(String.format(".field public %s %s", fieldName,
+                    descriptor));
         }
-        
+
         // Default constructor.
         output.addDefaultConstructor();
-        
+
         // Visit method declarations as usual.
         for (MethodDecl methodDecl : n.methodDecls) {
             methodDecl.accept(this);
         }
-        
+
         restoreScope();
         return null;
     }
@@ -276,7 +280,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(Identifier n) {
         Type type = scope.getType(n.name);
-        
+
         // Load either local variable OR class field.
         if (scope.isLocalVariable(n.name)) {
             int index = indexMapper.getIndex(n);
@@ -299,7 +303,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
             output.println("aload_0");
             output.println(String.format("getfield %s %s", fieldSpec,
                     descriptor));
-        }   
+        }
 
         return null;
     }
@@ -345,15 +349,23 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
      */
     @Override
     public Void visit(IntegerLiteral n) {
-        // The Jasmin instruction 'ldc' takes a constant to be pushed onto the
-        // stack, in contrast to the Java bytecode instruction 'ldc', which
-        // takes an index for the runtime constant pool. Behind the scenes,
-        // Jasmin creates a record in that pool with the given constant, and
-        // replaces the constant with the corresponding pool index.
-        output.println("ldc " + n.i);
-
-        // TODO Use bipush and sipush for numbers fitting into bytes and shorts, respectively.
-        // TODO use iconst_x for x = 0, 1, 2, 3.
+        
+        if (n.i == -1) {
+            output.println("iconst_m1");
+        } else if (n.i >= 0 && n.i <= 5) {
+            output.println("iconst_" + n.i);
+        } else if (n.i >= Byte.MIN_VALUE && n.i <= Byte.MAX_VALUE) {
+            output.println("bipush " + n.i);
+        } else if (n.i >= Short.MIN_VALUE && n.i <= Short.MAX_VALUE) {
+            output.println("sipush " + n.i);
+        } else {
+            // The Jasmin instruction 'ldc' takes a constant to be pushed onto the
+            // stack, in contrast to the Java bytecode instruction 'ldc', which
+            // takes an index for the runtime constant pool. Behind the scenes,
+            // Jasmin creates a record in that pool with the given constant, and
+            // replaces the constant with the corresponding pool index.
+            output.println("ldc " + n.i);            
+        }
 
         return null;
     }
@@ -405,7 +417,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
     @Override
     public Void visit(MethodDecl n) {
         getScope(n);
-        
+
         // Update index mapper reference.
         indexMapper = scope.getIndexMapper();
 
@@ -421,20 +433,22 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
         output.println(getShortName(n.retType));
 
         // All local variables, including formals, plus "this" variable.
-        output.println(".limit locals " + (1 + n.varDecls.size() + n.args.size()));
-        // FIXME Räkna maximala antalet operander som ligger på stacken i metoden.
-        output.println(".limit stack 20"); 
+        output.println(".limit locals "
+                + (1 + n.varDecls.size() + n.args.size()));
+        // FIXME Räkna maximala antalet operander som ligger på stacken i
+        // metoden.
+        output.println(".limit stack 20");
 
         // Traverse the given method; first variable declarations.
         for (VarDecl varDecl : n.varDecls) {
             varDecl.accept(this);
         }
-        
+
         // Then statements.
         for (Statement statement : n.statements) {
             statement.accept(this);
         }
-        
+
         // And at last the return expression.
         output.println(";ret:");
         n.returnExpression.accept(this);
