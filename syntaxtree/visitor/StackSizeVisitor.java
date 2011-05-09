@@ -49,109 +49,110 @@ public class StackSizeVisitor extends DepthFirstVisitor<Integer> {
     @Override
     public Integer visit(And n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 1);
     }
 
     @Override
     public Integer visit(ArrayAssign n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 3);
     }
 
     @Override
     public Integer visit(ArrayLength n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 0);
     }
 
     @Override
     public Integer visit(ArrayLookup n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(2, 1);
     }
 
     @Override
     public Integer visit(Assign n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(1, 2);
     }
 
     @Override
     public Integer visit(Block n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 0);
     }
 
     @Override
     public Integer visit(BooleanType n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 0);
     }
 
     @Override
     public Integer visit(Call n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(n.args.size(), n.args.size() + 1); // FIXME correct?
     }
 
     @Override
     public Integer visit(ClassDeclExtends n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 0);
     }
 
     @Override
     public Integer visit(ClassDeclSimple n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 0);
     }
 
     @Override
     public Integer visit(False n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(1, 0);
     }
 
     @Override
     public Integer visit(Formal n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 0);
     }
 
     @Override
     public Integer visit(Identifier n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(2, 1); // Need at maximum 2, for getfield from this,
+        // and will in such a case remove that one. XXX Check if correct
     }
 
     @Override
     public Integer visit(IdentifierExp n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 0);
     }
 
     @Override
     public Integer visit(IdentifierType n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 0);
     }
 
     @Override
     public Integer visit(If n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 1);
     }
 
     @Override
     public Integer visit(IntArrayType n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(0, 0);
     }
 
     @Override
     public Integer visit(IntegerLiteral n) {
         super.visit(n);
-        return maxSize;
+        return updateSize(1, 0);
     }
 
     @Override
