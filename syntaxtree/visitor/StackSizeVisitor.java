@@ -67,7 +67,7 @@ public class StackSizeVisitor extends DepthFirstVisitor<Integer> {
     @Override
     public Integer visit(ArrayLookup n) {
         super.visit(n);
-        return updateSize(2, 1);
+        return updateSize(0, 1);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class StackSizeVisitor extends DepthFirstVisitor<Integer> {
     @Override
     public Integer visit(Call n) {
         super.visit(n);
-        return updateSize(n.args.size(), n.args.size() + 1); // FIXME correct?
+        return updateSize(0, 1);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class StackSizeVisitor extends DepthFirstVisitor<Integer> {
     @Override
     public Integer visit(LessThan n) {
         super.visit(n);
-        return updateSize(1, 1);
+        return updateSize(0, 1);
     }
 
     @Override
