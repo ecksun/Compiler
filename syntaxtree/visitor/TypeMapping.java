@@ -354,4 +354,13 @@ public class TypeMapping {
             this.maxOperandStackSize = size;
         }
     }
+
+    /**
+     * Returns the maximum operand stack size for this scope.
+     * 
+     * @return The maximum number of operands that sits on the stack.
+     */
+    public Integer getMaxOperandStackSize() {
+        return this.maxOperandStackSize;
+    }
 }

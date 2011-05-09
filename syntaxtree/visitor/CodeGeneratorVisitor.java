@@ -437,7 +437,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
                 + (1 + n.varDecls.size() + n.args.size()));
         // FIXME Räkna maximala antalet operander som ligger på stacken i
         // metoden.
-        output.println(".limit stack 20");
+        output.println(".limit stack " + scope.getMaxOperandStackSize());
 
         // Traverse the given method; first variable declarations.
         for (VarDecl varDecl : n.varDecls) {

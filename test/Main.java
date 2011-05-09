@@ -4,6 +4,7 @@ import lex.Lexer;
 import parser.parser;
 import syntaxtree.Program;
 import syntaxtree.visitor.CodeGeneratorVisitor;
+import syntaxtree.visitor.StackSizeVisitor;
 import syntaxtree.visitor.SymbolTableVisitor;
 import syntaxtree.visitor.SyntaxTreePrinter;
 import syntaxtree.visitor.TypeVisitor;
@@ -41,6 +42,10 @@ public class Main {
             result.accept(visitor);
 
             visitor = new TypeVisitor();
+            System.out.println(visitor.getClass().getName());
+            result.accept(visitor);
+            
+            visitor = new StackSizeVisitor();
             System.out.println(visitor.getClass().getName());
             result.accept(visitor);
             
