@@ -8,6 +8,7 @@ package syntaxtree.visitor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import syntaxtree.And;
@@ -102,12 +103,10 @@ public class TypeMapping {
         children = new HashMap<String, TypeMapping>();
         methods = new HashMap<String, List<MethodDecl>>();
         if (obj instanceof MethodDecl) {
-            indexMapper = new LocalVariableIndexMapper(this);
-            for (Formal arg : ((MethodDecl) obj).args) {
-                indexMapper.getIndex(arg.name);
-            }
-        } else
+            indexMapper = new LocalVariableIndexMapper();
+        } else {
             indexMapper = null;
+        }
         if (obj != null && obj.getName() != null) {
             parent.addChild(obj.getName(), this);
             if (obj instanceof ClassDecl) {

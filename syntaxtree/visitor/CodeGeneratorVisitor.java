@@ -264,9 +264,6 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
     @Override
     public Void visit(Formal n) {
-        System.err.println("Formal unimplemented");
-        super.visit(n);
-
         return null;
     }
 
@@ -414,7 +411,10 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor {
 
         // Prepare the .method directive, incl. formal and return types.
         output.print(".method public " + n.methodName + "(");
-        for (Formal arg : n.args) {
+        ListIterator<Formal> argsIt = n.args.listIterator(n.args.size());
+        Formal arg;
+        while (argsIt.hasPrevious() && (arg = argsIt.previous()) != null) {
+            indexMapper.getIndex(arg.name);
             output.print(getShortName(arg.type));
         }
         output.print(")");
