@@ -35,14 +35,27 @@ import syntaxtree.True;
 import syntaxtree.VarDecl;
 import syntaxtree.While;
 
+/**
+ * StackSizeVisitor offers traversal of a program tree and adds the maximum
+ * operand stack size to each method's scope.
+ */
 public class StackSizeVisitor extends DepthFirstVisitor<Integer> {
     private int maxSize;
     private int currentSize;
 
-    private Integer updateSize(int i, int j) {
-        currentSize += i;
+    /**
+     * Updates the stack size and records maximum values.
+     * 
+     * @param pushes
+     *            Number of pushes.
+     * @param pops
+     *            Number of pops.
+     * @return The new maximum stack size.
+     */
+    private Integer updateSize(int pushes, int pops) {
+        currentSize += pushes;
         maxSize = Math.max(currentSize, maxSize);
-        currentSize -= j;
+        currentSize -= pops;
         return maxSize;
     }
 
