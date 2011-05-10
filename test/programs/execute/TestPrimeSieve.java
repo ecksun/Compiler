@@ -28,7 +28,7 @@ class PrimeSieve {
     int size;
     boolean slask;
     public int run() {
-        size = 10000;
+        size = 1000000;
         is_prime = new int[size]; // Based on that java sets all ints to 0
         is_prime[0] = 1;
         is_prime[1] = 1;
@@ -55,7 +55,7 @@ class PrimeSieve {
     }
 
     public boolean isPrime(int i) {
-        return (is_prime[i] < 0 && (0-1) < is_prime[i]);
+        return is_prime[i] < 1;
     }
 
     public int getSize() {
