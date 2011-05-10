@@ -1,12 +1,12 @@
 class TestPrimeSieve {
     public static void main(String[] argv) {
-        System.out.println((new MiniJavaIsAPain()).miniJavaIsStupid());
+        System.out.println((new PrimeSieveHelper()).initPrimeSieve());
     }
 }
 
-class MiniJavaIsAPain  {
+class PrimeSieveHelper  {
     int slask;
-    public int miniJavaIsStupid() {
+    public int initPrimeSieve() {
         int i;
         PrimeSieve ps;
         ps = new PrimeSieve(); 

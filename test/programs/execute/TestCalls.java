@@ -1,14 +1,14 @@
-class Test4 {
+class TestCalls {
 
     public static void main(String[] args) {
-        System.out.println((new Test4A()).test());
+        System.out.println((new TestCallsA()).test());
     }
 
 }
 
-class Test4A {
+class TestCallsA {
 
-    Test4B test4B;
+    TestCallsB testCallsB;
 
     public int test() {
         int test1;
@@ -16,8 +16,8 @@ class Test4A {
         test1 = this.test1(100000, 200000, 300000);
         test2 = 999999;
 
-        test4B = new Test4B();
-        System.out.println(test4B.test());
+        testCallsB = new TestCallsB();
+        System.out.println(testCallsB.test());
 
         return test1;
     }
@@ -38,7 +38,7 @@ class Test4A {
 
 }
 
-class Test4B {
+class TestCallsB {
 
     public int test() {
         return 1337;

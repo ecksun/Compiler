@@ -1,7 +1,7 @@
 /**
- * Correct program 1.
+ * Minimal correct program.
  */
-class Test1 {
+class TestMinimal {
     public static void main (String[] args) {
     }
 }
