@@ -1,11 +1,45 @@
 class TestFactorial {
     public static void main(String[] argv) {
-        System.out.println((new MiniJavaIsAPain()).recFac(10));
-        System.out.println((new MiniJavaIsAPain()).itFac(10));
+
+        if (new TestFactorialHelper().run()) {
+        } else {
+        }
+
     }
 }
 
-class MiniJavaIsAPain {
+class TestFactorialHelper {
+    public boolean run() {
+        Factorial fac;
+        int i;
+        int j;
+        int recResult;
+        int itResult;
+        recResult = 0;
+        itResult = 0;
+        i = 1;
+        fac = new Factorial();
+
+        while (i < 14) {
+            j = 0;
+            while (j < 2000000) {
+                recResult = fac.recFac(i);
+                itResult = fac.itFac(i);
+                j = j + 1;
+            }
+            
+            System.out.println(recResult);
+            System.out.println(itResult);
+           
+            i = i + 1;
+        }
+
+        return true;
+    }
+}
+
+class Factorial {
+
     public int recFac(int n) {
         int ret;
         ret = 1;
