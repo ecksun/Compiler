@@ -53,7 +53,7 @@ jcup_jar = $(lib_dir)/java-cup-11a.jar
 java_sources = **/*.java
 
 # Default test input file to pass to test main program.
-TEST_FILE = $(test_dir)/programs/correct/TestPrimeSieve.java
+TEST_FILE = $(test_dir)/programs/execute/TestPrimeSieve.java
 
 
 ##################################################
