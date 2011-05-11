@@ -45,10 +45,6 @@ public class Main {
             System.out.println(visitor.getClass().getName());
             result.accept(visitor);
             
-            visitor = new StackSizeVisitor();
-            System.out.println(visitor.getClass().getName());
-            result.accept(visitor);
-            
             visitor = new CodeGeneratorVisitor();
             System.out.println(visitor.getClass().getName());
             result.accept(visitor);
