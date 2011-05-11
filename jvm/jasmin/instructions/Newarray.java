@@ -12,6 +12,10 @@ public class Newarray extends Instruction {
      */
     private String arrayType;
 
+    public Newarray(String arrayType) {
+        this.arrayType = arrayType;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // count => arrayref

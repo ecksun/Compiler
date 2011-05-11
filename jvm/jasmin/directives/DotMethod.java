@@ -5,7 +5,7 @@ import jvm.jasmin.Directive;
 public class DotMethod extends Directive {
 
     /**
-     * One of the keywords: public, private, protected, static, final,
+     * One (or more) of the keywords: public, private, protected, static, final,
      * synchronized, native, abstract.
      */
     private String accessSpec;
@@ -16,15 +16,21 @@ public class DotMethod extends Directive {
     private String methodSpec;
 
     /**
-     * The code defining the body of the method.
+     * Constructs a new .method directive.
+     * 
+     * @param accessSpec
+     *            The method visibility.
+     * @param methodSpec
+     *            Method specification.
      */
-    // TODO remove, or nest statements in here?
-    // private List<Statement> statements;
+    public DotMethod(String accessSpec, String methodSpec) {
+        this.accessSpec = accessSpec;
+        this.methodSpec = methodSpec;
+    }
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return null;
+        return ".method " + accessSpec + " " + methodSpec + comment();
     }
 
 }

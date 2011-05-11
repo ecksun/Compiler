@@ -21,9 +21,19 @@ public class Invokespecial extends Instruction {
      */
     private static final int numArgs = 0;
 
+    /**
+     * Constructs a new {@link Invokespecial} with given method specification.
+     * 
+     * @param methodSpec
+     *            The method to invoke.
+     */
+    public Invokespecial(String methodSpec) {
+        this.methodSpec = methodSpec;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
-        // objectref, [arg1, arg2, ...] => 
+        // objectref, [arg1, arg2, ...] =>
         return -(1 + numArgs);
     }
 

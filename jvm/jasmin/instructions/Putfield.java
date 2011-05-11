@@ -17,6 +17,19 @@ public class Putfield extends Instruction {
      */
     private String descriptor;
 
+    /**
+     * Constructs a new Putfield instruction.
+     * 
+     * @param fieldSpec
+     *            The field to put into.
+     * @param descriptor
+     *            Field type descriptor.
+     */
+    public Putfield(String fieldSpec, String descriptor) {
+        this.fieldSpec = fieldSpec;
+        this.descriptor = descriptor;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // objectref, value =>

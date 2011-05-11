@@ -10,10 +10,18 @@ public class Label extends Statement {
      */
     String name;
 
+    public Label(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public int getOperandStackSizeChange() {
+        return 0;
+    }
+
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return null;
+        return name + ":" + comment();
     }
 
 }

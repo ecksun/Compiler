@@ -12,6 +12,16 @@ public class Aload extends Instruction {
      */
     private int varNum;
 
+    /**
+     * Constructs a new Aload with the given variable number.
+     * 
+     * @param varNum
+     *            Number of variable to load from.
+     */
+    public Aload(int varNum) {
+        this.varNum = varNum;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // => objectref

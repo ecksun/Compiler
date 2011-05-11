@@ -12,6 +12,10 @@ public class Goto extends Instruction {
      */
     private String label;
 
+    public Goto(String label) {
+        this.label = label;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // [no change]

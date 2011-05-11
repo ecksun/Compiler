@@ -9,19 +9,33 @@ public class DotField extends Directive {
     private String descriptor;
     private String value;
 
+    /**
+     * Constructs a new .field directive.
+     * 
+     * @param fieldName
+     *            Name of the field.
+     * @param descriptor
+     *            Field type descriptor.
+     */
+    public DotField(String accessSpec, String fieldName, String descriptor) {
+        this.accessSpec = accessSpec;
+        this.fieldName = fieldName;
+        this.descriptor = descriptor;
+    }
+
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
 
         str.append(".field");
 
-        if (accessSpec.length() > 0) {
+        if (accessSpec != null) {
             str.append(" " + accessSpec);
-            if (fieldName.length() > 0) {
+            if (fieldName != null) {
                 str.append(" " + fieldName);
-                if (descriptor.length() > 0) {
+                if (descriptor != null) {
                     str.append(" " + descriptor);
-                    if (value.length() > 0) {
+                    if (value != null) {
                         str.append(" = " + value);
                     }
                 }

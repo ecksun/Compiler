@@ -17,14 +17,27 @@ public abstract class Statement {
      * @return Formatted comment;
      */
     protected String comment() {
-        return comment.length() > 0 ? " \t; " + comment : "";
+        if (comment != null) {
+            return " \t" + comment;
+        } else {
+            return "";
+        }
     }
+
+    /**
+     * Returns the operand stack size change caused by this instruction.
+     * 
+     * @return The operand stack size change, which is 0 for everyting except
+     *         Jasmin instructions.
+     */
+    public abstract int getOperandStackSizeChange();
 
     /**
      * Returns a valid Jasmin statement string representation.
      * 
      * @return A Jasmin statement string.
      */
+    @Override
     public abstract String toString();
 
 }

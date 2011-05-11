@@ -15,6 +15,11 @@ public class Getstatic extends Instruction {
      */
     private String descriptor;
 
+    public Getstatic(String field, String descriptor) {
+        this.field = field;
+        this.descriptor = descriptor;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // Pushes the static field value.

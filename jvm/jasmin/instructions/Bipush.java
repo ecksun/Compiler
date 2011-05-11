@@ -10,8 +10,12 @@ public class Bipush extends Instruction {
     /**
      * The byte to be pushed onto stack as an integer value.
      */
-    private int value;
-    
+    private byte value;
+
+    public Bipush(byte b) {
+        this.value = b;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // => value

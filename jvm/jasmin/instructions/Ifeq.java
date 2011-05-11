@@ -12,6 +12,10 @@ public class Ifeq extends Instruction {
      */
     private String label;
 
+    public Ifeq(String label) {
+        this.label = label;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // value =>

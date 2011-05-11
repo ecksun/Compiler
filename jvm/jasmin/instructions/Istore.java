@@ -13,6 +13,16 @@ public class Istore extends Instruction {
      */
     private int varNum;
 
+    /**
+     * Constructs a new Istore with the given variable number.
+     * 
+     * @param varNum
+     *            Number of variable to store into.
+     */
+    public Istore(int varNum) {
+        this.varNum = varNum;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // value =>

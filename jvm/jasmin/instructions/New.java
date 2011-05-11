@@ -10,6 +10,10 @@ public class New extends Instruction {
      */
     private String className;
 
+    public New(String className) {
+        this.className = className;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // => objectref

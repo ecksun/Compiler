@@ -12,6 +12,10 @@ public class IfIcmplt extends Instruction {
      */
     private String label;
 
+    public IfIcmplt(String label) {
+        this.label = label;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // value1, value2 =>

@@ -17,6 +17,11 @@ public class Getfield extends Instruction {
      */
     private String descriptor;
     
+    public Getfield(String fieldSpec, String descriptor) {
+        this.fieldSpec = fieldSpec;
+        this.descriptor = descriptor;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // objectref => value
@@ -25,7 +30,7 @@ public class Getfield extends Instruction {
 
     @Override
     public String toString() {
-        return "getfield " + fieldSpec + descriptor + comment();
+        return "getfield " + fieldSpec + " " + descriptor + comment();
     }
 
 }

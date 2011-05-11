@@ -12,6 +12,10 @@ public class Iload extends Instruction {
      */
     private int varNum;
 
+    public Iload(int varNum) {
+        this.varNum = varNum;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // => value

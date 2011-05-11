@@ -5,4 +5,9 @@ package jvm.jasmin;
  */
 abstract public class Directive extends Statement {
 
+    @Override
+    public int getOperandStackSizeChange() {
+        return 0;
+    }
+
 }

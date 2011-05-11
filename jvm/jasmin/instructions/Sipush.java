@@ -10,7 +10,11 @@ public class Sipush extends Instruction {
     /**
      * The short value to be pushed onto stack as an integer.
      */
-    private int value;
+    private short value;
+
+    public Sipush(short s) {
+        value = s;
+    }
 
     @Override
     public int getOperandStackSizeChange() {

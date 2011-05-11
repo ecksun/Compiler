@@ -13,6 +13,17 @@ public class Iconst extends Instruction {
      */
     private int value;
 
+    /**
+     * Constructs a new Iconst with the given value.
+     * 
+     * @param value
+     *            A value between -1 and 5 (inclusive).
+     */
+    public Iconst(int value) {
+        assert -1 <= value && value <= 5;
+        this.value = value;
+    }
+
     @Override
     public int getOperandStackSizeChange() {
         // => value
@@ -22,7 +33,7 @@ public class Iconst extends Instruction {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder("iconst_");
-        
+
         if (value == -1) {
             str.append("m1");
         } else if (0 <= value && value <= 5) {
@@ -33,7 +44,7 @@ public class Iconst extends Instruction {
         }
 
         str.append(comment());
-        
+
         return str.toString();
     }
 

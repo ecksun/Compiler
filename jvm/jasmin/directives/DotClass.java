@@ -24,4 +24,13 @@ public class DotClass extends Directive {
         return ".class " + name;
     }
 
+    /**
+     * Returns the class name that is included in this directive.
+     * 
+     * @return The class name.
+     */
+    public String getName() {
+        return name;
+    }
+
 }

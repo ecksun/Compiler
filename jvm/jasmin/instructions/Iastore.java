@@ -3,20 +3,19 @@ package jvm.jasmin.instructions;
 import jvm.jasmin.Instruction;
 
 /**
- * Return reference from a method.
+ * Store an integer into an array.
  */
-public class Areturn extends Instruction {
+public class Iastore extends Instruction {
 
     @Override
     public int getOperandStackSizeChange() {
-        // objectref => [empty]
-        // TODO Correct?
-        return -1;
+        // arrayref, index, value =>
+        return -3;
     }
 
     @Override
     public String toString() {
-        return "areturn" + comment();
+        return "iastore" + comment();
     }
 
 }
