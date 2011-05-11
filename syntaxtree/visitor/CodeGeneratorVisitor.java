@@ -1,7 +1,12 @@
 package syntaxtree.visitor;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
+import jvm.jasmin.Label;
+import jvm.jasmin.directives.*;
+import jvm.jasmin.instructions.*;
 import syntaxtree.And;
 import syntaxtree.ArrayAssign;
 import syntaxtree.ArrayLength;
@@ -42,7 +47,7 @@ import syntaxtree.VarDecl;
 import syntaxtree.While;
 
 public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
-    private ClassCreator output;
+
     /**
      * The type mapping for the current scope. Should always be kept up to date
      * whenever changing scope.
@@ -60,6 +65,18 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
      * A Jasmin type descriptor of the type that was most recently visited.
      */
     private String typeDescriptor;
+
+    private List<jvm.jasmin.Statement> code = new LinkedList<jvm.jasmin.Statement>();
+
+    private List<jvm.jasmin.Statement> defaultConstructor() {
+        List<jvm.jasmin.Statement> stmts = new LinkedList<jvm.jasmin.Statement>();
+        stmts.add(new DotMethod("public", "<init>()V"));
+        stmts.add(new Aload(0));
+        stmts.add(new Invokespecial("java/lang/Object/<init>()V"));
+        stmts.add(new Return());
+        stmts.add(new DotEnd("method"));
+        return stmts;
+    }
 
     private String getLongName(Type type) {
         // TODO
@@ -110,7 +127,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
 
         // Perform bitwise integer AND on the two values that have now been
         // pushed to the stack.
-        output.println("iand"); // value1, value2 => result
+        code.add(new Iand());
+
         return null;
     }
 
@@ -121,7 +139,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         // value.
         super.visit(n);
 
-        output.println("iastore"); // arrayref, index, value =>
+        code.add(new Iastore());
+
         return null;
     }
 
@@ -131,7 +150,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         // on top of the stack.
         super.visit(n);
 
-        output.println("arraylength"); // arrayref => length
+        code.add(new Arraylength());
+
         return null;
     }
 
@@ -142,7 +162,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         n.index.accept(this);
 
         // Finally, eat array reference and index, and load value onto stack.
-        output.println("iaload"); // arrayref, index => value
+        code.add(new Iaload());
+
         return null;
     }
 
@@ -155,10 +176,10 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         if (scope.isLocalVariable(n.id.name)) {
             n.exp.accept(this);
             if (type instanceof IdentifierType) {
-                output.println("astore" + (id <= 3 ? "_" : " ") + id);
+                code.add(new Astore(id));
             } else if (type instanceof IntegerType
                     || type instanceof BooleanType) {
-                output.println("istore" + (id <= 3 ? "_" : " ") + id);
+                code.add(new Istore(id));
             } else {
                 System.err
                         .println("Type of variable to assign was unrecognized: "
@@ -173,10 +194,9 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
             String fieldSpec = getLongName(scope.getType("this")) + "/"
                     + n.id.name;
             String descriptor = getShortName(type);
-            output.println("aload_0");
+            code.add(new Aload(0));
             n.exp.accept(this);
-            output.println(String.format("putfield %s %s", fieldSpec,
-                    descriptor));
+            code.add(new Putfield(fieldSpec, descriptor));
         }
 
         return null;
@@ -211,15 +231,23 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
             iterator.previous().accept(this);
         }
 
-        output.print("invokevirtual ");
-        // TODO Might need to do s/./\// on getLongName below.
-        output.print(getLongName(scope.getType(n.obj)));
-        output.print("/" + n.method.name + "("); // Method name
-        for (Exp arg : n.args) { // All arguments
+        StringBuilder methodSpec = new StringBuilder();
+        // Class name.
+        methodSpec.append(getLongName(scope.getType(n.obj)));
+
+        // Method name.
+        methodSpec.append("/" + n.method.name + "(");
+
+        // Argument types.
+        for (Exp arg : n.args) {
             Type type = scope.getType(arg);
-            output.print(getShortName(type));
+            methodSpec.append(getShortName(type));
         }
-        output.println(")" + getShortName(scope.getType(n))); // The return type
+
+        // Return type.
+        methodSpec.append(")" + getShortName(scope.getType(n)));
+
+        code.add(new Invokevirtual(methodSpec.toString(), n.args.size()));
 
         return null;
     }
@@ -236,19 +264,19 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
     public Void visit(ClassDeclSimple n) {
         getScope(n);
 
-        // Create a new class (and close previous implicitly).
-        output = ClassCreator.createClass(n.className);
+        // Create a new class.
+        code.add(new DotClass(n.className.name));
+        code.add(new DotSuper("java/lang/Object"));
 
         // Field definitions.
         for (VarDecl varDecl : n.varDecls) {
             String fieldName = varDecl.name.name;
             String descriptor = getShortName(varDecl.type);
-            output.println(String.format(".field public %s %s", fieldName,
-                    descriptor));
+            code.add(new DotField("public", fieldName, descriptor));
         }
 
         // Default constructor.
-        output.addDefaultConstructor();
+        code.addAll(defaultConstructor());
 
         // Visit method declarations as usual.
         for (MethodDecl methodDecl : n.methodDecls) {
@@ -261,7 +289,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
 
     @Override
     public Void visit(False n) {
-        output.println("iconst_0");
+        code.add(new Iconst(0));
         super.visit(n);
         return null;
     }
@@ -285,10 +313,10 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         if (scope.isLocalVariable(n.name)) {
             int index = indexMapper.getIndex(n);
             if (type instanceof IdentifierType) {
-                output.println("aload" + (index <= 3 ? "_" : " ") + index);
+                code.add(new Aload(index));
             } else if (type instanceof IntegerType
                     || type instanceof BooleanType) {
-                output.println("iload" + (index <= 3 ? "_" : " ") + index);
+                code.add(new Iload(index));
             } else {
                 System.out.println("Identifier type was not recognized: "
                         + type.getClass());
@@ -300,9 +328,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
             String fieldSpec = getLongName(scope.getType("this")) + "/"
                     + n.name;
             String descriptor = getShortName(type);
-            output.println("aload_0");
-            output.println(String.format("getfield %s %s", fieldSpec,
-                    descriptor));
+            code.add(new Aload(0));
+            code.add(new Getfield(fieldSpec, descriptor));
         }
 
         return null;
@@ -325,13 +352,12 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         n.exp.accept(this);
         String endLabel = LabelCreator.getLabel();
         String elseLabel = LabelCreator.getLabel();
-        output.println("ifeq " + elseLabel);
+        code.add(new Ifeq(elseLabel));
         n.ifStm.accept(this);
-        output.println("goto " + endLabel);
-        output.println(elseLabel + ":");
+        code.add(new Goto(endLabel));
+        code.add(new Label(elseLabel));
         n.elseStm.accept(this);
-        output.println(endLabel + ":");
-
+        code.add(new Label(endLabel));
         return null;
     }
 
@@ -349,22 +375,21 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
      */
     @Override
     public Void visit(IntegerLiteral n) {
-        
-        if (n.i == -1) {
-            output.println("iconst_m1");
-        } else if (n.i >= 0 && n.i <= 5) {
-            output.println("iconst_" + n.i);
+
+        if (n.i >= -1 && n.i <= 5) {
+            code.add(new Iconst(n.i));
         } else if (n.i >= Byte.MIN_VALUE && n.i <= Byte.MAX_VALUE) {
-            output.println("bipush " + n.i);
+            code.add(new Bipush((byte) n.i));
         } else if (n.i >= Short.MIN_VALUE && n.i <= Short.MAX_VALUE) {
-            output.println("sipush " + n.i);
+            code.add(new Sipush((short) n.i));
         } else {
-            // The Jasmin instruction 'ldc' takes a constant to be pushed onto the
+            // The Jasmin instruction 'ldc' takes a constant to be pushed onto
+            // the
             // stack, in contrast to the Java bytecode instruction 'ldc', which
             // takes an index for the runtime constant pool. Behind the scenes,
             // Jasmin creates a record in that pool with the given constant, and
             // replaces the constant with the corresponding pool index.
-            output.println("ldc " + n.i);            
+            code.add(new Ldc(n.i));
         }
 
         return null;
@@ -385,12 +410,19 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         super.visit(n);
         String label = LabelCreator.getLabel();
         String endLabel = LabelCreator.getLabel();
-        output.println("if_icmplt " + label + " ; if less than, goto label");
-        output.println("iconst_0 ; load FALSE onto the stack");
-        output.println("goto " + endLabel + " ; and finish LessThan");
-        output.println(label + ":");
-        output.println("iconst_1 ; load TRUE onto the stack");
-        output.println(endLabel + ":");
+
+        // If less than is true, goto label.
+        code.add(new IfIcmplt(label));
+        // Otherwise, load FALSE (0) onto the stack.
+        code.add(new Iconst(0));
+        // Then finish the LessThan expression.
+        code.add(new Goto(endLabel));
+        // Add true label.
+        code.add(new Label(label));
+        // If comparison was true, load TRUE (1) onto the stack.
+        code.add(new Iconst(1));
+        // Print end label for this LessThan expression.
+        code.add(new Label(endLabel));
 
         return null;
     }
@@ -399,16 +431,25 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
     public Void visit(MainClass mainClass) {
         getScope(mainClass);
 
-        output = ClassCreator.createClass(mainClass.className);
-        output.addDefaultConstructor();
-        output.println(".method public static main([Ljava/lang/String;)V");
-        output.println(".limit locals 1");
-        output.println(".limit stack 4"); // TODO is this correct?
+        // Create class.
+        code.add(new DotClass(mainClass.className.name));
+        code.add(new DotSuper("java/lang/Object"));
+        code.addAll(defaultConstructor());
+
+        // Create main method.
+        code.add(new DotMethod("public static", "main([Ljava/lang/String;)V"));
+        // TODO Add the correct limit values.
+        code.add(new DotLimit("locals", 1));
+        code.add(new DotLimit("stack", 4));
+
+        // Add statements by visiting them as usual.
         for (Statement statement : mainClass.statements) {
             statement.accept(this);
         }
-        output.println("return");
-        output.println(".end method");
+
+        // Return and end method.
+        code.add(new Return());
+        code.add(new DotEnd("method"));
 
         restoreScope();
         return null;
@@ -422,22 +463,27 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         indexMapper = scope.getIndexMapper();
 
         // Prepare the .method directive, incl. formal and return types.
-        output.print(".method public " + n.methodName + "(");
+        StringBuilder methodSpec = new StringBuilder();
+        methodSpec.append(n.methodName + "(");
+
         ListIterator<Formal> argsIt = n.args.listIterator(n.args.size());
         Formal arg;
         while (argsIt.hasPrevious() && (arg = argsIt.previous()) != null) {
             indexMapper.getIndex(arg.name);
-            output.print(getShortName(arg.type));
+            methodSpec.append(getShortName(arg.type));
         }
-        output.print(")");
-        output.println(getShortName(n.retType));
+        methodSpec.append(")");
+        methodSpec.append(getShortName(n.retType));
+
+        DotMethod methodStart = new DotMethod("public", methodSpec.toString());
+        code.add(methodStart);
 
         // All local variables, including formals, plus "this" variable.
-        output.println(".limit locals "
-                + (1 + n.varDecls.size() + n.args.size()));
-        // FIXME Räkna maximala antalet operander som ligger på stacken i
-        // metoden.
-        output.println(".limit stack " + scope.getMaxOperandStackSize());
+        code.add(new DotLimit("locals", 1 + n.varDecls.size() + n.args.size()));
+
+        // Add stack limit in correct position. Will be updated later.
+        DotLimit stackLimit = new DotLimit("stack");
+        code.add(stackLimit);
 
         // Traverse the given method; first variable declarations.
         for (VarDecl varDecl : n.varDecls) {
@@ -450,25 +496,35 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         }
 
         // And at last the return expression.
-        output.println(";ret:");
         n.returnExpression.accept(this);
+
+        // Now update the maximum operand stack size limit.
+        ListIterator<jvm.jasmin.Statement> stmts = code.listIterator(code
+                .indexOf(methodStart));
+        int maxSize = 0, currentSize = 0;
+        while (stmts.hasNext()) {
+            currentSize += stmts.next().getOperandStackSizeChange();
+            if (currentSize > maxSize) {
+                maxSize = currentSize;
+            }
+        }
+        stackLimit.setLimit(maxSize);
 
         // Add appropriate return stm, depending on return type.
         if (n.retType instanceof IntegerType
                 || n.retType instanceof BooleanType) {
-            output.println("ireturn");
+            code.add(new Ireturn());
         } else if (n.retType instanceof IntArrayType
                 || n.retType instanceof IdentifierType) {
-            output.println("areturn");
+            code.add(new Areturn());
         } else {
             // Should not happen if type checking in front-end is correct.
             System.err.println("Return expression type was not recognized: "
                     + n.retType);
         }
 
-        output.println("; end ret");
+        code.add(new DotEnd("method"));
 
-        output.println(".end method");
         restoreScope();
         return null;
     }
@@ -476,60 +532,63 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
     @Override
     public Void visit(Minus n) {
         super.visit(n);
-        output.println("isub");
+        code.add(new Isub());
         return null;
     }
 
     @Override
     public Void visit(NewArray n) {
         super.visit(n);
-        output.println("newarray int");
+        code.add(new Newarray("int"));
         return null;
     }
 
     @Override
     public Void visit(NewObject n) {
-        output.println("new " + n.id.name);
-        output.println("dup");
-        output.println("invokespecial " + n.id.name + "/<init>()V");
+        code.add(new New(n.id.name));
+        code.add(new Dup());
+        code.add(new Invokespecial(n.id.name + "/<init>()V"));
         return null;
     }
 
     @Override
     public Void visit(Not n) {
         super.visit(n);
-        output.println("ineg");
+        code.add(new Ineg());
         return null;
     }
 
     @Override
     public Void visit(Plus n) {
         super.visit(n);
-        output.println("iadd");
+        code.add(new Iadd());
         return null;
     }
 
     @Override
     public Void visit(Print n) {
         Type expType = scope.getType(n.exp);
-
-        output.println("getstatic java/lang/System/out Ljava/io/PrintStream;");
+        code
+                .add(new Getstatic("java/lang/System/out",
+                        "Ljava/io/PrintStream;"));
         super.visit(n);
-        output.print("invokevirtual java/io/PrintStream/println(");
-        output.print(getShortName(expType));
-        output.println(")V");
+        code.add(new Invokevirtual("java/io/PrintStream/println("
+                + getShortName(expType) + ")V", 1));
         return null;
     }
 
     @Override
     public Void visit(Program n) {
         super.visit(n);
+
+        new ClassCreator().write(code);
+
         return null;
     }
 
     @Override
     public Void visit(This n) {
-        output.println("aload_0");
+        code.add(new Aload(0));
         return null;
     }
 
@@ -538,13 +597,13 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         // Visit TIMES left and right expressions so that
         // their values are pushed onto the stack.
         super.visit(n);
-        output.println("imul");
+        code.add(new Imul());
         return null;
     }
 
     @Override
     public Void visit(True n) {
-        output.println("iconst_1");
+        code.add(new Iconst(1));
         super.visit(n);
         return null;
     }
@@ -561,15 +620,19 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         String expLabel = LabelCreator.getLabel();
         String endLabel = LabelCreator.getLabel();
         String stmLabel = LabelCreator.getLabel();
-        output.println(expLabel + ":");
+
+        code.add(new Label(expLabel));
+
         n.exp.accept(this);
 
         // If conditional expression is 0, go to endLabel.
-        output.println("ifeq " + endLabel);
-        output.println(stmLabel + ":");
+        code.add(new Ifeq(endLabel));
+        code.add(new Label(stmLabel));
+
         n.stm.accept(this);
-        output.println("goto " + expLabel);
-        output.println(endLabel + ":");
+
+        code.add(new Goto(expLabel));
+        code.add(new Label(endLabel));
 
         return null;
     }

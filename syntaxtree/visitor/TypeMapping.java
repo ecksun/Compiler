@@ -71,13 +71,6 @@ public class TypeMapping {
     private LocalVariableIndexMapper indexMapper;
 
     /**
-     * The maximum number of operands that ever exist on the stack for a method.
-     * This value is only interesting as long as this scope is a MethodDecl or
-     * deeper.
-     */
-    private Integer maxOperandStackSize; 
-
-    /**
      * Create a new TypeMapping, this will set the parent to null which is
      * probably only wanted in the top level scope, i.e. the program mapping
      * 
@@ -109,10 +102,8 @@ public class TypeMapping {
         methods = new HashMap<String, List<MethodDecl>>();
         if (obj instanceof MethodDecl) {
             indexMapper = new LocalVariableIndexMapper();
-            maxOperandStackSize = 0;
         } else {
             indexMapper = null;
-            maxOperandStackSize = null;
         }
         if (obj != null && obj.getName() != null) {
             parent.addChild(obj.getName(), this);
@@ -307,11 +298,11 @@ public class TypeMapping {
      *         as that scope is not Program or Class scope.
      */
     public boolean isLocalVariable(String var) {
-        // Program scope's parent and Class scope's grandparent are always null. 
+        // Program scope's parent and Class scope's grandparent are always null.
         if (parent == null || parent.parent == null) {
             return false;
         }
-        
+
         if (typemap.containsKey(var)) {
             // Assume that we are still deeper than Class scope.
             return true;
@@ -320,7 +311,7 @@ public class TypeMapping {
             return parent.isLocalVariable(var);
         }
     }
-    
+
     /**
      * Returns the number of variable mappings that are local to this scope.
      * 
@@ -340,27 +331,4 @@ public class TypeMapping {
         return typemap.keySet();
     }
 
-    /**
-     * Sets the maximum operand stack size for the appropriate scope (one where
-     * the private field that is being updated has been initialized).
-     * 
-     * @param size
-     *            The maximum operand stack size.
-     */
-    public void setMaxOperandStackSize(int size) {
-        if (maxOperandStackSize == null) {
-            parent.setMaxOperandStackSize(size);
-        } else {
-            this.maxOperandStackSize = size;
-        }
-    }
-
-    /**
-     * Returns the maximum operand stack size for this scope.
-     * 
-     * @return The maximum number of operands that sits on the stack.
-     */
-    public Integer getMaxOperandStackSize() {
-        return this.maxOperandStackSize;
-    }
 }

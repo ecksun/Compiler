@@ -3,54 +3,47 @@ package syntaxtree.visitor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.List;
 
-import syntaxtree.Identifier;
+import jvm.jasmin.Statement;
+import jvm.jasmin.directives.DotClass;
 
 public class ClassCreator {
     private PrintStream stream;
-    private static ClassCreator currentCreator = null;
 
-    public static ClassCreator createClass(Identifier className) {
-        if (currentCreator != null) {
-            currentCreator.close();
-        }
-        currentCreator = new ClassCreator(className);
-        return currentCreator;
+    public ClassCreator() {
+        stream = null;
     }
 
-    private ClassCreator(Identifier className) {
+    private void close() {
+        if (stream != null) {
+            stream.close();
+        }
+    }
+
+    private void open(String className) {
         try {
-            stream = new PrintStream(new File(className.name + ".j"));
+            stream = new PrintStream(new File(className + ".j"));
         } catch (FileNotFoundException e) {
-            System.err
-                    .println("File not found while trying to open the filewriter to the .j file");
             e.printStackTrace();
         }
-        println(".class " + className.name);
-        println(".super java/lang/Object");
-    }
-    
-    /**
-     * Adds a default constructor to the current class.
-     */
-    public void addDefaultConstructor() {
-        println(".method public <init>()V");
-        println("aload_0");
-        println("invokespecial java/lang/Object/<init>()V");
-        println("return");
-        println(".end method");
     }
 
-    // TODO this needs to be run at program exit.
-    private void close() {
-        stream.close();
+    private void println(Object stm) {
+        stream.println(stm);
     }
 
-    public void println(String str) {
-        stream.println(str);
-    }
+    public void write(List<Statement> code) {
+        for (Statement stm : code) {
+            if (stm instanceof DotClass) {
+                // Create new print stream (and close old, if exists).
+                close();
+                open(((DotClass) stm).getName());
+            }
 
-    public void print(String str) {
-        stream.print(str);
+            // Print statement to stream.
+            println(stm);
+        }
+        close();
     }
 }
