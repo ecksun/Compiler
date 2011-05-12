@@ -33,8 +33,11 @@ public class Invokevirtual extends Instruction {
 
     @Override
     public int getOperandStackSizeChange() {
-        // objectref, [arg1, arg2, ...] =>
-        return -(1 + numArgs);
+        // Find out return stack size change, which depends on non-/Void-type.
+        int returnSizeChange = methodSpec.trim().endsWith("V") ? 0 : 1;
+
+        // objectref, [arg1, arg2, ...] => [V=0; ~V=1]
+        return returnSizeChange - (1 + numArgs);
     }
 
     @Override
