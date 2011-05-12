@@ -5,8 +5,42 @@ import java.util.List;
 import java.util.ListIterator;
 
 import jvm.jasmin.Label;
-import jvm.jasmin.directives.*;
-import jvm.jasmin.instructions.*;
+import jvm.jasmin.directives.DotClass;
+import jvm.jasmin.directives.DotEnd;
+import jvm.jasmin.directives.DotField;
+import jvm.jasmin.directives.DotLimit;
+import jvm.jasmin.directives.DotMethod;
+import jvm.jasmin.directives.DotSuper;
+import jvm.jasmin.instructions.Aload;
+import jvm.jasmin.instructions.Areturn;
+import jvm.jasmin.instructions.Arraylength;
+import jvm.jasmin.instructions.Astore;
+import jvm.jasmin.instructions.Bipush;
+import jvm.jasmin.instructions.Dup;
+import jvm.jasmin.instructions.Getfield;
+import jvm.jasmin.instructions.Getstatic;
+import jvm.jasmin.instructions.Goto;
+import jvm.jasmin.instructions.Iadd;
+import jvm.jasmin.instructions.Iaload;
+import jvm.jasmin.instructions.Iand;
+import jvm.jasmin.instructions.Iastore;
+import jvm.jasmin.instructions.Iconst;
+import jvm.jasmin.instructions.IfIcmplt;
+import jvm.jasmin.instructions.Ifeq;
+import jvm.jasmin.instructions.Ifne;
+import jvm.jasmin.instructions.Iload;
+import jvm.jasmin.instructions.Imul;
+import jvm.jasmin.instructions.Invokespecial;
+import jvm.jasmin.instructions.Invokevirtual;
+import jvm.jasmin.instructions.Ireturn;
+import jvm.jasmin.instructions.Istore;
+import jvm.jasmin.instructions.Isub;
+import jvm.jasmin.instructions.Ldc;
+import jvm.jasmin.instructions.New;
+import jvm.jasmin.instructions.Newarray;
+import jvm.jasmin.instructions.Putfield;
+import jvm.jasmin.instructions.Return;
+import jvm.jasmin.instructions.Sipush;
 import syntaxtree.And;
 import syntaxtree.ArrayAssign;
 import syntaxtree.ArrayLength;
@@ -554,7 +588,17 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
     @Override
     public Void visit(Not n) {
         super.visit(n);
-        code.add(new Ineg());
+
+        String makeFalse = LabelCreator.getLabel();
+        String end = LabelCreator.getLabel();
+
+        code.add(new Ifne(makeFalse));
+        code.add(new Iconst(1));
+        code.add(new Goto(end));
+        code.add(new Label(makeFalse));
+        code.add(new Iconst(0));
+        code.add(new Label(end));
+
         return null;
     }
 
