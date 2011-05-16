@@ -12,7 +12,6 @@ import parser.sym;
 %column
 %cup
 %int
-%debug
 %yylexthrow lex.NoTokenMatchException
 
 %{

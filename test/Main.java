@@ -29,12 +29,13 @@ public class Main {
 
         try {
             parser p = new parser(scanner);
-            Program result = (Program) p.debug_parse().value;
-            System.out.println(result.toString());
 
-            Visitor<?> visitor = new SyntaxTreePrinter(System.out);
-            System.out.println(visitor.getClass().getName());
-            result.accept(visitor);
+            Program result = (Program) p.parse().value;
+//            System.out.println(result.toString());
+
+            Visitor<?> visitor; // = new SyntaxTreePrinter(System.out);
+//            System.out.println(visitor.getClass().getName());
+//            result.accept(visitor);
 
             visitor = new SymbolTableVisitor();
             System.out.println(visitor.getClass().getName());
