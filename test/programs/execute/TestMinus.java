@@ -9,12 +9,12 @@ class TestMinusHelper {
         int x;
 
         // NOTE: All integers operations are well-defined mod 2^32.
-        x = print(2-1); // subtract the constant 1
-        x = print(2+-1); // add the contant -1
-        x = print(2--1); // subtract the constant -1
-        x = print(2-2147483647); // subtract largest positive int
-        x = print(2+-2147483648); // add largest negative int
-        x = print(2--2147483648); // subtract largest negative int
+        x = this.print(2-1); // subtract the constant 1
+        x = this.print(2+-1); // add the contant -1
+        x = this.print(2--1); // subtract the constant -1
+        x = this.print(2-2147483647); // subtract largest positive int
+        x = this.print(2+-2147483648); // add largest negative int
+        x = this.print(2--2147483648); // subtract largest negative int
 
         // Correct Java for reference output.
         //x = print(2-1); // subtract the constant 1
