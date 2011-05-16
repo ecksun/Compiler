@@ -1,3 +1,4 @@
+// EXT:BMO
 /**
  * Bogus test program 5 with type errors.
  */
