@@ -16,6 +16,8 @@ class TestCallsA {
         int test2;
         test1 = this.test1(100000, 200000, 300000);
         test2 = 999999;
+        
+        test2 = this.test1(100000, 200000);
 
         testCallsB = new TestCallsB();
         System.out.println(testCallsB.test());
