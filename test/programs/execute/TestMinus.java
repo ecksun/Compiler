@@ -1,3 +1,9 @@
+/**
+ * Minus operation tests, stolen directly from email from tg.
+ *
+ * The creator of these test cases is thus, Torbjörn Granlund, but they were
+ * wrapped inside a MiniJava class by us.
+ */
 class TestMinus {
     public static void main(String[] args) {
         if (new TestMinusHelper().testMinus()) {} else {}
