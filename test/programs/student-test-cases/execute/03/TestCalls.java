@@ -1,3 +1,5 @@
+// EXT:BMO
+
 class TestCalls {
 
     public static void main(String[] args) {

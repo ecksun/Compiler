@@ -3,12 +3,7 @@
 
 class FieldInheritence{
 	public static void main(String[] args) {
-		Field2 f;
-		int r;
-		f = new Field2();
-		
-		r =f.setI(101);
-		r = f.getI();
+		System.out.println(new Field().test());
 	}
     
 }
@@ -26,6 +21,15 @@ class Field {
 	Field f;
 	int[] a;
 	
+	public int test() {
+		Field2 f;
+		int r;
+		f = new Field2();
+		
+		r =f.setI(101);
+		r = f.getI();
+		return 0;
+	}
 	
 	public int setI(int v) {
 		i = v;

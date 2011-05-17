@@ -8,8 +8,16 @@
 class OpTest {
 //this should print 1,2,3,4,5,6,7,8,9
 	public static void main ( String [ ] id ) 
-	{ 
-		int a;
+	{
+		System.out.println( new TestOp().t());
+	}	
+
+}
+
+
+class TestOp{
+	public int t() {
+			int a;
 		int b;
 		int c;
 		
@@ -53,13 +61,11 @@ class OpTest {
 		} else {
 			if( (a*b*c) <= 12 )
 				System.out.println(9);
-		}
-	} 
+		} 
 	
+		return 0;
+	}
 }
-
-
-
 
 
 

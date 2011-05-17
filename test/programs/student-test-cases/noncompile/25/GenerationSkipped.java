@@ -4,11 +4,7 @@ class GenerationSkipped {
 //this tests method signature across a "skipped" generation 
 	public static void main ( String [ ] id ) 
 	{ 
-		int r;
-		TestClass c;
-		c = new TestClass2();
-		r = c.createSelf().helloClassWorld(3,9);
-		System.out.println(r);
+		System.out.println(new TestClass2().createSelf().helloClassWorld(3,9));
 		System.out.println(new TestClass().createSelf().helloClassWorld(3,9));
 	} 
 	

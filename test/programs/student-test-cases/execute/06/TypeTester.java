@@ -1,4 +1,5 @@
 // EXT:NBD
+// EXT:CGT
 class TypeTester{
 	public static void main(String[] args){
 		{

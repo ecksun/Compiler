@@ -1,9 +1,10 @@
-// EXTCODE:ISC
-// EXTCODE:ICG
+// EXT:ISC
+// EXT:ICG
 
 class MainClass {
 	public static void main(String[] args) {
-		System.out.println( new A().doStuff() );
+		System.out.println( new A().doStuff(-100)[0] );
+		System.out.println( new A().doStuff( 100)[0] );
 	}
 }
 
@@ -41,7 +42,7 @@ class booleanarray {
 		else
 			retval = true;
 		
-		return retval;			
+		return retval;
 	}
 	
 	public int[] getArray() {
@@ -55,19 +56,20 @@ class booleanarray {
 }
 
 class A {
-	public boolean doStuff()
+	public int[] doStuff(int hundra)
 	{
 		// Variable declarations
 		int i;
 		moreBooleanArray ba;
 		boolean start;
+		boolean junk;
 		
 		// Assigning stuff
 		i = 0;
 		ba = new moreBooleanArray();
 		start = true;
 		
-		System.out.println(ba.create(10));
+		junk = ba.create(10);
 		
 		while(i < ba.getLength() && ba.set(i, start)) 
 		{
@@ -76,16 +78,18 @@ class A {
 		}
 		
 		// Should be true
-		System.out.println(ba.get(2));
+		junk = ba.get(2);
 		// Will become false
 		if( ba.set(2, false) )
-			System.out.println(ba.get(2));			// Should be false
+			junk = ba.get(2);						// Should be false
 		else
-			System.out.println(43110);				// Should not happen
+			System.out.println(4711);				// Should not happen
 		
-		ba.reset();
+		if(hundra < 99) {
+			junk = ba.reset();
+		}
 		
-		return ba.get(8);
+		return ba.getArray();
 	}
 }
 

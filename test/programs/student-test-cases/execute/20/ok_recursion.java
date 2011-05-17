@@ -1,3 +1,7 @@
+// EXT:CEQ
+// EXT:CGE
+// EXT:CGT
+
 class Recursion {
 	public static void main(String[] args) {
 		System.out.println(new SerieCreator().getFibSeries(new Recursive(), 10));
@@ -19,12 +23,6 @@ class Recursive {
 		return res;
 	}
 
-	// EXT:CEQ
-	
-	// EXT:CGE
-	
-	// EXT:CGT
-	
 	public int bincof(int n, int k) {
 		int res;
 		if(k == 0 && n >= 0) res = 1; 

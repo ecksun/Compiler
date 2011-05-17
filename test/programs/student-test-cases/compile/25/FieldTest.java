@@ -2,12 +2,7 @@
 
 class FieldTest{
 	public static void main(String[] args) {
-		Field f;
-		int r;
-		f = new Field();
-		
-		r = f.init();
-		r = f.hej(2);
+		System.out.println( new Field().test());
 	}
     
 }
@@ -17,6 +12,18 @@ class Field {
 	int i;
 	Field f;
 	int[] a;
+	
+	public int test() {
+		Field f;
+		int r;
+		f = new Field();
+		
+		r = f.init();
+		r = f.hej(2);
+	
+		return 0;
+	}
+	
 	
 	public int getI() {
 		return i;

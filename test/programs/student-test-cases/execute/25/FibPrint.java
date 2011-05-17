@@ -1,11 +1,7 @@
 
 class FibPrint{
 	public static void main(String[] args) {
-		Fib f;
-		int r;
-		f = new Fib();
-		r = 1;
-		r = f.printFib(1000);
+		System.out.println(new Fib().doIt());
 	}
     
 }
@@ -14,6 +10,15 @@ class FibPrint{
 class Fib {
 	int current;
 	int prev;
+	
+	public int doIt() {
+		Fib f;
+		int r;
+		f = new Fib();
+		r = 1;
+		r = f.printFib(1000);
+		return 0;
+	}
 	
 	public int printFib(int range) {
 		int i;

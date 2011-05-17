@@ -1,8 +1,15 @@
-
+// EXT:CEQ
 
 class BasicMath{
-	public static void main(String[] args) {
-			
+	public static void main(String[] args) {		
+		System.out.println(new Quad().calc());
+	}
+    
+}
+
+class Quad {
+
+	public int calc() {
 		int[] a;
 		int i;
 		DivChecker d;
@@ -33,11 +40,8 @@ class BasicMath{
 			}
 			i= i +1;
 		}
+		return 0;
 	}
-    
-}
-
-class Quad {
 
 	public int quad(int i) {
 		return i*i;

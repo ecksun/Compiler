@@ -8,6 +8,13 @@
 class Sort{
 	public static void main(String[] args) {
 			
+		System.out.println(new Tester().sort());
+	}
+    
+}
+
+class Tester {
+	public int sort() {
 		int[] a;
 		int r;
 		int i;
@@ -42,10 +49,10 @@ class Sort{
 			System.out.println(a[i]);
 			i = i + 1;
 		}
+		return 0;
 	}
-    
+	
 }
-
 
 class QuickSort
 {
