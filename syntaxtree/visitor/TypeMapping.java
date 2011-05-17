@@ -95,7 +95,7 @@ public class TypeMapping {
      */
     public TypeMapping(Scopeable obj, TypeMapping parent)
             throws VariableDupeException {
-//        System.out.println("New Scope:");
+        System.out.println("New Scope:");
         this.parent = parent;
         typemap = new HashMap<String, Type>();
         children = new HashMap<String, TypeMapping>();
@@ -153,7 +153,7 @@ public class TypeMapping {
                 decls.add(decl);
             }
         }
-//        System.out.println("|- " + decl);
+        System.out.println("|- " + decl);
     }
 
     /**
@@ -182,7 +182,7 @@ public class TypeMapping {
         if (typemap.put(name.name, type) != null) {
             throw new VariableDupeException(name.name);
         }
-//        System.out.println("|- " + name.name + " => " + getType(name.name));
+        System.out.println("|- " + name.name + " => " + getType(name.name));
     }
 
     public TypeMapping getChild(String name) {

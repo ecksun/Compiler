@@ -83,7 +83,9 @@ public class SymbolTableVisitor extends DepthFirstVisitor<Void> implements
     }
 
     private void printLevel() {
-        return;
+        for (int i = 0; i < level; ++i) {
+            System.out.print("  ");
+        }
     }
 
     @Override
