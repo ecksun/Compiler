@@ -157,11 +157,20 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
     @Override
     public Void visit(And n) {
         // Visit operand expressions.
-        super.visit(n);
-
+        n.e1.accept(this);
+        
+        String end = LabelCreator.getLabel();
+        
+        code.add(new Dup());
+        code.add(new Ifeq(end).setComment("Short-circuite &&"));
+        
+        n.e2.accept(this);
+        
         // Perform bitwise integer AND on the two values that have now been
         // pushed to the stack.
         code.add(new Iand());
+        
+        code.add(new Label(end));
 
         return null;
     }
@@ -209,7 +218,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         // Store value on the stack either in local variable or class field.
         if (scope.isLocalVariable(n.id.name)) {
             n.exp.accept(this);
-            if (type instanceof IdentifierType) {
+            if (type instanceof IdentifierType || type instanceof IntArrayType) {
                 code.add(new Astore(id));
             } else if (type instanceof IntegerType
                     || type instanceof BooleanType) {
@@ -346,11 +355,11 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         // Load either local variable OR class field.
         if (scope.isLocalVariable(n.name)) {
             int index = indexMapper.getIndex(n);
-            if (type instanceof IdentifierType) {
+            if (type instanceof IdentifierType || type instanceof IntArrayType) {
                 code.add(new Aload(index));
             } else if (type instanceof IntegerType
                     || type instanceof BooleanType) {
-                code.add(new Iload(index));
+                code.add(new Iload(index).setComment("Identifier " + n.toString()));
             } else {
                 System.out.println("Identifier type was not recognized: "
                         + type.getClass());
@@ -409,7 +418,6 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
      */
     @Override
     public Void visit(IntegerLiteral n) {
-
         if (n.i >= -1 && n.i <= 5) {
             code.add(new Iconst(n.i));
         } else if (n.i >= Byte.MIN_VALUE && n.i <= Byte.MAX_VALUE) {
