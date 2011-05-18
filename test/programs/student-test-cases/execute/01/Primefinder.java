@@ -3,7 +3,7 @@
  *
  * uses the MiniJava language
  *
- * Is extended with the extensions ISC, ICG, JVM, IWE, BMO and NBD 
+ * Is extended with the extensions ISC, ICG, JVM, IWE, BMO and NBD
  */
 
 //EXT: ISC

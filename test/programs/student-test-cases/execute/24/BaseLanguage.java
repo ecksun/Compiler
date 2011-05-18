@@ -13,6 +13,7 @@ class ComputePrimes {
 
 	int stop;   
 	int[] primes;		
+	int number_of_primes;
 
 	public int[] somePrimes(int max) { 	    
 	    int n; 
@@ -20,6 +21,7 @@ class ComputePrimes {
 
 	    n = 5;
 	    k = 1;
+		number_of_primes = 0;
 	    
 	    stop = max;
 	    primes = new int[stop];
@@ -32,6 +34,7 @@ class ComputePrimes {
 	    	if(this.isPrime(n, primes, k)) {
 	    		k = k + 1;
 	    		primes[k] = n; 
+				number_of_primes= number_of_primes + 1;
 	    	}
 	    	else {
 	    		System.out.println(99);
@@ -49,9 +52,11 @@ class ComputePrimes {
 		
 		ps = this.somePrimes(n);
 		
-		while(0 < n) {
+		System.out.println(number_of_primes);
+		while(0 < number_of_primes) {
 			System.out.println(ps[n - k]);
 			k = k - 1;
+			number_of_primes = number_of_primes - 1;
 		}
 		return 1;
 	}

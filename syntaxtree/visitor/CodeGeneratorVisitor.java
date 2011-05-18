@@ -282,8 +282,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         methodSpec.append("/" + n.method.name + "(");
 
         // Argument types.
-        for (Exp arg : n.args) {
-            Type type = scope.getType(arg);
+        for (int i = n.args.size()-1; i >= 0; --i) {
+            Type type = scope.getType(n.args.get(i));
             methodSpec.append(getShortName(type));
         }
 
@@ -356,7 +356,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         if (scope.isLocalVariable(n.name)) {
             int index = indexMapper.getIndex(n);
             if (type instanceof IdentifierType || type instanceof IntArrayType) {
-                code.add(new Aload(index));
+                code.add(new Aload(index).setComment(n.toString()));
             } else if (type instanceof IntegerType
                     || type instanceof BooleanType) {
                 code.add(new Iload(index).setComment("Identifier " + n.toString()));
