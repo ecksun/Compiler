@@ -12,13 +12,30 @@ public abstract class Statement {
     private String comment;
 
     /**
+     * Set the comment for this Statement.
+     * 
+     * This method returns a reference to this object in order to simplify its
+     * usage in order to be able to do:
+     * 
+     * {@code code.add(new Statement().setComment("string"))}
+     * 
+     * @param comment
+     *            The comment to set
+     * @return This object
+     */
+    public Statement setComment(String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    /**
      * Returns the comment for this Statement formatted.
      * 
      * @return Formatted comment;
      */
     protected String comment() {
         if (comment != null) {
-            return " \t" + comment;
+            return " \t;" + comment;
         } else {
             return "";
         }
