@@ -88,7 +88,7 @@ Number = 0 | [1-9][0-9]*
 
     {Identifier}        { return symbol(sym.IDENTIFIER, yytext()); }
 
-    {Number}           { return symbol(sym.NUMBER, Integer.parseInt(yytext())); }
+    {Number}           { return symbol(sym.NUMBER, yytext()); }
 
     {WhiteSpace}        { }
     

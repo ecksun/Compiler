@@ -25,7 +25,7 @@ terminal PUBLIC, CLASS, RETURN, LENGTH, THIS, NEW, VOID, STRING, IF, ELSE, WHILE
 terminal String IDENTIFIER;
 terminal Boolean TRUE, FALSE;
 terminal BooleanType BOOLEAN;
-terminal Integer NUMBER;
+terminal String NUMBER;
 terminal IntegerType INT;
 
 non terminal Program Program;
@@ -197,6 +197,8 @@ Exp         ::=   op:operator
 {: RESULT = new Call(obj, method, args); :}
                 | NUMBER:n
 {: RESULT = new IntegerLiteral(n); :}
+                | MINUS NUMBER:n
+{: RESULT = new IntegerLiteral("-" + n); :}
                 | TRUE
 {: RESULT = new True(); :}
                 | FALSE
