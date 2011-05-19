@@ -404,7 +404,7 @@ public class TypeVisitor implements Visitor<Type>, ErrorCollector {
 
     @Override
     public Type visit(NewObject newObject) {
-        return newObject.id.accept(this);
+        return new IdentifierType(newObject.id);
     }
 
     @Override
