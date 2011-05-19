@@ -113,7 +113,6 @@ for i in noncompile compile execute nonexecute; do
     fi
 
     find "$directory" -type f -name "*.java" | while read testfile; do
-        echo "checking $testfile"
         out=`is_supported "$testfile"`
         if [ "$out" = "ok" ]; then
             check "$i" "$testfile";

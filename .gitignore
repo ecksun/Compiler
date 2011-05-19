@@ -1,6 +1,3 @@
-*.log
-*.refoutput
-*.output
 *.swp
 *.class
 bin
