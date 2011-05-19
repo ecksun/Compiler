@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MiniJava Compiler" default="jar" basedir=".">
+    <description>
+        This ant buildfile contains a default target that builds the compiler,
+        runs the parser generator and lexer generator (from the lib directory),
+        and then generates one compiler (or several compilers) as a jar file. 
+    </description>
+    <!-- set global properties for this build -->
+    <property name="bin" location="bin"/>
+    <property name="dist"  location="dist"/>
+    <property name="lib" location="lib"/>
+    <property name="src" location="src"/>
+    <property name="src.lex" location="${src}/lex"/>
+    <property name="src.parser" location="${src}/parser"/>
+
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${bin}"/>
+    </target>
+
+    <target name="lexerUpToDateCheck">
+        <uptodate property="lexerUpToDate" srcfile="${src.lex}/minijava.lex"
+            targetfile="${src.lex}/Lexer.java"/>
+    </target>
+
+    <target name="lexer" depends="lexerUpToDateCheck" unless="lexerUpToDate" description="Generates the lexer source.">
+        <java jar="${lib}/JFlex.jar" fork="true">
+            <arg file="${src.lex}/minijava.lex"/>
+        </java>
+    </target>
+
+    <target name="parserUpToDateCheck">
+        <condition property="parserUpToDate">
+            <and>
+                <uptodate srcfile="${src.parser}/parser.cup" targetfile="${src.parser}/parser.java"/>
+                <uptodate srcfile="${src.parser}/parser.cup" targetfile="${src.parser}/sym.java"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="parser" depends="parserUpToDateCheck" unless="parserUpToDate" description="Generates the parser source.">
+        <java jar="${lib}/java-cup-11a.jar" fork="true" dir="${src.parser}" input="${src.parser}/parser.cup"/> 
+    </target>
+
+    <target name="compile" depends="init,lexer,parser" description="Compile the source in ${src} into ${bin}">
+        <javac srcdir="${src}" destdir="${bin}" classpath="${lib}/*.jar" includeantruntime="no">
+            <classpath>
+                <fileset dir="${lib}">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile" description="Create JAR file">
+        <jar jarfile="mjc.jar" basedir="${bin}"/>
+    </target>
+
+    <target name="run" depends="compile">
+        <java classname="mjc.JVMMain">
+            <arg value="${run.args.filename}"/>
+            <classpath>
+                <pathelement path="${bin}"/>
+                <fileset dir="${lib}">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="clean" description="Remove all generated files.">
+        <!-- TODO convert to file sets. -->
+        <delete dir="${bin}"/>
+        <delete file="${src.lex}/Lexer.java"/>
+        <delete file="${src.lex}/Lexer.java~"/>
+        <delete file="${src.parser}/parser.java"/>
+        <delete file="mjc.jar"/>
+    </target>
+</project>
+

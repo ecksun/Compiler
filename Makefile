@@ -65,7 +65,7 @@ TEST_FILE = $(test_dir)/programs/execute/TestPrimeSieve.java
 all: lex parser classes
 
 run_test: all
-	$(JAVA) $(java_all_flags) test.Main $(TEST_FILE)
+	$(JAVA) $(java_all_flags) mjc.JVMMain $(TEST_FILE)
 
 classes: $(bin_dir)
 	$(JAVAC) $(javac_all_flags) $(java_sources)
