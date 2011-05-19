@@ -142,6 +142,33 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
     }
 
     /**
+     * Calculates and returns the maximum stack size for the method in code that
+     * starts at methodStart.
+     * 
+     * @param code
+     *            List of code statements.
+     * @param methodStart
+     *            DotMethod directive that marks the beginning of the code to
+     *            analyze.
+     * @return Maximum operand stack size.
+     */
+    private int maxOperandStackSize(List<jvm.jasmin.Statement> code,
+            DotMethod methodStart) {
+        ListIterator<jvm.jasmin.Statement> stmts = code.listIterator(code
+                .indexOf(methodStart));
+        int maxSize = 0, currentSize = 0;
+        while (stmts.hasNext()) {
+            jvm.jasmin.Statement stmt = stmts.next();
+
+            currentSize += stmt.getOperandStackSizeChange();
+            if (currentSize > maxSize) {
+                maxSize = currentSize;
+            }
+        }
+        return maxSize;
+    }
+
+    /**
      * Restores the type-mapping scope to the parent of the current.
      */
     private void restoreScope() {
@@ -158,18 +185,18 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
     public Void visit(And n) {
         // Visit operand expressions.
         n.e1.accept(this);
-        
+
         String end = LabelCreator.getLabel();
-        
+
         code.add(new Dup());
         code.add(new Ifeq(end).setComment("Short-circuite &&"));
-        
+
         n.e2.accept(this);
-        
+
         // Perform bitwise integer AND on the two values that have now been
         // pushed to the stack.
         code.add(new Iand());
-        
+
         code.add(new Label(end));
 
         return null;
@@ -282,7 +309,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         methodSpec.append("/" + n.method.name + "(");
 
         // Argument types.
-        for (int i = n.args.size()-1; i >= 0; --i) {
+        for (int i = n.args.size() - 1; i >= 0; --i) {
             Type type = scope.getType(n.args.get(i));
             methodSpec.append(getShortName(type));
         }
@@ -359,7 +386,8 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
                 code.add(new Aload(index).setComment(n.toString()));
             } else if (type instanceof IntegerType
                     || type instanceof BooleanType) {
-                code.add(new Iload(index).setComment("Identifier " + n.toString()));
+                code.add(new Iload(index).setComment("Identifier "
+                        + n.toString()));
             } else {
                 System.out.println("Identifier type was not recognized: "
                         + type.getClass());
@@ -479,15 +507,22 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         code.addAll(defaultConstructor());
 
         // Create main method.
-        code.add(new DotMethod("public static", "main([Ljava/lang/String;)V"));
-        // TODO Add the correct limit values.
+        DotMethod methodStart = new DotMethod("public static",
+                "main([Ljava/lang/String;)V");
+        code.add(methodStart);
         code.add(new DotLimit("locals", 1));
-        code.add(new DotLimit("stack", 4));
+        // Add stack limit in correct position. Will be updated later.
+        DotLimit stackLimit = new DotLimit("stack");
+        code.add(stackLimit);
 
         // Add statements by visiting them as usual.
         for (Statement statement : mainClass.statements) {
             statement.accept(this);
         }
+
+        // Now update the maximum operand stack size limit.
+        int maxSize = maxOperandStackSize(code, methodStart);
+        stackLimit.setLimit(maxSize);
 
         // Return and end method.
         code.add(new Return());
@@ -541,15 +576,7 @@ public class CodeGeneratorVisitor extends DepthFirstVisitor<Void> {
         n.returnExpression.accept(this);
 
         // Now update the maximum operand stack size limit.
-        ListIterator<jvm.jasmin.Statement> stmts = code.listIterator(code
-                .indexOf(methodStart));
-        int maxSize = 0, currentSize = 0;
-        while (stmts.hasNext()) {
-            currentSize += stmts.next().getOperandStackSizeChange();
-            if (currentSize > maxSize) {
-                maxSize = currentSize;
-            }
-        }
+        int maxSize = maxOperandStackSize(code, methodStart);
         stackLimit.setLimit(maxSize);
 
         // Add appropriate return stm, depending on return type.
