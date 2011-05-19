@@ -19,13 +19,13 @@ JAVAC = javac
 JAVACFLAGS =
 # All flags to pass to the Java compiler.
 javac_all_flags = $(JAVACFLAGS)\
-				  -classpath $(jcup_jar)\
+				  -classpath $(jcup_jar):${jflex_jar}\
 				  -d $(bin_dir)\
-				  -sourcepath .:$(lex_dir):$(parser_dir):$(syntaxtree_dir)
+				  -sourcepath src:$(lex_dir):$(parser_dir):$(syntaxtree_dir)
 
 
 # JFlex binary to use for lexer generation.
-JFLEX = $(lib_dir)/jflex/bin/jflex
+JFLEX = java -jar $(jflex_jar)
 
 # Java Cup command (relative to parser dir) to use for parser generation.
 JCUP = java -jar $(jcup_jar)
@@ -40,17 +40,18 @@ VPATH = $(lex_dir):$(parser_dir)
 
 # Sub-directories within this project.
 bin_dir = bin
-lex_dir = lex
+lex_dir = src/lex
 lib_dir = lib
-parser_dir = parser
-syntaxtree_dir = syntaxtree
+parser_dir = src/parser
+syntaxtree_dir = src/syntaxtree
 test_dir = test
 
-# Java Cup JAR file.
+# Java Cup and ohter lib JAR file.
 jcup_jar = $(lib_dir)/java-cup-11a.jar
+jflex_jar = $(lib_dir)/JFlex.jar
 
 # Java source files.
-java_sources = **/*.java
+java_sources = src/**/*.java
 
 # Default test input file to pass to test main program.
 TEST_FILE = $(test_dir)/programs/execute/TestPrimeSieve.java
@@ -77,10 +78,10 @@ clean: clean_lex clean_parser
 	-rm -rf $(bin_dir)/*
 
 # Include lexer targets.
-include lex/lex.mk
+include $(lex_dir)/lex.mk
 
 # Include parser targets.
-include parser/parser.mk
+include ${parser_dir}/parser.mk
 
 
 ##################################################
