@@ -62,7 +62,7 @@ public class JVMMain {
             List<String> command = new LinkedList<String>();
             command.add("java");
             command.add("-jar");
-            command.add("lib/jasmin.jar");
+            command.add("jasmin.jar");
             command.add(result.main.className.name + JASMIN_EXT);
             for (ClassDecl classDecl : result.classDecls) {
                 command.add(classDecl.className.name + JASMIN_EXT);
