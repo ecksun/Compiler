@@ -4,6 +4,7 @@ import lex.Lexer;
 import parser.parser;
 import syntaxtree.Program;
 import syntaxtree.visitor.CodeGeneratorVisitor;
+import syntaxtree.visitor.ErrorCollector;
 import syntaxtree.visitor.SymbolTableVisitor;
 import syntaxtree.visitor.SyntaxTreePrinter;
 import syntaxtree.visitor.TypeVisitor;
@@ -36,14 +37,21 @@ public class JVMMain {
             visitor = new SymbolTableVisitor();
             System.out.println(visitor.getClass().getName());
             result.accept(visitor);
+            
+            if (((ErrorCollector) visitor).hasErrors())
+                System.exit(1);
 
             visitor = new TypeVisitor();
             System.out.println(visitor.getClass().getName());
             result.accept(visitor);
             
+            if (((ErrorCollector) visitor).hasErrors())
+                System.exit(1);
+            
             visitor = new CodeGeneratorVisitor();
             System.out.println(visitor.getClass().getName());
             result.accept(visitor);
+            
 
         } catch (java.io.IOException e) {
             System.out.println("An I/O error occured while parsing : \n" + e);
