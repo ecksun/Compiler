@@ -1,7 +1,11 @@
 package mjc;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import lex.Lexer;
 import parser.parser;
+import syntaxtree.ClassDecl;
 import syntaxtree.Program;
 import syntaxtree.visitor.CodeGeneratorVisitor;
 import syntaxtree.visitor.ErrorCollector;
@@ -12,6 +16,8 @@ import syntaxtree.visitor.Visitor;
 
 public class JVMMain {
 
+    private final static String JASMIN_EXT = ".j";
+    
     public static void main(String argv[]) throws java.io.IOException,
             java.lang.Exception {
         Lexer scanner = null;
@@ -51,8 +57,19 @@ public class JVMMain {
             visitor = new CodeGeneratorVisitor();
             System.out.println(visitor.getClass().getName());
             result.accept(visitor);
-            
 
+            // Assemble the code to generate executables.
+            List<String> command = new LinkedList<String>();
+            command.add("java");
+            command.add("-jar");
+            command.add("lib/jasmin.jar");
+            command.add(result.main.className.name + JASMIN_EXT);
+            for (ClassDecl classDecl : result.classDecls) {
+                command.add(classDecl.className.name + JASMIN_EXT);
+            }
+            ProcessBuilder pb = new ProcessBuilder(command);
+            pb.start();
+            
         } catch (java.io.IOException e) {
             System.out.println("An I/O error occured while parsing : \n" + e);
             System.exit(1);
