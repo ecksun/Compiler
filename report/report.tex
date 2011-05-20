@@ -42,8 +42,9 @@ linuswa@kth.se \\
 En kompilator är ett omfattande program vars huvudsakliga uppgift är att
 översätta programspråk till körbar maskinkod. I den här rapporten presenteras
 hur vi gick tillväga för att konstruera vår egen kompilator för programspråket
-MiniJava, kompilatorns kodstruktur och diskuterar bland annat designval och
-dess konsekvenser samt problem som vi har stött på under arbetets gång.
+MiniJava; vi beskriver kompilatorns kodstruktur och diskuterar bland annat
+designval och dess konsekvenser samt problem som vi har stött på under arbetets
+gång.
 
 \section*{Metod}
 
@@ -52,37 +53,38 @@ några små modifikationer av grammatiken. Vårt första steg var att välja ett
 verktyg för att generera en lexer och en parser, eftersom det är en relativt
 omständlig uppgift att skriva sådana själv från grunden, vilket dessutom är
 förknippat med en viss risk för ödesdigra misstag. Vi hade i praktiken att
-välja mellan JFlex (lexergenerator) kombinerat med Java CUP (parsergenerator)
-och JavaCC där den senare kombinerar lexer- och parsergenereringen. Valet föll
+välja på JFlex (lexergenerator) kombinerat med Java CUP (parsergenerator) samt
+JavaCC där den senare kombinerar lexer- och parsergenereringen. Valet föll
 slutligen på det första alternativet då Java CUP är en LALR(1)-parser med
 vilken varje rimligt programmeringsspråk kan analyseras, enligt Appel
-\cite{appel2002}.
+\cite{appel2002}, och således är vanligt förekommande i dessa sammanhang.
 
 Därefter inledde vi arbetet med att skriva en lexerspecifikation för JFlex.
 Till slut fick vi ut en lexer som kompilerade, men som vi inte riktigt kunde
-sätta in i ett sammanhang därmed inte heller testa dess funktionsduglighet.
-Arbetet fortskred ändå genom att vi leta upp några exempel på Java
-CUP-specifikationer som kunde anpassas till MiniJava. När det var klart insåg
-vi hur kopplingen mellan lexern och parsern skulle se ut.
+sätta in i ett sammanhang och därmed heller inte kunde testa.  Arbetet
+fortskred ändå genom att vi leta upp några exempel på Java CUP-specifikationer
+som kunde anpassas till MiniJava. När det var klart insåg vi hur kopplingen
+mellan lexern och parsern skulle se ut.
 
 Nästa milstolpe bestod av att infoga semantisk åtgärdskod \trans{semantic
-action code} i parsern för att bygga ett abstrakt syntaxträd. Det syntaxträdet,
-uppbyggt av klasserna i \texttt{syntaxtree}-paketet, använde vi senare vid
+action code} i parsern för att bygga ett abstrakt syntaxträd. Det syntaxträdet
+-- uppbyggt av klasserna i \texttt{syntaxtree}-paketet -- använde vi senare vid
 typkontrollen och därefter vid JVM-bytekodgenereringen. Typkontrollen krävde en
 hel del tillägg av kod, men var ändå relativt rättfram. Därefter återstod
 alltså själva kodgenereringen, vilken vi gjorde utgående ifrån syntaxträdet med
 vissa tillägg. Slutligen återstod endast att kontrollera att allting fungerade,
-vilket det naturligtvis inte gjorde på första försöket.
+vilket det naturligtvis inte gjorde på första försöket, men (förhoppningsvis)
+väl efter idoga testande och buggletande.
 
 \section*{Resultat}
 
 I denna del beskriver vi den färdiga kompilatorns uppbyggnad och vilka
 designval vi har gjort.
 
-\section*{Lexer (symbolanalys)}
+\subsection*{Lexer (symbolanalys)}
 
 Lexern är den del av kompilatorn som styckar upp indata, det vill säga
-programkoden, i en ström av symboler \trans{tokens}. Den lexer som används i
+programkoden, till en ström av symboler \trans{tokens}. Den lexer som används i
 vår kompilator är, som nämnts ovan, genererad av JFlex och specificeras i
 \texttt{src/lex/minijava.lex}. Det mesta i specifikationen är väldigt rättframt
 då det i stort sett endast handlar om att beskriva vilka reguljära uttryck som
@@ -100,7 +102,7 @@ det är negativt, vilket vi konstaterat inte går att bedöma i lexern. Av denna
 anledning hanterar lexern tal som strängar, och överlämnar problemet med
 negativa tal till parsern.
 
-\section*{Parser (syntaxanalys)}
+\subsection*{Parser (syntaxanalys)}
 
 Syntaxanalysen går igenom de symboler som genererats av lexern och matchar dem
 mot grammatiken som består av en samling fördefinierade regler, eller
@@ -112,7 +114,7 @@ Java CUP är en LALR(1)-parser och är således relativt kraftfull jämfört med
 till exempel en LR(0)- eller LL(0)-parser, vilket i praktiken innebar att
 reglerna mer eller mindre direkt motsvarar grammatiken som vi utgick ifrån.
 
-\section*{Besökarmönstret}
+\subsection*{Besökarmönstret}
 
 För att undvika alltför många \texttt{instanceof} i koden använder vi oss av
 ett så kallat besökarmönster \trans{visitor pattern} då vi traverserar
@@ -126,7 +128,7 @@ uppgifter innan vi fortsätter nedåt genom att anropa \texttt{accept(Visitor~v)
 på den aktuella nodens barn. Exempelvis kan vi skriva ut hur syntaxträdet ser
 ut genom att låta en besökare i varje nod skriva ut namnet på noden.
 
-\section*{Typgenomgång}
+\subsection*{Typgenomgång}
 
 För att generera en karta över vilka identifierare som existerar i koden
 användes också besökarmönstret. Genom att gå igenom koden och vid varje
@@ -143,7 +145,7 @@ Typ-genomgången ser till att inte samma identifierare deklareras flera gånger
 inom samma omfång, och även i vissa fall i underliggande nästlade omfång, såsom
 exempelvis inom ett nytt block.
 
-\section*{Typkontroll}
+\subsection*{Typkontroll}
 
 Med hjälp av typkopplingen ser vi till att alla tilldelningar och liknande har
 samma typ i högerled som i vänsterled. Även typkontrollen görs via
@@ -158,7 +160,7 @@ Det innebär exempelvis att om indata försöker multiplicera två strängar
 rapporterar vi felet men påstår ändå att multiplikationen resulterade i ett
 heltal, vilket är att förvänta av en multiplikation.
 
-\section*{Kodgenerering}
+\subsection*{Kodgenerering}
 
 Kodgenereringen sker via besökarmönstret. I var nod genereras instruktioner som
 sparas i en lista. Varje instruktion innehåller information om vilken bytecode
