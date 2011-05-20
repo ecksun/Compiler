@@ -67,7 +67,7 @@ vi hur kopplingen mellan lexern och parsern skulle se ut.
 
 Nästa milstolpe bestod av att infoga semantisk åtgärdskod \trans{semantic
 action code} i parsern för att bygga ett abstrakt syntaxträd. Det syntaxträdet,
-bestående av de olika noderna i syntaxtree-paketet, använde vi senare vid
+uppbyggt av klasserna i \texttt{syntaxtree}-paketet, använde vi senare vid
 typkontrollen och därefter vid JVM-bytekodgenereringen. Typkontrollen krävde en
 hel del tillägg av kod, men var ändå relativt rättfram. Därefter återstod
 alltså själva kodgenereringen, vilken vi gjorde utgående ifrån syntaxträdet med
@@ -76,30 +76,31 @@ vilket det naturligtvis inte gjorde på första försöket.
 
 \section*{Resultat}
 
-I denna del beskriver vi den färdiga kompilatorns uppbyggnad och vilka designval vi har gjort.
+I denna del beskriver vi den färdiga kompilatorns uppbyggnad och vilka
+designval vi har gjort.
 
-\section*{Lexer}
+\section*{Lexer (symbolanalys)}
 
 Lexern är den del av kompilatorn som styckar upp indata, det vill säga
 programkoden, i en ström av symboler \trans{tokens}. Den lexer som används i
-vår kompilator är, som nämnts ovan, genererad av JFlex och specifieras i
-src/lex/minijava.lex. Det mesta i specifikationen är väldigt rättframt då det i
-stort sett endast handlar om att beskriva vilka reguljära uttryck som ska
-mappas till vilken symbol. Något som ändå vållade vissa bekymmer rörde
+vår kompilator är, som nämnts ovan, genererad av JFlex och specificeras i
+\texttt{src/lex/minijava.lex}. Det mesta i specifikationen är väldigt rättframt
+då det i stort sett endast handlar om att beskriva vilka reguljära uttryck som
+ska knytas till vilken symbol. Något som ändå vållade vissa bekymmer rörde
 hanteringen av negativa tal.
 
 Lexern har inte tillräcklig kunskap för att besluta om ett minustecken framför
 ett tal är en del av symbolen eller om det är en egen symbol, operatorn för
 subtraktion. Detta innebär att vi inte kan veta om ett tal är negativt eller
 positivt. Detta i sin tur innebär ett problem då det går att representera tal
-vars absolutvärde är större om talet är negativt än om det är positivt. Dvs
-även om $-2^{31}$ går att representera med en Integer, går det inte att
-representera $2^{31}$, talet kommer alltså bara vara giltigt om det är
-negativt, vilket vi konstaterat inte går att bedöma i lexern. Av denna
+vars absolutvärde är större om talet är negativt än om det är positivt. Det
+vill säga även om $-2^{31}$ går att representera med ett 32-bitars heltal går
+det inte att representera $2^{31}$; talet kommer alltså bara vara giltigt om
+det är negativt, vilket vi konstaterat inte går att bedöma i lexern. Av denna
 anledning hanterar lexern tal som strängar, och överlämnar problemet med
 negativa tal till parsern.
 
-\section*{Parsing - Syntaxanalys}
+\section*{Parser (syntaxanalys)}
 
 Syntaxanalysen går igenom de symboler som genererats av lexern och matchar dem
 mot grammatiken som består av en samling fördefinierade regler, eller
@@ -111,53 +112,55 @@ Java CUP är en LALR(1)-parser och är således relativt kraftfull jämfört med
 till exempel LR(0) och LL(0), vilket i praktiken innebar att reglerna mer eller
 mindre direkt motsvarar grammatiken som vi utgick ifrån.
 
-\section*{Visitor-mönstret}
+\section*{Besökarmönstret}
 
-För att undvika alltför många instanceof i koden använder vi oss av det så
-kallade besökarmönstret (eng. Visitor pattern) då vi traverserar syntaxträdet
-som är resultatet av parsningen. Besökarmönstret så som vi implementerar det
-resulterar mer eller mindre i en djupet-först-sökning i syntaxträdet. Sökningen
-initieras genom att rotnoden (genom accept(Visitor v)) bjuder in besökaren som
-sedan direkt ges tillbaka kontrollen genom att den accepterande noden, rotnoden
-i det här fallet, anropar v.visit(this). På det viset kan vi i varje nod utföra
-lämpliga uppgifter innan vi fortsätter nedåt. Exempelvis kan vi skriva ut hur
-syntaxträdet ser ut genom att skapa en besökare som i varje nod skriver ut
-namnet på noden.
+För att undvika alltför många \texttt{instanceof} i koden använder vi oss av
+ett så kallat besökarmönster \trans{visitor pattern} då vi traverserar
+syntaxträdet som är resultatet av parsningen. Besökarmönstret så som vi
+implementerar det resulterar mer eller mindre i en djupet-först-sökning i
+syntaxträdet. Sökningen initieras genom att rotnoden via
+\texttt{accept(Visitor~v)} bjuder in besökaren som sedan direkt ges tillbaka
+kontrollen genom att den accepterande noden -- rotnoden, i det här fallet --
+anropar \texttt{v.visit(this)}. På det viset kan vi i varje nod utföra lämpliga
+uppgifter innan vi fortsätter nedåt genom att anropa \texttt{accept(Visitor~v)}
+på den aktuella nodens barn. Exempelvis kan vi skriva ut hur syntaxträdet ser
+ut genom att låta en besökare i varje nod skriva ut namnet på noden.
 
-\section*{Typ-genomgång}
+\section*{Typgenomgång}
 
 För att generera en lista över vilka identifierare som existerar i koden
-användes också besökaremönstret. Genom att gå igenom koden och vid varje
+användes också besökarmönstret. Genom att gå igenom koden och vid varje
 deklaration, såsom variabel klass och metoddeklarationer, sparade vi undan
 varje identifierare och dess typ. Datastrukturen som användes är i stort ett
-träd, där varje nod representerar ett omfång (eng. scope). Tanken är att varje
-omfång ska ha en mappning mellan identifieraren och typen den innehåller.
-Problemet som uppstår då är metoder, som inte har riktigt samma regler som
-vanliga variabler på grund av överlagring. På grund av det hanterar vi
-metoderna speciellt, medans vanliga identifierare, såsom variabler, sparas i en
-enkel HashMap<String, Type>.
+träd, där varje nod representerar ett omfång \trans{scope}. Tanken är att varje
+omfång ska ha en koppling mellan identifieraren och typen den innehåller.
+Problemet som uppstår då är metoder, vilka inte riktigt har samma regler som
+vanliga variabler på grund av överlagring. Med anledning av det hanterar vi
+metoderna speciellt, medan vanliga identifierare, såsom variabler, sparas i en
+enkel \texttt{HashMap<String, Type>}.
 
-Typ-genomgången ser till att inte samma identifierare deklareras flera gånger
+Typgenomgången ser till att inte samma identifierare deklareras flera gånger
 inom samma omfång, vilket även inkluderar alla underliggande, nästlade omfång.
 
-\section*{Typ-checkning}
+\section*{Typkontroll}
 
-Med hjälp av Typ-mappningen ser vi till att alla tilldelningar och liknande har
-samma typ i högerled som i vänsterled. Även typ-kollen görs via besökarmönstret
-med skillnaden att varje steg i trädet returnerar en typen av den noden. På så
-vis kan man evaluera vilken typ ett komplext uttryck är på ett simpelt vis.
+Med hjälp av typkopplingen ser vi till att alla tilldelningar och liknande har
+samma typ i högerled som i vänsterled. Även typkontrollen görs via
+besöksmönstret med skillnaden att varje steg i trädet returnerar en typen av
+den noden. På så vis kan man evaluera vilken typ ett komplext uttryck är på ett
+simpelt vis.
 
 För att hitta alla typ-fel i koden antas hela tiden att varje operation är
 lyckad, vilket innebär att även om typ-kollen upptäcker ett fel någonstans,
-returnerar den som om det vore lyckat, för att kunna fortsätta typkollen. Det
-innebär exempelvis att om indata försöker multiplicera två strängar rapporterar
-vi felet men påstår ändå att multiplikationen resulterade i ett heltal, vilket
-är att förvänta av en multiplikation.
+returnerar den som om det vore lyckat, för att kunna fortsätta typkontrollen.
+Det innebär exempelvis att om indata försöker multiplicera två strängar
+rapporterar vi felet men påstår ändå att multiplikationen resulterade i ett
+heltal, vilket är att förvänta av en multiplikation.
 
 \section*{Kodgenerering}
 
 Kodgenereringen sker via besökarmönstret. I var nod genereras instruktioner
-(jvm.Instructions) som sparas i en lista. Varje instruktion innehåller
+(\texttt{jvm.Instructions}) som sparas i en lista. Varje instruktion innehåller
 information om vilken bytecode den skall generera samt dess förändring av
 storleken på operandstacken. Listan med instruktioner gör det enklare att gå
 igenom och beräkna hur stor gränsen på stacken för var metod skall vara, vilket
@@ -166,15 +169,15 @@ igenom och varje instruktion skrivs ut till rätt fil, motsvarande klassen
 instruktionerna befinner sig i.
 
 I varje metod krävs det att alla lokala variabler har ett unikt id. Varje gång
-en variabel tilldelas slås ID för den identifieraren upp i en map tillhöranden
-typ-mappningen. Ifall variabeln inte tidigare slagits upp genereras ett nytt
-ID. På så vis får vi en lat användning av variabler vilket innebär att
+en variabel tilldelas slås ID för den identifieraren upp i en karta tillhörande
+typkopplingen. Ifall variabeln inte tidigare slagits upp genereras ett nytt ID.
+På så vis får vi en lat användning av variabler vilket innebär att
 variabeldeklarationerna i sig inte påverkar assemblerkoden vilket i sin tur
-innebär att oanvända varibler aldrig blir inkluderade i programmet.
+innebär att oanvända variabler aldrig blir inkluderade i programmet.
 
 Likt identifierarna för de lokala variablerna behövs unika identifierare för
-alla ettiketter (eng label), som används för branches/jumps/hopp. En klass med
-statiska metoder håller koll på de senaste genererade ettiketterna för att
+alla etiketter \trans{labels}, som används för hopp \trans{branches}. En klass
+med statiska metoder håller koll på de senaste genererade etiketterna för att
 undvika krockar.
 
 
@@ -224,5 +227,6 @@ bra av ytterligare handpåläggning.
         Appel, A.W. and Palsberg, J.
         (2002).
         \emph{Modern compiler implementation in Java,}.
+\end{thebibliography}
 
 \end{document}
