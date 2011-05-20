@@ -139,8 +139,9 @@ vanliga variabler på grund av överlagring. Med anledning av det hanterar vi
 metoderna speciellt, medan vanliga identifierare, såsom variabler, sparas i en
 enkel \texttt{HashMap<String, Type>}.
 
-Typgenomgången ser till att inte samma identifierare deklareras flera gånger
-inom samma omfång, vilket även inkluderar alla underliggande, nästlade omfång.
+Typ-genomgången ser till att inte samma identifierare deklareras flera gånger
+inom samma omfång, och även i vissa fall i underliggande nästlade omfång, såsom
+exempelvis inom ett nytt block.
 
 \section*{Typkontroll}
 
@@ -159,41 +160,36 @@ heltal, vilket är att förvänta av en multiplikation.
 
 \section*{Kodgenerering}
 
-Kodgenereringen sker via besökarmönstret. I var nod genereras instruktioner
-(\texttt{jvm.Instructions}) som sparas i en lista. Varje instruktion innehåller
-information om vilken bytecode den skall generera samt dess förändring av
-storleken på operandstacken. Listan med instruktioner gör det enklare att gå
-igenom och beräkna hur stor gränsen på stacken för var metod skall vara, vilket
-beräknas efter att all kod genererats. När genereringen är färdig gås listan
-igenom och varje instruktion skrivs ut till rätt fil, motsvarande klassen
-instruktionerna befinner sig i.
+Kodgenereringen sker via besökarmönstret. I var nod genereras instruktioner som
+sparas i en lista. Varje instruktion innehåller information om vilken bytecode
+den skall generera samt dess förändring av storleken på operandstacken. Listan
+med instruktioner gör det enklare att gå igenom och beräkna hur stor gränsen på
+stacken för var metod skall vara, vilket beräknas efter att all kod genererats.
+När genereringen är färdig gås listan igenom och varje instruktion skrivs ut
+till rätt fil, motsvarande klassen instruktionerna befinner sig i.
 
 I varje metod krävs det att alla lokala variabler har ett unikt id. Varje gång
 en variabel tilldelas slås ID för den identifieraren upp i en karta tillhörande
 typkopplingen. Ifall variabeln inte tidigare slagits upp genereras ett nytt ID.
 På så vis får vi en lat användning av variabler vilket innebär att
 variabeldeklarationerna i sig inte påverkar assemblerkoden vilket i sin tur
-innebär att oanvända variabler aldrig blir inkluderade i programmet.
+innebär att icke tilldelade variabler aldrig blir inkluderade i programmet.
 
 Likt identifierarna för de lokala variablerna behövs unika identifierare för
 alla etiketter \trans{labels}, som används för hopp \trans{branches}. En klass
 med statiska metoder håller koll på de senaste genererade etiketterna för att
 undvika krockar.
 
-
-% TODO Nämna någonstans att vi ofta behöver hålla koll på vilket scope vi är i, pga hur type-mappingen fungerar
-
 \section*{Diskussion}
 
 Ett av problemen vi stötte på var hur negativa tal skulle hanteras. Det
 naturliga är att låta lexern representera dem som tal och låta minustecknet
-vara en del av talet. Eftersom det är tvetydigt ifall minustecknet är en del av
-talet eller en operator behövs antingen striktare regler i grammatiken eller en
-smartare parser som kan hantera operationer utan explicit operator utan
-istället härleda den från ifall den andra operanden är negativ. I båda fallen
-uppstår det problem när man har tal vid gränsen av vad den bakomliggande
-datatypen kan hantera, iom att negativa och positiva tal har olika stora
-maximala absolutvärden.
+vara en del av talet. Det är tvetydligt ifall minustecknet är en del av talet
+eller en operator. På grund av detta behövs antingen striktare regler i
+grammatiken eller en smartare parser som kan hantera den extra komplexiteten.
+I båda fallen uppstår det problem när man har tal vid gränsen av vad den
+bakomliggande datatypen kan hantera, iom att negativa och positiva tal har
+olika stora maximala absolutvärden.
 
 Tack vare att kompilatorn är konstruerad för MiniJava har vi haft möjligheten
 att begränsa komplexiteten i kompilatorn eftersom språket är såpass begränsat.
