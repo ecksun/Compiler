@@ -60,9 +60,7 @@ public class JVMMain {
 
             // Assemble the code to generate executables.
             List<String> command = new LinkedList<String>();
-            command.add("java");
-            command.add("-jar");
-            command.add("jasmin.jar");
+            command.add("jasmin");
             command.add(result.main.className.name + JASMIN_EXT);
             for (ClassDecl classDecl : result.classDecls) {
                 command.add(classDecl.className.name + JASMIN_EXT);
