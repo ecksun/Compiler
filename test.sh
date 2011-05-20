@@ -2,7 +2,9 @@
 
 DIR="test/programs/student-test-cases"
 MJC="java -cp `pwd`/mjc.jar:`pwd`/lib/java-cup-11a.jar:`pwd`/lib/JFlex.jar mjc.JVMMain "
-JASMIN="java -jar `pwd`/jasmin.jar "
+JASMIN="jasmin " # Use the systems
+# JASMIN="java -jar `pwd`/jasmin.jar "
+# JASMIN="java -cp /usr/share/java/jasmin-sable.jar:/usr/share/java/cup.jar jasmin.Main "
 if [ -n "$1" ]; then
     DIR="$1"
 fi
@@ -36,6 +38,7 @@ check() {
             [ $? -eq 0 ]; failed=$?
 
             if [ "$failed" -eq "0" ]; then
+                rm *class
                 $JASMIN *j > /dev/null
                 mainclass=`find_mainclass`
                 java "$mainclass" > "$testfile.output" 2>&1
@@ -54,6 +57,7 @@ check() {
                         [ "$?" -eq 0 ]; failed="$?"
                     fi
                 fi
+                rm *j
             fi
             ;;
         nonexecute)
@@ -65,6 +69,7 @@ check() {
                 mainclass=`find_mainclass`
                 java "$mainclass" > "$testfile.output" 2>&1
                 [ $? -ne 0 ]; failed=$?
+                rm *j
             fi
             ;;
     esac
