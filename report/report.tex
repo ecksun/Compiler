@@ -109,8 +109,8 @@ för språket och kommer i slutändan motsvara noder i det syntaxträd som är
 grunden för resterande del av kompilatorn.
 
 Java CUP är en LALR(1)-parser och är således relativt kraftfull jämfört med
-till exempel LR(0) och LL(0), vilket i praktiken innebar att reglerna mer eller
-mindre direkt motsvarar grammatiken som vi utgick ifrån.
+till exempel en LR(0)- eller LL(0)-parser, vilket i praktiken innebar att
+reglerna mer eller mindre direkt motsvarar grammatiken som vi utgick ifrån.
 
 \section*{Besökarmönstret}
 
@@ -128,7 +128,7 @@ ut genom att låta en besökare i varje nod skriva ut namnet på noden.
 
 \section*{Typgenomgång}
 
-För att generera en lista över vilka identifierare som existerar i koden
+För att generera en karta över vilka identifierare som existerar i koden
 användes också besökarmönstret. Genom att gå igenom koden och vid varje
 deklaration, såsom variabel klass och metoddeklarationer, sparade vi undan
 varje identifierare och dess typ. Datastrukturen som användes är i stort ett
