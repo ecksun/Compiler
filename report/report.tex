@@ -187,6 +187,11 @@ naturliga är att låta lexern representera dem som tal och låta minustecknet
 vara en del av talet. Det är tvetydligt ifall minustecknet är en del av talet
 eller en operator. På grund av detta behövs antingen striktare regler i
 grammatiken eller en smartare parser som kan hantera den extra komplexiteten.
+Striktare regler innebär helt enkelt att man skiljer de två fallen åt,
+exempelvis genom att alltid definiera negativa tal med ett minustecken direkt
+följt av talet, medan operatorn har ett mellanrum. Likaså kan man göra parsern
+inteligentare genom att låta den hantera operationer utan explicit operator,
+utan att parsern får härleda operatorn ifall den högra operanden är negativ.
 I båda fallen uppstår det problem när man har tal vid gränsen av vad den
 bakomliggande datatypen kan hantera, iom att negativa och positiva tal har
 olika stora maximala absolutvärden.
