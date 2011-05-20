@@ -92,9 +92,9 @@ ska knytas till vilken symbol. Något som ändå vållade vissa bekymmer rörde
 hanteringen av negativa tal.
 
 Lexern har inte tillräcklig kunskap för att besluta om ett minustecken framför
-ett tal är en del av symbolen eller om det är en egen symbol, operatorn för
-subtraktion. Detta innebär att vi inte kan veta om ett tal är negativt eller
-positivt. Detta i sin tur innebär ett problem då det går att representera tal
+ett tal är en del av symbolen eller om det är en egen symbol -- operatorn för
+subtraktion. Det innebär att vi inte kan veta om ett tal är negativt eller
+positivt. Det för i sin tur med sig ett problem då det går att representera tal
 vars absolutvärde är större om talet är negativt än om det är positivt. Det
 vill säga även om $-2^{31}$ går att representera med ett 32-bitars heltal går
 det inte att representera $2^{31}$; talet kommer alltså bara vara giltigt om
@@ -104,7 +104,7 @@ negativa tal till parsern.
 
 \subsection*{Parser (syntaxanalys)}
 
-Syntaxanalysen går igenom de symboler som genererats av lexern och matchar dem
+Syntaxanalysen behandlar de symboler som genererats av lexern och matchar dem
 mot grammatiken som består av en samling fördefinierade regler, eller
 produktioner \trans{productions}. Produktionerna i sig representerar syntaxen
 för språket och kommer i slutändan motsvara noder i det syntaxträd som är
@@ -118,15 +118,16 @@ reglerna mer eller mindre direkt motsvarar grammatiken som vi utgick ifrån.
 
 För att undvika alltför många \texttt{instanceof} i koden använder vi oss av
 ett så kallat besökarmönster \trans{visitor pattern} då vi traverserar
-syntaxträdet som är resultatet av parsningen. Besökarmönstret så som vi
-implementerar det resulterar mer eller mindre i en djupet-först-sökning i
-syntaxträdet. Sökningen initieras genom att rotnoden via
-\texttt{accept(Visitor~v)} bjuder in besökaren som sedan direkt ges tillbaka
-kontrollen genom att den accepterande noden -- rotnoden, i det här fallet --
-anropar \texttt{v.visit(this)}. På det viset kan vi i varje nod utföra lämpliga
-uppgifter innan vi fortsätter nedåt genom att anropa \texttt{accept(Visitor~v)}
-på den aktuella nodens barn. Exempelvis kan vi skriva ut hur syntaxträdet ser
-ut genom att låta en besökare i varje nod skriva ut namnet på noden.
+syntaxträ. Besökarmönstret så som vi implementerar det resulterar mer eller
+mindre i en djupet-först-sökning i syntaxträdet. Sökningen initieras genom att
+rotnoden via \texttt{accept(Visitor~v)} bjuder in besökaren som sedan direkt
+ges tillbaka kontrollen genom att den accepterande noden (rotnoden, i fallet
+med det initierande besöket) anropar \texttt{v.visit(this)}. I
+\texttt{Visitor}-klassen finns en \texttt{visit}-metod för vardera nodtyp.  På
+det viset kan vi i varje nod utföra lämpliga uppgifter innan vi fortsätter
+nedåt genom att anropa \texttt{accept(Visitor~v)} på den aktuella nodens barn.
+Exempelvis kan vi skriva ut hur syntaxträdet ser ut genom att låta en besökare
+i varje nod skriva ut namnet på noden.
 
 \subsection*{Typgenomgång}
 
