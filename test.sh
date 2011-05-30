@@ -38,7 +38,7 @@ check() {
             [ $? -eq 0 ]; failed=$?
 
             if [ "$failed" -eq "0" ]; then
-                rm *class
+                rm -f *.class
                 $JASMIN *j > /dev/null
                 mainclass=`find_mainclass`
                 java "$mainclass" > "$testfile.output" 2>&1
@@ -57,7 +57,7 @@ check() {
                         [ "$?" -eq 0 ]; failed="$?"
                     fi
                 fi
-                rm *j
+                rm -f *.j
             fi
             ;;
         nonexecute)
