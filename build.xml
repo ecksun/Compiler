@@ -69,7 +69,6 @@
     </target>
 
     <target name="clean" description="Remove all generated files.">
-        <!-- TODO convert to file sets. -->
         <delete dir="${bin}"/>
         <delete file="${src.lex}/Lexer.java"/>
         <delete file="${src.lex}/Lexer.java~"/>
