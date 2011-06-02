@@ -1,4 +1,4 @@
-// EXT:ISC 
+// EXT:ISC
 
 class MainClass{
     public static void main(String[] args){

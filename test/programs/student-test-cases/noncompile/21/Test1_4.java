@@ -5,7 +5,7 @@ class Test1_4 {
 }
 
 class Test {
-	
+
 	public doSomething() {
 		return 0;
 	}

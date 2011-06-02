@@ -1,4 +1,3 @@
-
 class Fiske
 {
 	public static void main(String[] argv){
@@ -12,23 +11,23 @@ class Fisk{
 		int y;
 		int tmp;
 		Matrix m;
-        int[] list;
-        int a;
+	int[] list;
+	int a;
 		z = 15;
 		y = 3;
 		m = new Matrix();
-        tmp = m.start();
+	tmp = m.start();
 			list = this.fiske2(m,z-1,y-1);
 			a = 0;
 			while(a<y){
-                System.out.println(list[a]);
+		System.out.println(list[a]);
 				a = a + 1;
 				}
 				return 0;
-        }
-    
+	}
+
     public int[] fiske2(Matrix m,int n,int k)
-    {   
+    {
 		int z;
 		int y;
        int jamfor;
@@ -45,32 +44,32 @@ class Fisk{
 	   j = k;
        while(0 < j){
 			i = n;
-          while(0 < i-(k-j)){
-             jamfor = m.max(m.get(i,j),jamfor);
-             carp = m.set(i-1,j-1,jamfor + m.get(i-1,j-1));          
-            i = i-1;
+	  while(0 < i-(k-j)){
+	     jamfor = m.max(m.get(i,j),jamfor);
+	     carp = m.set(i-1,j-1,jamfor + m.get(i-1,j-1));
+	    i = i-1;
 			}
 			j = j-1;
-        }
+	}
 
 
 		list = new int[k+1];
 			plats = 0;
 			b = 0;
-        while(b < k+1){
-            jamfor = m.get(plats+1,b);
+	while(b < k+1){
+	    jamfor = m.get(plats+1,b);
 			a = plats+1;
-            while(a < n-(k-b-1)){
-                jamfor = m.max(m.get(a,b),jamfor);
-                if (!(jamfor < m.get(a,b)) && !(m.get(a,b)< jamfor)){
-                    plats = a;
-                }else{}
+	    while(a < n-(k-b-1)){
+		jamfor = m.max(m.get(a,b),jamfor);
+		if (!(jamfor < m.get(a,b)) && !(m.get(a,b)< jamfor)){
+		    plats = a;
+		}else{}
 				a = a+1;
-            }
-          list[b] = plats+1;
+	    }
+	  list[b] = plats+1;
 			b = b+1;
-        }
-        return list;
+	}
+	return list;
     }
 }
 
@@ -92,7 +91,7 @@ class Matrix{
 		}else{}
 		return i;
 	}
-	
+
 
 	public int set(int y, int x, int value){
 		if(!(x < 0) && !(0 < x)){
@@ -105,8 +104,8 @@ class Matrix{
 			a3[y] = value;
 		}else{}
 		return 0;
-	}	
-	
+	}
+
 	public int start(){
 		int i;
 		a1 = new int[15];
@@ -162,7 +161,7 @@ class Matrix{
 		a3[14] = 1;
 		return 0;
 	}
-	
+
 	public int max(int a, int b){
 		int i;
 		if(a < b)
@@ -171,5 +170,5 @@ class Matrix{
 			i = a;
 		return i;
 	}
-	
+
 }

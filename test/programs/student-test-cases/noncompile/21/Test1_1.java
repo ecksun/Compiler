@@ -7,7 +7,7 @@ class Test1_1 {
 class Test {
 
 	int[] a;
-	
+
 	public boolean test(int i) {
 		a = new int[i];
 		return a[i];

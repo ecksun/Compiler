@@ -6,7 +6,7 @@ class Test1{
 
 class makeList{
 	int[] a;
-	
+
 	public int f(int x){
 		a = new int[20];
 		a[0]=20;
@@ -29,23 +29,23 @@ class makeList{
 		a[17]=3;
 		a[18]=2;
 		a[19]=1;
-		
+
 		this.print();
 		this.sort();
 		this.print();
-		
+
 		return 1;
 	}
-	
+
 	public int sort(){
 		int x;
 		int y;
 		int t;
-		
+
 		x=0;
 		y=0;
 		t=0;
-		
+
 		while(x<a.length){
 			while(y<a.length){
 				if(a[x]<a[y]){
@@ -61,17 +61,17 @@ class makeList{
 			y=0;
 			x=x+1;
 		}
-		
+
 		int d;
 		d=1;
 		return d;
 	}
-	
+
 	public int print(){
 		int counter;
-		
+
 		counter=0;
-		
+
 		while(counter<a.length){
 			System.out.println(a[counter]);
 			counter=counter+1;

@@ -25,7 +25,7 @@ class Recursive {
 
 	public int bincof(int n, int k) {
 		int res;
-		if(k == 0 && n >= 0) res = 1; 
+		if(k == 0 && n >= 0) res = 1;
 		else if(n == 0 && k > 0) res = 0;
 		else res = this.bincof(n - 1, k - 1) + this.bincof(n - 1, k);
 		return res;
@@ -50,7 +50,7 @@ class SerieCreator {
 		}
 		return res;
 	}
-	
+
 	public int[] getBinCofSeries(Recursive rec, int n) {
 		int[] res;
 		res = new int[n+1];

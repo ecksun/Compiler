@@ -7,11 +7,11 @@ class Test7{
 class methodA{
 
 	int i;
-	
+
 	public int init(int a) {
-				
+
 		i = methodC.init(a);
-			
+
 		return i;
 	}
 }
@@ -21,10 +21,9 @@ class methodB {
 	int i;
 
 	public int init(int a) {
-		
-		i = i + a;	
-		
+
+		i = i + a;
+
 		return i;
 	}
-}	
-
+}

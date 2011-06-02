@@ -1,10 +1,10 @@
 // EXT:CEQ
 
 class BasicMath{
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
 		System.out.println(new Quad().calc());
 	}
-    
+
 }
 
 class Quad {
@@ -17,10 +17,10 @@ class Quad {
 		 q = new Quad();
 		d = new DivChecker();
 		a = new int[10];
-				
-			
+
+
 		while(i < a.length) {
-		
+
 			if(  d.divisableBy(i, 2) )  {
 				a[i] = d.moduluBy(i,5);
 			}
@@ -28,10 +28,10 @@ class Quad {
 				a[i] = (0-1);
 			}
 			i = i + 1;
-			
+
 		}
 		i = 0;
-		
+
 		while(i < a.length) {
 			if( 0 < a[i] ) {
 				a[i] = q.quad(a[i]);
@@ -46,7 +46,7 @@ class Quad {
 	public int quad(int i) {
 		return i*i;
 	}
-	
+
 	public int pow(int i,int p) {
 		while( 0<p) {
 			i = i *i;
@@ -61,7 +61,7 @@ class DivChecker {
 		while( 0 < i) {
 			i = i - div;
 		}
-		
+
 		return (i == 0);
 	}
 	public int moduluBy(int i, int div) {
@@ -74,7 +74,7 @@ class DivChecker {
 				divide = false;
 			}
 		}
-		
+
 		return i;
 	}
 }

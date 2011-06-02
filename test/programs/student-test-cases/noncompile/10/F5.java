@@ -2,7 +2,7 @@ class F5
 {
 	public static void main(String[] args)
 	{
-		
+
 		System.out.println((new Caller()).call());
 	}
 }
@@ -13,7 +13,7 @@ class Caller
 	{
 		Mergesort m;
 		int[] a;
-		
+
 		a = new int[20];
 		m = new Mergesort();
 
@@ -37,7 +37,7 @@ class Caller
 		a[17] = 11;
 		a[18] = 67;
 		a[19] = 63;
-		
+
 		a = m.mergesort(a);
 
 		System.out.println(m.avg(1, 2));
@@ -145,7 +145,7 @@ class Mergesort
 
 		return 0;
 	}
-	
+
 	public int avg(int a, int b)
 	{
 		while (a + 1 < b)
@@ -156,7 +156,7 @@ class Mergesort
 
 		return b;
 	}
-	
+
 	public int print(int[] a)
 	{
 		int i;

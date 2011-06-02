@@ -16,7 +16,7 @@
 class Primefinder{
     public static void main(String[] args){
         if(new PrimeFinderSub().find_primes()){
-            System.out.println(true);
+            System.out.println(0);
         }
     }
 }

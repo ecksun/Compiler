@@ -1,4 +1,4 @@
-// EXT:ABC 
+// EXT:ABC
 
 class MainClass{
 	public static void main(String[] args){
@@ -11,7 +11,7 @@ class TestClass {
 		int[] a;
 
 		a = new int[10]
-		
+
 		return a[(((5*4-3)*3-30)/2)/2-2];	//error a[-1]
 	}
 }

@@ -65,7 +65,7 @@ class Stack {
 		size = 0;
 		return 0;
 	}
-	
+
 	public boolean isEmpty() {
 		boolean i;
 		if(new Math().equal(0,size))
@@ -74,7 +74,7 @@ class Stack {
 			i = false;
 		return i;
 	}
-	
+
 	public int push(int push) {
 		int i;
 		int[] tmp;
@@ -91,12 +91,12 @@ class Stack {
 		size = size + 1;
 		return push;
 	}
-	
+
 	public int pop() {
 		size = size + -1;
 		return stack[size];
 	}
-	
+
 	public int peek() {
 		return stack[size-1];
 	}
@@ -111,8 +111,8 @@ class Node{
 	int numChilds;
 	int value;
 	int id;
-	
-	
+
+
 	public Node init4(Node a_0, Node a_1, Node a_2, Node a_3,int val, int iid) {
 		_a_0 = a_0;
 		_a_1 = a_1;
@@ -123,7 +123,7 @@ class Node{
 		numChilds = 4;
 		return this;
 	}
-	
+
 	public Node init3(Node a_0, Node a_1, Node a_2,int val, int iid) {
 		_a_0 = a_0;
 		_a_1 = a_1;
@@ -161,7 +161,7 @@ class Node{
 	public int getVal(){
 		return value;
 	}
-	
+
 	public Node getNode(int i){
 		Math math;
 		Node node;
@@ -178,20 +178,20 @@ class Node{
 			node = this;
 		return node;
 	}
-	
+
 	public int setParent(Node par) {
 		parent = par;
 		return 0;
 	}
-	
+
 	public Node getParent() {
 		return parent;
 	}
-	
+
 	public int getNumChilds() {
 		return numChilds;
 	}
-	
+
 	public int getId(){
 		return id;
 	}
@@ -223,7 +223,7 @@ Stack stack;
 		tmp = stack.init();
 		return this.DFS();
 	}
-	
+
 	public Node DFS() {
 		boolean found;
 		Math math;
@@ -236,7 +236,7 @@ Stack stack;
 			if(math.equal(currNode.getVal(), value)){
 				found = true;
 			}else{}
-			
+
 			if(!found && math.equal(currVal,currNode.getNumChilds())){
 				if(stack.isEmpty()){
 					found = true;
@@ -247,13 +247,13 @@ Stack stack;
 			}else if (!found) {
 				tmp = currNode.getNode(currVal).setParent(currNode);
 				currNode = currNode.getNode(currVal);
-				
+
 				currVal = currVal + 1;
 				tmp = stack.push(currVal);
 				currVal = 0;
 			}else{}
 		}
-		
+
 		return currNode;
 	}
 }

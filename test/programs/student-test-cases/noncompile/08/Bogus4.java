@@ -8,7 +8,7 @@ class Bogus4 {
 		while(a.returnField())
 			a = new A();
 	}
-	
+
 	}
 }
 

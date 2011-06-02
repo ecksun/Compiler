@@ -4,16 +4,16 @@
 
 class InheritAndVirtual {
 //This test is successfull if parsed correctly and prints 12\n13\n
-	public static void main ( String [ ] id ) 
-	{ 
+	public static void main ( String [ ] id )
+	{
 		System.out.println(new TestClass().testIt());
-	} 
-	
+	}
+
 }
 
 
 class TestClass{
-	
+
 	public int testIt() {
 		int r;
 		TestClass c;
@@ -29,10 +29,10 @@ class TestClass{
 		r = 1;
 		return k+r+g;
 	}
-	
+
 	public TestClass createSelf() {
 		return new TestClass();
-	} 
+	}
 }
 
 class TestClass2 extends TestClass {
@@ -42,14 +42,9 @@ class TestClass2 extends TestClass {
 		r = 2;
 		return k+g;
 	}
-	
+
 	public TestClass createSelf() {
 		return this;
-	} 
+	}
 
 }
-
-
-
-
-

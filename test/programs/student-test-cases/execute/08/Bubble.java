@@ -4,7 +4,7 @@ class Bubble{
 			System.out.println(new DD().DD());
 		else
 			System.out.println(new DD().DD()+-2147483648);
-	}	
+	}
 }
 
 class bool {
@@ -29,7 +29,7 @@ class DD {
 		}
 		bsort = new A().a(new A(),false).b(new A(),false).bsort();
 		array = new BSort().rSort(bsort.sort(new BSort().rSort(bsort.sort(array))));
-		
+
 		i = 0;
 		while(i < array.length && array[i] < 1000){
 			System.out.println(array[i]);
@@ -61,7 +61,7 @@ class BSort{
 		}
 		return array;
 	}
-	
+
 	public int[] rSort(int[] array){
 		int i;
 		int tmp;
@@ -74,7 +74,7 @@ class BSort{
 			i = i+1;
 		}
 		return array;
-	}	
+	}
 }
 
 class A{
@@ -85,8 +85,8 @@ class A{
 			a = this;
 		return a;
 	}
-	
-	
+
+
 	public B b(A a, boolean i){
 		B b;
 		b = new B();
@@ -103,8 +103,8 @@ boolean a;
 	public A a(){
 		return new A().a(new A(),a).b(new A(),false).a();
 	}
-	
+
 	public BSort bsort(){
 		return new BSort();
-	}	
+	}
 }

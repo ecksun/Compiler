@@ -16,10 +16,9 @@ class A{
 	public int a(int a,int b, boolean c, boolean d, A e, int[] f){
 		return 5;
 	}
-	
+
 	public A b(A a){
 		return this;
 	}
 
 }
-

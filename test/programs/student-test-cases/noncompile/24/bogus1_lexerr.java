@@ -8,5 +8,5 @@ class Modulo {
 
     public int doit(){
 		return 3 modulo 5; //error unknown word/lexical token "modulo"
-    } 
+    }
 }

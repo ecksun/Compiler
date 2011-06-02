@@ -8,14 +8,14 @@ class Ackermann{
 	public int calculate(int m, int n){
 		int ret;
 		boolean unused;
-		
+
 		{}{}{}{{{}}}
-		
+
 		while(false){
 			m = 0;
 			n = 999;
 		}
-		
+
 		if(m < 1){
 			ret = n+1;
 		}else{

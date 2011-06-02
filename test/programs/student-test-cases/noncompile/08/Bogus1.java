@@ -17,7 +17,7 @@ class A {
 	public A thisA(){
 		return this;
 	}
-	
+
 }
 
 class B {

@@ -1,6 +1,6 @@
 class MainClass{
     public static void main(String[] args){
-    	System.out.println((new B()).createB());
+	System.out.println((new B()).createB());
     }
 }
 

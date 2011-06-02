@@ -1,9 +1,9 @@
 class Missing {
-	public static void main ( String [ ] id ) 
-	{ 
-		
-	
-	
+	public static void main ( String [ ] id )
+	{
+
+
+
 	}
 }
 
@@ -19,6 +19,3 @@ class A {
 	}
 
 }
-
-    
-	

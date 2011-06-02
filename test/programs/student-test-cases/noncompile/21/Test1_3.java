@@ -5,7 +5,7 @@ class Test1_3 {
 }
 
 class Test {
-	
+
 	int a
 	int b;
 }

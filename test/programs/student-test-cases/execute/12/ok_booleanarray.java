@@ -5,19 +5,19 @@ class MainClass {
 		} else {
 			System.out.println(-1337);
 		}
-		
+
 		if(!new A().doStuff()) {
 			System.out.println(1337);
 		} else {
 			System.out.println(-1337);
 		}
-		
+
 	}
 }
 
 class booleanarray {
 	int[] array;
-	
+
 	public boolean create(int len)
 	{
 		array = new int[len];
@@ -36,11 +36,11 @@ class booleanarray {
 				array[pos] = 1;	// 1 is true
 			else
 				array[pos] = 0;	// 0 is false
-			
+
 			success = true;
 		} else
 			success = false;
-		
+
 		return success;
 	}
 	public boolean get(int pos)
@@ -50,8 +50,8 @@ class booleanarray {
 			retval = false;
 		else
 			retval = true;
-		
-		return retval;			
+
+		return retval;
 	}
 	public int[] getArray()
 	{
@@ -67,29 +67,28 @@ class A {
 		booleanarray ba;
 		boolean start;
 		boolean junk;
-		
+
 		// Assigning stuff
 		i = 0;
 		ba = new booleanarray();
 		start = true;
-		
+
 		junk = ba.create(10);
-		
-		while(i < ba.getLength() && ba.set(i, start)) 
+
+		while(i < ba.getLength() && ba.set(i, start))
 		{
 			start = !start;
 			i = i + 1;
 		}
-		
+
 		// Should be true
 		junk = ba.get(2);
 		// Will become false
 		if( ba.set(2, false) )
 			junk = ba.get(2);			// Should be false
 		else
-			System.out.println(43110);				// Should not happen		
-		
+			System.out.println(43110);				// Should not happen
+
 		return ba.get(8);
 	}
 }
-

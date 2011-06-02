@@ -1,7 +1,7 @@
 class ClassAssign {
-	public static void main ( String [ ] id ) 
-	{ 
-		
+	public static void main ( String [ ] id )
+	{
+
 	A = new A();
 	}
 }
@@ -9,6 +9,3 @@ class ClassAssign {
 
 class A {
 }
-
-    
-	

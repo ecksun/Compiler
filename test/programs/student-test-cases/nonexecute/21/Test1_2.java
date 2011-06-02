@@ -7,9 +7,10 @@ class Test1_2 {
 }
 
 class Test {
-	
+
+	Test t;
+
 	public int test() {
-		Test t;
 		return t.test();
 	}
 }

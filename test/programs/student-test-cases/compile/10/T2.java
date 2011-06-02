@@ -1,5 +1,5 @@
 class T2
-{	
+{
 	public static void main(String[] args)
 	{
 		System.out.println((new Caller()).call());
@@ -7,22 +7,22 @@ class T2
 }
 
 class Caller
-{	
+{
 	public int call()
 	{
 		int i;
 		Utils u;
 		u = new Utils();
 		i = 1;
-		
+
 		System.out.println(u.sub(6, 3));
-		
+
 		while (i < 100000)
 		{
 			System.out.println(u.sum(u.range(0, i * 2)));
 			i = i * 10;
 		}
-		
+
 		if (!!true && 1 < 0)
 		{
 			System.out.println(1);
@@ -31,7 +31,7 @@ class Caller
 		{
 			System.out.println(0);
 		}
-		
+
 		return 0;
 	}
 }
@@ -40,7 +40,7 @@ class Abc
 {
 	int a;
 	int b;
-	
+
 	public int add(int x, int y)
 	{
 		int result;
@@ -53,10 +53,10 @@ class Abc
 
 class Utils
 {
-	
+
 	int a;
 	int b;
-	
+
 	public int add(int x, int y)
 	{
 		int result;
@@ -70,7 +70,7 @@ class Utils
 		result = a + b;
 		return result;
 	}
-	
+
 	public int sub(int x, int y)
 	{
 		int result;
@@ -84,14 +84,14 @@ class Utils
 		result = a - b;
 		return result;
 	}
-	
+
 	public int sum(int[] a)
 	{
 		int len;
 		int i;
 		int s;
 		len = a.length;
-		
+
 		i = 0;
 		s = 0;
 		while (i < len)
@@ -99,10 +99,10 @@ class Utils
 			s = this.add(s, a[i]);
 			i = i + 1;
 		}
-		
+
 		return s;
 	}
-	
+
 	public int[] range(int start, int stop)
 	{
 		int[] a;
@@ -116,8 +116,7 @@ class Utils
 			a[i] = i + start;
 			i = i + 1;
 		}
-		
+
 		return a;
 	}
 }
-

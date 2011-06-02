@@ -5,7 +5,7 @@ class Test1{
 }
 
 class CardDeck{
-    	
+
 	int[] card;
 	int size;
 	int max;
@@ -19,21 +19,21 @@ class CardDeck{
 	}
 
 	public int searchMax() {
-				
+
 		max = 0;
-		i = 0;	
-				
-		while (i < size) {	
-	
+		i = 0;
+
+		while (i < size) {
+
 			if(max < card[i]) {
 				max = card[i];
-			}			
+			}
 			else {
 
 			}
 			i = i + 1 ;
 		}
-		
+
 		System.out.println(max);
 		return max;
 	}
@@ -41,15 +41,13 @@ class CardDeck{
 	public int Shuffle(int a){
 		size = a;
 		card = new int[a] ;
-	
+
 		card[0] = 2 ;
-		card[1] = 7  ; 
+		card[1] = 7  ;
 		card[2] = 12 ;
 		card[3] = 18 ;
-		card[4] = 1  
-	
-		return 0 ;	
-    	}
+		card[4] = 1
 
-
+		return 0 ;
+	}
 }

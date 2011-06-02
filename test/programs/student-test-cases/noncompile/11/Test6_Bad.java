@@ -7,15 +7,15 @@ class Test6{
 class Loop{
 
 	int[] array_1;
-	
+
 	public int init(a) {
-		int i;		
+		int i;
 		array_1[0] = 0;
-		array_1[1] = 1;		
+		array_1[1] = 1;
 		array_1[2] = 2;
-		array_1[3] = 3;		
+		array_1[3] = 3;
 		i = this.loop(a);
-			
+
 		return i;
 	}
 
@@ -25,9 +25,8 @@ class Loop{
 		i = 0;
 		while(j < 1){
 			k = array_1[i] + i + 5 - a;
-			i = i + 1;		
-		}		
+			i = i + 1;
+		}
 		return k;
 	}
 }
-

@@ -1,10 +1,8 @@
-
-
 class StackError{
 	public static void main(String[] args) {
 		System.out.println(new Field().init());
 	}
-    
+
 }
 
 class Field {
@@ -12,16 +10,16 @@ class Field {
 	int i;
 	Field f;
 	int[] a;
-	
+
 	public int getI() {
 		return i;
 	}
-	
+
 	public int setI(int v) {
 		i = v;
 		return 0;
 	}
-	
+
 	public int init() {
 		f = new Field();
 		i = f.init();
