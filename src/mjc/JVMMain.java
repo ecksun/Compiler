@@ -1,5 +1,6 @@
 package mjc;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -62,18 +63,31 @@ public class JVMMain {
 
             // Assemble the code to generate executables if -S was given.
             if (assemble) {
+                // Derive names of all Jasmin files from program syntax tree.
+                List<String> jasminFileNames = new LinkedList<String>();
+                jasminFileNames.add(result.main.className.name + JASMIN_EXT);
+                for (ClassDecl classDecl : result.classDecls) {
+                    jasminFileNames.add(classDecl.className.name + JASMIN_EXT);
+                }
+
+                // Prepare and execute the Jasmin command.
                 List<String> command = new LinkedList<String>();
                 command.add("jasmin");
-                command.add(result.main.className.name + JASMIN_EXT);
-                for (ClassDecl classDecl : result.classDecls) {
-                    command.add(classDecl.className.name + JASMIN_EXT);
+                for (String fileName : jasminFileNames) {
+                    command.add(fileName);
                 }
                 ProcessBuilder pb = new ProcessBuilder(command);
-                pb.start();
+                Process jasminProc = pb.start();
+                jasminProc.waitFor();
+
+                // Delete all intermediate Jasmin files.
+                for (String fileName : jasminFileNames) {
+                    new File(fileName).deleteOnExit();
+                }
             }
 
         } catch (java.io.IOException e) {
-            System.out.println("An I/O error occured while parsing : \n" + e);
+            System.out.println("An I/O error occured: \n" + e);
             System.exit(1);
         }
     }
