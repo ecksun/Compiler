@@ -39,7 +39,7 @@ check() {
 
             if [ "$failed" -eq "0" ]; then
                 rm -f *.class
-                $JASMIN *j > /dev/null
+                $JASMIN *.j > /dev/null
                 mainclass=`find_mainclass`
                 java "$mainclass" > "$testfile.output" 2>&1
                 [ $? -eq 0 ]; failed=$?
@@ -65,11 +65,11 @@ check() {
             [ $? -eq 0 ]; failed=$?
 
             if [ "$failed" -eq "0" ]; then
-                $JASMIN *j > /dev/null
+                $JASMIN *.j > /dev/null
                 mainclass=`find_mainclass`
                 java "$mainclass" > "$testfile.output" 2>&1
                 [ $? -ne 0 ]; failed=$?
-                rm *j
+                rm *.j
             fi
             ;;
     esac
