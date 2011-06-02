@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.List;
 
+import mjc.JVMMain;
+
 import jvm.jasmin.Statement;
 import jvm.jasmin.directives.DotClass;
 
@@ -23,7 +25,7 @@ public class ClassCreator {
 
     private void open(String className) {
         try {
-            stream = new PrintStream(new File(className + ".j"));
+            stream = new PrintStream(new File(className + JVMMain.JASMIN_EXT));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

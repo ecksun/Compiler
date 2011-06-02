@@ -16,8 +16,8 @@ import syntaxtree.visitor.Visitor;
 
 public class JVMMain {
 
-    private final static String JASMIN_EXT = ".j";
-    
+    public final static String JASMIN_EXT = ".j";
+
     public static void main(String argv[]) throws java.io.IOException,
             java.lang.Exception {
         Lexer scanner = null;
@@ -27,9 +27,11 @@ public class JVMMain {
             System.out.println("File not found : \"" + argv[0] + "\"");
             System.exit(1);
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Usage : java JVMMain <inputfile>");
+            System.out.println("Usage : java JVMMain <inputfile> [-S]");
             System.exit(1);
         }
+
+        boolean assemble = argv.length >= 2 && argv[1].equals("-S");
 
         try {
             parser p = new parser(scanner);
@@ -43,31 +45,33 @@ public class JVMMain {
             visitor = new SymbolTableVisitor();
             System.out.println(visitor.getClass().getName());
             result.accept(visitor);
-            
+
             if (((ErrorCollector) visitor).hasErrors())
                 System.exit(1);
 
             visitor = new TypeVisitor();
             System.out.println(visitor.getClass().getName());
             result.accept(visitor);
-            
+
             if (((ErrorCollector) visitor).hasErrors())
                 System.exit(1);
-            
+
             visitor = new CodeGeneratorVisitor();
             System.out.println(visitor.getClass().getName());
             result.accept(visitor);
 
-            // Assemble the code to generate executables.
-            List<String> command = new LinkedList<String>();
-            command.add("jasmin");
-            command.add(result.main.className.name + JASMIN_EXT);
-            for (ClassDecl classDecl : result.classDecls) {
-                command.add(classDecl.className.name + JASMIN_EXT);
+            // Assemble the code to generate executables if -S was given.
+            if (assemble) {
+                List<String> command = new LinkedList<String>();
+                command.add("jasmin");
+                command.add(result.main.className.name + JASMIN_EXT);
+                for (ClassDecl classDecl : result.classDecls) {
+                    command.add(classDecl.className.name + JASMIN_EXT);
+                }
+                ProcessBuilder pb = new ProcessBuilder(command);
+                pb.start();
             }
-            ProcessBuilder pb = new ProcessBuilder(command);
-            pb.start();
-            
+
         } catch (java.io.IOException e) {
             System.out.println("An I/O error occured while parsing : \n" + e);
             System.exit(1);
