@@ -38,7 +38,8 @@ public class Putfield extends Instruction {
 
     @Override
     public String toString() {
-        return "putfield " + fieldSpec + " " + descriptor + comment();
+        // Append ' to protect Jasmin from the field name "stack".
+        return "putfield " + fieldSpec + "' " + descriptor + comment();
     }
 
 }

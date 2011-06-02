@@ -32,7 +32,8 @@ public class DotField extends Directive {
         if (accessSpec != null) {
             str.append(" " + accessSpec);
             if (fieldName != null) {
-                str.append(" " + fieldName);
+                // Append ' to protect Jasmin from the field name "stack".
+                str.append(" " + fieldName + "'");
                 if (descriptor != null) {
                     str.append(" " + descriptor);
                     if (value != null) {

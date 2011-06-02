@@ -30,7 +30,8 @@ public class Getfield extends Instruction {
 
     @Override
     public String toString() {
-        return "getfield " + fieldSpec + " " + descriptor + comment();
+        // Append ' to protect Jasmin from the field name "stack".
+        return "getfield " + fieldSpec + "' " + descriptor + comment();
     }
 
 }
