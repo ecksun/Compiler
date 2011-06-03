@@ -32,28 +32,34 @@ public class JVMMain {
             System.out.println("File not found : \"" + argv[0] + "\"");
             System.exit(1);
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Usage : java JVMMain <inputfile> [-S]");
+            System.out.println("Usage : java JVMMain <inputfile> [-S] [-v]");
             System.exit(1);
         }
 
         boolean assemble = argv.length >= 2 && argv[1].equals("-S");
+        Logger.verbose = (argv.length >= 2 && argv[1].equals("-v"))
+                || (argv.length >= 3 && argv[2].equals("-v"));
 
         parser p = new parser(scanner);
         Program result = null;
         try {
-            result = (Program) p.parse().value;
+            result = (Program) (Logger.verbose ? p.debug_parse().value : p
+                    .parse().value);
         } catch (Exception e) {
             System.err.println("Exception caught during parsing.");
             System.exit(1);
         }
-        System.out.println(result.toString());
+        Logger.println(result.toString());
 
-        Visitor<?> visitor = new SyntaxTreePrinter(System.out);
-        System.out.println(visitor.getClass().getName());
-        result.accept(visitor);
+        Visitor<?> visitor;
+        if (Logger.verbose) {
+            visitor = new SyntaxTreePrinter(System.out);
+            Logger.println(visitor.getClass().getName());
+            result.accept(visitor);
+        }
 
         visitor = new SymbolTableVisitor();
-        System.out.println(visitor.getClass().getName());
+        Logger.println(visitor.getClass().getName());
         result.accept(visitor);
 
         if (((ErrorCollector) visitor).hasErrors()) {
@@ -61,7 +67,7 @@ public class JVMMain {
         }
 
         visitor = new TypeVisitor();
-        System.out.println(visitor.getClass().getName());
+        Logger.println(visitor.getClass().getName());
         result.accept(visitor);
 
         if (((ErrorCollector) visitor).hasErrors()) {
@@ -69,7 +75,7 @@ public class JVMMain {
         }
 
         visitor = new CodeGeneratorVisitor();
-        System.out.println(visitor.getClass().getName());
+        Logger.println(visitor.getClass().getName());
         result.accept(visitor);
 
         // Assemble the code to generate executables if -S was given.
@@ -127,6 +133,6 @@ public class JVMMain {
                 new File(fileName).delete();
             }
         }
-
     }
+
 }

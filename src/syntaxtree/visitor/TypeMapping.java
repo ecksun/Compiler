@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import mjc.Logger;
+
 import syntaxtree.And;
 import syntaxtree.ArrayLength;
 import syntaxtree.ArrayLookup;
@@ -95,7 +97,7 @@ public class TypeMapping {
      */
     public TypeMapping(Scopeable obj, TypeMapping parent)
             throws VariableDupeException {
-        System.out.println("New Scope:");
+        Logger.println("New Scope:");
         this.parent = parent;
         typemap = new HashMap<String, Type>();
         children = new HashMap<String, TypeMapping>();
@@ -153,7 +155,7 @@ public class TypeMapping {
                 decls.add(decl);
             }
         }
-        System.out.println("|- " + decl);
+        Logger.println("|- " + decl);
     }
 
     /**
@@ -182,7 +184,7 @@ public class TypeMapping {
         if (typemap.put(name.name, type) != null) {
             throw new VariableDupeException(name.name);
         }
-        System.out.println("|- " + name.name + " => " + getType(name.name));
+        Logger.println("|- " + name.name + " => " + getType(name.name));
     }
 
     public TypeMapping getChild(String name) {
@@ -262,11 +264,10 @@ public class TypeMapping {
                 }
 
             } else {
-                System.err.println("öhm, error!!");
+                Logger.println("öhm, error!!");
             }
         }
-        System.err
-                .println("Should not happen, we have mised implemented support for "
+        Logger.println("Should not happen, we have mised implemented support for "
                         + exp + " in TypeMapping.getType(Exp)");
         return null; // In case we missed implementing a type
     }

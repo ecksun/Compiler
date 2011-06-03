@@ -4,6 +4,7 @@
  */
 package syntaxtree.visitor;
 
+import mjc.Logger;
 import syntaxtree.Block;
 import syntaxtree.ClassDeclSimple;
 import syntaxtree.Formal;
@@ -84,7 +85,7 @@ public class SymbolTableVisitor extends DepthFirstVisitor<Void> implements
 
     private void printLevel() {
         for (int i = 0; i < level; ++i) {
-            System.out.print("  ");
+            Logger.print("  ");
         }
     }
 
