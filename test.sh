@@ -2,9 +2,6 @@
 
 DIR="test/programs/student-test-cases"
 MJC="java -cp `pwd`/mjc.jar:`pwd`/lib/java-cup-11a.jar:`pwd`/lib/JFlex.jar mjc.JVMMain "
-JASMIN="jasmin " # Use the systems
-# JASMIN="java -jar `pwd`/jasmin.jar "
-# JASMIN="java -cp /usr/share/java/jasmin-sable.jar:/usr/share/java/cup.jar jasmin.Main "
 if [ -n "$1" ]; then
     DIR="$1"
 fi
@@ -26,20 +23,18 @@ check() {
     
     case "$category" in
         noncompile)
-            output=`eval "$MJC" "$testfile" 2>&1`
+            output=`eval "$MJC $testfile -S" 2>&1`
             [ $? -ne 0 ]; failed=$?
             ;;
         compile)
-            output=`eval "$MJC" "$testfile" 2>&1`
+            output=`eval "$MJC $testfile -S" 2>&1`
             [ $? -eq 0 ]; failed=$?
             ;;
         execute)
-            output=`eval "$MJC" "$testfile" 2>&1`
+            output=`eval "$MJC $testfile -S" 2>&1`
             [ $? -eq 0 ]; failed=$?
 
             if [ "$failed" -eq "0" ]; then
-                rm -f *.class
-                $JASMIN *.j > /dev/null
                 mainclass=`find_mainclass`
                 java "$mainclass" > "$testfile.output" 2>&1
                 [ $? -eq 0 ]; failed=$?
@@ -57,19 +52,18 @@ check() {
                         [ "$?" -eq 0 ]; failed="$?"
                     fi
                 fi
-                rm -f *.j
+                rm -f *.class
             fi
             ;;
         nonexecute)
-            output=`eval "$MJC" "$testfile" 2>&1`
+            output=`eval "$MJC $testfile -S" 2>&1`
             [ $? -eq 0 ]; failed=$?
 
             if [ "$failed" -eq "0" ]; then
-                $JASMIN *.j > /dev/null
                 mainclass=`find_mainclass`
                 java "$mainclass" > "$testfile.output" 2>&1
                 [ $? -ne 0 ]; failed=$?
-                rm *.j
+                rm -f *.class
             fi
             ;;
     esac

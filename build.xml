@@ -53,7 +53,10 @@
     </target>
 
     <target name="jar" depends="compile" description="Create JAR file">
-        <jar jarfile="mjc.jar" basedir="${bin}"/>
+        <jar destfile="mjc.jar">
+            <fileset dir="${bin}"/>
+            <fileset dir="." includes="resources/jasmin.jar"/>
+        </jar>
     </target>
 
     <target name="run" depends="compile">
