@@ -86,8 +86,9 @@ public class JVMMain {
             // Prepare and execute the Jasmin command.
             List<String> command = new LinkedList<String>();
             command.add("java");
-            command.add("-jar");
-            command.add("resources/jasmin.jar");
+            command.add("-classpath");
+            command.add(System.getProperty("java.class.path"));
+            command.add("jasmin.Main");
             for (String fileName : jasminFileNames) {
                 command.add(fileName);
             }
