@@ -1,7 +1,7 @@
 #!/bin/sh
 
 DIR="test/programs/student-test-cases"
-MJC="java -cp `pwd`/mjc.jar:`pwd`/lib/java-cup-11a.jar:`pwd`/lib/JFlex.jar mjc.JVMMain "
+MJC="java -cp `pwd`/mjc.jar:`pwd`/lib/jasmin-jarjar.jar:`pwd`/lib/java-cup-11a.jar:`pwd`/lib/JFlex.jar mjc.JVMMain "
 if [ -n "$1" ]; then
     DIR="$1"
 fi
