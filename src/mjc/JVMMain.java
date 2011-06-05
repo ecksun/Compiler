@@ -36,7 +36,7 @@ public class JVMMain {
             System.exit(1);
         }
 
-        boolean assemble = argv.length >= 2 && argv[1].equals("-S");
+        boolean assemble = !(argv.length >= 2 && argv[1].equals("-S"));
         Logger.verbose = (argv.length >= 2 && argv[1].equals("-v"))
                 || (argv.length >= 3 && argv[2].equals("-v"));
 
