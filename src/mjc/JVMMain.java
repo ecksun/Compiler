@@ -1,11 +1,7 @@
 package mjc;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -87,33 +83,11 @@ public class JVMMain {
                 jasminFileNames.add(classDecl.className.name + JASMIN_EXT);
             }
 
-            // Copy the Jasmin lib to a place with known absolute path.
-            File tempDir = new File(System.getProperty("java.io.tmpdir"));
-            File jasminJarFile = new File(tempDir, "jasmin.jar");
-            InputStream jasminIn = JVMMain.class
-                    .getResourceAsStream("/resources/jasmin.jar");
-            OutputStream out = null;
-            try {
-                out = new FileOutputStream(jasminJarFile);
-            } catch (FileNotFoundException e) {
-                System.err.println("Invalid jasmin jar output file.");
-            }
-
-            byte[] buffer = new byte[1024];
-            int len;
-            try {
-                while ((len = jasminIn.read(buffer)) != -1) {
-                    out.write(buffer, 0, len);
-                }
-            } catch (IOException e) {
-                System.exit(1);
-            }
-
             // Prepare and execute the Jasmin command.
             List<String> command = new LinkedList<String>();
             command.add("java");
             command.add("-jar");
-            command.add(jasminJarFile.getAbsolutePath());
+            command.add("resources/jasmin.jar");
             for (String fileName : jasminFileNames) {
                 command.add(fileName);
             }
