@@ -225,6 +225,43 @@ som lexer, parser och semantikanalyserare, även om paketstrukturen hade mått
 bra av ytterligare handpåläggning.
 
 
+\appendix
+\section{Kodstruktur}
+\subsection*{jvm.jasmin}
+Innehåller all kod direkt relaterade till generering av Jasmin-kod, vilket mer
+eller mindre är bytecode.
+\subsubsection*{jvm.jasmin.directives}
+Innehåller Jasmin-specifik kod för att hjälpa Jasmin att generera bytekoden.
+\subsubsection*{jvm.jasmin.instructions}
+Majoriteten av klasserna i detta paket är bytekod, med ett fåtal undantag och
+förenklingar som finns tillgängliga i Jasmin.
+\subsection*{lex}
+Innehåller alla klasser genererade av lexern, JFlex.
+\subsection*{mjc}
+Den huvudsakliga ingångspunkten för kompilatorn som ser till att alla delar
+blir exekverade och hanterar eventuella fel. Klasserna i paketet har alla en
+main-metod för att vara exekverbara.
+\subsection*{parser}
+Paketet parser innehåller alla klasser genererade av parsern, för tillfället
+Java CUP.
+\subsection*{syntaxtree}
+Alla noder i syntaxträdet har en motsvarande klass i paketet syntaxtree. De
+instansieras av parsern vid parsning och används sedan för resterande steg av
+kompilatorn.
+\subsection*{syntaxtree.visitor}
+Alla besökare som använder besökarmönstret finns i paketet syntaxtree.visitor.
+Även klasser direkt använda av besökarna befinner sig här. Besökarna använder
+sig av en djupet-först-sökning för att gå igenom syntaxträdet.
+
+Viktiga klasser och interfaces är:
+\begin{itemize}
+\texttt{Visitor} - Ett generellt interface för alla besökare.
+\texttt{DepthFirstVisitor} - En implementation av en djupet-först-sökning som används av majoriteten av besökare.
+\texttt{SymbolTableVisitor} - Går med hjälp av DepthFirstVisitor igenom trädet och registrerar alla varibeldeklarationer
+\texttt{TypeVisitor} - Går igenom syntaxträdet och kollar så att inga typfel finns.
+\texttt{CodeGeneratorVisitor} - Genererar den slutgiltiga koden från syntaxträdet med hjälp av DepthFirstVisitor
+\end{itemize}
+
 \begin{thebibliography}{99}
 
     \bibitem{appel2002}
