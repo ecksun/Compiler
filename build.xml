@@ -53,6 +53,12 @@
     </target>
 
     <target name="jar" depends="compile" description="Create JAR file">
+        <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask"
+            classpath="res/jarjar-1.1.jar"/>
+        <jarjar jarfile="lib/jasmin-jarjar.jar">
+            <zipfileset src="res/jasmin.jar"/>
+            <rule pattern="java_cup.**" result="jarjar.java_cup.@1"/>
+        </jarjar>
         <jar destfile="mjc.jar">
             <fileset dir="${bin}"/>
         </jar>
@@ -77,5 +83,5 @@
         <delete file="${src.parser}/parser.java"/>
         <delete file="mjc.jar"/>
     </target>
-</project>
 
+</project>
