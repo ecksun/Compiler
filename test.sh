@@ -23,15 +23,15 @@ check() {
     
     case "$category" in
         noncompile)
-            output=`eval "$MJC $testfile -S" 2>&1`
+            output=`eval "$MJC $testfile" 2>&1`
             [ $? -ne 0 ]; failed=$?
             ;;
         compile)
-            output=`eval "$MJC $testfile -S" 2>&1`
+            output=`eval "$MJC $testfile" 2>&1`
             [ $? -eq 0 ]; failed=$?
             ;;
         execute)
-            output=`eval "$MJC $testfile -S" 2>&1`
+            output=`eval "$MJC $testfile" 2>&1`
             [ $? -eq 0 ]; failed=$?
 
             if [ "$failed" -eq "0" ]; then
@@ -56,7 +56,7 @@ check() {
             fi
             ;;
         nonexecute)
-            output=`eval "$MJC $testfile -S" 2>&1`
+            output=`eval "$MJC $testfile" 2>&1`
             [ $? -eq 0 ]; failed=$?
 
             if [ "$failed" -eq "0" ]; then
